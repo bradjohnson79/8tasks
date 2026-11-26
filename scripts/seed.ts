@@ -12,7 +12,12 @@ import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "../src/db/schema";
-import { CATEGORY_SEED, DEMO_PROVIDERS, RETIRED_CATEGORIES } from "./seed-data";
+import {
+  CATEGORY_SEED,
+  DEMO_PROVIDERS,
+  MOVED_SUBCATEGORIES,
+  RETIRED_CATEGORIES,
+} from "./seed-data";
 
 config({ path: ".env.local" });
 
@@ -92,6 +97,21 @@ async function main() {
         where category_id = (select id from categories where slug = ${oldSlug})`);
       const res = await tx.execute(sql`delete from categories where slug = ${oldSlug}`);
       if (res.rowCount) console.log(`Merged category ${oldSlug} into ${newSlug}.`);
+    }
+
+    // Subcategories that moved to another category: repoint opportunities to the
+    // target's copy (seeded above), then drop the old one (idempotent).
+    for (const m of MOVED_SUBCATEGORIES) {
+      await tx.execute(sql`
+        update opportunities o set subcategory_id = t.id, category_id = t.category_id
+        from subcategories f, subcategories t
+        where o.subcategory_id = f.id
+          and f.slug = ${m.slug} and f.category_id = (select id from categories where slug = ${m.from})
+          and t.slug = ${m.slug} and t.category_id = (select id from categories where slug = ${m.to})`);
+      const res = await tx.execute(sql`
+        delete from subcategories
+        where slug = ${m.slug} and category_id = (select id from categories where slug = ${m.from})`);
+      if (res.rowCount) console.log(`Moved subcategory ${m.slug} from ${m.from} to ${m.to}.`);
     }
 
     if (categoriesOnly) return;

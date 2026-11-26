@@ -22,11 +22,20 @@ describe("seed data", () => {
 });
 
 describe("category merges", () => {
-  it("keeps Photo Scouting and retires Micro Tasks into AI & Data", async () => {
-    const { RETIRED_CATEGORIES } = await import("./seed-data");
+  it("uses the founder's 8 categories and every retired slug maps to one of them", async () => {
+    const { RETIRED_CATEGORIES, MOVED_SUBCATEGORIES } = await import("./seed-data");
     const slugs = CATEGORY_SEED.map((c) => c.slug);
-    expect(slugs).toContain("photo-scouting");
-    expect(slugs).not.toContain("micro-tasks");
-    expect(slugs).toContain(RETIRED_CATEGORIES["micro-tasks"]);
+    expect(slugs).toEqual([
+      "surveys", "app-website-testing", "photography", "mystery-shopping",
+      "content-media", "gaming-entertainment", "paid-research", "microtasks-ai",
+    ]);
+    for (const [oldSlug, target] of Object.entries(RETIRED_CATEGORIES)) {
+      expect(slugs).not.toContain(oldSlug);
+      expect(slugs).toContain(target);
+    }
+    for (const m of MOVED_SUBCATEGORIES) {
+      const to = CATEGORY_SEED.find((c) => c.slug === m.to);
+      expect(to?.subcategories.map((s) => s.slug)).toContain(m.slug);
+    }
   });
 });
