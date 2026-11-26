@@ -144,9 +144,9 @@ export function formatCompensation(c: Compensation): CompensationDisplay {
       };
     case "unknown":
       return {
-        primary: "See provider details",
+        primary: "Check provider for current rates",
         isAmount: false,
-        label: "See provider for payment details",
+        label: "Compensation not listed. Check the provider for current rates.",
       };
   }
 }

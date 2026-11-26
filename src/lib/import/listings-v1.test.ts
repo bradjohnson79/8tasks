@@ -78,6 +78,9 @@ const free = {
     slug: "prolific",
     name: "Prolific",
     websiteUrl: "https://www.prolific.com",
+    summary: "Online studies.",
+    description:
+      "Online studies. Free listing: 8Tasks has no affiliate relationship with this provider and earns no commission.",
     countries: ["CA", "US"],
     status: "published", // must be ignored: free listings are always drafts
     adminNotes: "Unverified pay note (do NOT display): £6/h",
@@ -129,6 +132,7 @@ describe("listings package adapter", () => {
     expect(f.listing).toEqual({ type: "free", status: "draft" });
     expect(f.public.affiliate_url).toBe("https://www.prolific.com");
     expect(f.public.affiliate_is_affiliate).toBe(false);
+    expect(f.public.description).toBe("Online studies.");
     expect(f.public.opportunities[0].compensation_type).toBe("unknown");
     expect(f.public.opportunities[0].compensation_note).toBeNull();
     expect(f.internal).toMatchObject({ readiness_level: "D", user_value_listing: true });

@@ -6,6 +6,7 @@ import { categoryDisplay } from "@/lib/taxonomy";
 import { BookmarkButton } from "./bookmark-button";
 import { CompensationDisplay } from "./compensation-display";
 import { MissionMetadata } from "./mission-metadata";
+import { INDEPENDENT_LABEL } from "./listing-disclosure";
 import { StatusPill } from "./status-pill";
 
 /**
@@ -63,7 +64,7 @@ export function MissionCard({
             {o.isDemo && <StatusPill tone="warning">Demo</StatusPill>}
             {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
             {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
-            {o.isFreeListing && <StatusPill>Free listing</StatusPill>}
+            {o.isFreeListing && <StatusPill>{INDEPENDENT_LABEL}</StatusPill>}
           </div>
         )}
         <Link

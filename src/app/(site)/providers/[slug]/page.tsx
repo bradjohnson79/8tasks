@@ -85,7 +85,7 @@ export default async function ProviderPage({ params }: Props) {
         </div>
       </header>
 
-      {provider.description && (
+      {provider.description && provider.description !== provider.summary && (
         <section className="mt-8 max-w-3xl space-y-3">
           <h2 className="text-xl font-semibold">About {provider.name}</h2>
           <p className="whitespace-pre-line text-muted-foreground">{provider.description}</p>

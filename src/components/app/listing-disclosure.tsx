@@ -3,8 +3,10 @@ import type { Opportunity } from "@/lib/missions/types";
 import { cn } from "@/lib/utils";
 import { AffiliateDisclosure } from "./affiliate-disclosure";
 
+/** Public label for non-affiliate (Level D) listings. Everything on 8Tasks is free to use. */
+export const INDEPENDENT_LABEL = "Independent listing";
 export const FREE_LISTING_NOTE =
-  "Free listing: 8Tasks has no affiliate relationship with this provider and earns no commission.";
+  "8Tasks does not currently receive a commission from this listing.";
 
 /** Free-listing note (shown instead of the affiliate disclosure on non-affiliate listings). */
 export function FreeListingNote({ className }: { className?: string }) {
@@ -38,8 +40,8 @@ export function ListingDisclosure({
           <p className="flex items-start gap-2 text-[13px] leading-relaxed text-text-2">
             <Info className="mt-0.5 size-4 shrink-0" aria-hidden />
             <span>
-              Listings marked &ldquo;Free listing&rdquo; earn 8Tasks no commission: we list them
-              because they&apos;re useful.
+              8Tasks does not currently receive a commission from listings marked &ldquo;Independent
+              listing&rdquo;. We list them because they&apos;re useful.
             </span>
           </p>
         ) : (

@@ -42,7 +42,7 @@ export function SiteFooter() {
           check your work or pay users. Third-party providers do that directly under their own
           terms.
         </p>
-        <AffiliateDisclosure className="max-w-2xl" />
+        <AffiliateDisclosure siteWide className="max-w-2xl" />
         <nav aria-label="Ways to earn">
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
             {EARN_LINKS.map((l) => (

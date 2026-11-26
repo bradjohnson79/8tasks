@@ -24,7 +24,7 @@ export type OpportunityFormOptions = {
 };
 
 const COMPENSATION_OPTIONS = [
-  { value: "unknown", label: "Unknown (“See provider details”)" },
+  { value: "unknown", label: "Unknown (“Check provider for current rates”)" },
   { value: "fixed", label: "Fixed amount" },
   { value: "range", label: "Payment range" },
   { value: "hourly", label: "Hourly (real working time)" },

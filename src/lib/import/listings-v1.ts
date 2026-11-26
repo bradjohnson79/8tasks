@@ -84,7 +84,12 @@ function convert(entry: Obj, free: boolean) {
       name: str(p.name),
       website_url: str(p.websiteUrl) || null,
       summary: str(p.summary) || null,
-      description: str(p.description) || null,
+      // The package appends its old "Free listing: …" sentence; the page shows the disclosure itself.
+      description:
+        str(p.description).replace(
+          /\s*Free listing: 8Tasks has no affiliate relationship[^.]*\.\s*$/,
+          "",
+        ) || null,
       countries: strs(p.countries),
       last_verified_at: lastVerified,
       affiliate_url: str(link.destinationUrl) || null,

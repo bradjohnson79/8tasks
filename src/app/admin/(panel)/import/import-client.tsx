@@ -95,7 +95,7 @@ export function ImportClient() {
                 </p>
                 <p>
                   {r.listingType === "free"
-                    ? "Free listing (no commission). "
+                    ? "Independent listing (Level D, no commission). "
                     : r.listingType === "affiliate"
                       ? "Affiliate listing. "
                       : ""}

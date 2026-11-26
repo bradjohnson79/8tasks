@@ -8,7 +8,7 @@ import { CompensationDisplay } from "@/components/app/compensation-display";
 import { Container } from "@/components/app/container";
 import { MissionMetadata } from "@/components/app/mission-metadata";
 import { StatusPill } from "@/components/app/status-pill";
-import { FreeListingNote } from "@/components/app/listing-disclosure";
+import { FreeListingNote, INDEPENDENT_LABEL } from "@/components/app/listing-disclosure";
 import { MissionGrid } from "@/components/app/mission-card";
 import { ReportListing } from "@/components/app/report-listing";
 import { getDiscoveryConfig } from "@/lib/discovery/config";
@@ -170,7 +170,7 @@ export default async function MissionDetailPage({ params }: Props) {
                 {closed && <StatusPill tone="warning">Closed</StatusPill>}
                 {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
                 {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
-                {o.isFreeListing && <StatusPill>Free listing</StatusPill>}
+                {o.isFreeListing && <StatusPill>{INDEPENDENT_LABEL}</StatusPill>}
                 {pathwayTitles.map((t) => (
                   <StatusPill key={t}>{t}</StatusPill>
                 ))}
