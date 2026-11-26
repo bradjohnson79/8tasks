@@ -7,7 +7,7 @@
   annotations stripped, unknown/"sometimes" facts dropped, internal context to admin notes. Dreamstime + JoinBrands
   re-imported as drafts (local + preview) from the real package (JoinBrands CA + US, extra subcategories/subsections).
 - G-30: providers publish only at readiness A, or D as a flagged user-value listing with no affiliate links (0009).
-- G-04: search matches secondary categories and /earn subsection names. G-24: Organization JSON-LD. G-35: CI workflow in `docs/ci-workflow.yml` (founder adds it to `.github/workflows/`).
+- G-04: search matches secondary categories and /earn subsection names. G-24: Organization JSON-LD. G-35: CI workflow in `.github/workflows/ci.yml` (moved from docs/ci-workflow.yml).
 
 ## 2026-11-26: Resend + My Daily 8 email (sending off until approved)
 - Migrations 0006–0008: `email_subscribers` (double opt-in, consent records, preferences, tokens), `email_sends`,
