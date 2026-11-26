@@ -12,22 +12,19 @@ import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "../src/db/schema";
-import { CATEGORY_SEED, DEMO_PROVIDERS } from "./seed-data";
+import { CATEGORY_SEED, DEMO_PROVIDERS, RETIRED_CATEGORIES } from "./seed-data";
 
 config({ path: ".env.local" });
 
 const categoriesOnly = process.argv.includes("--categories-only");
 const isProduction =
-  process.env.VERCEL_ENV === "production" ||
-  process.env.SEED_TARGET === "production";
+  process.env.VERCEL_ENV === "production" || process.env.SEED_TARGET === "production";
 
 async function main() {
   const url = process.env.MIGRATION_DATABASE_URL;
   if (!url) throw new Error("MIGRATION_DATABASE_URL is not set");
   if (isProduction && !categoriesOnly) {
-    throw new Error(
-      "Refusing to seed demo data into production. Use --categories-only.",
-    );
+    throw new Error("Refusing to seed demo data into production. Use --categories-only.");
   }
 
   const pool = new Pool({ connectionString: url });
@@ -65,15 +62,37 @@ async function main() {
             sortOrder: i,
           })
           .onConflictDoUpdate({
-            target: [
-              schema.subcategories.categoryId,
-              schema.subcategories.slug,
-            ],
+            target: [schema.subcategories.categoryId, schema.subcategories.slug],
             set: { name: s.name, sortOrder: i },
           });
       }
     }
     console.log(`Seeded ${CATEGORY_SEED.length} categories.`);
+
+    // Merge retired categories into their replacement (idempotent).
+    for (const [oldSlug, newSlug] of Object.entries(RETIRED_CATEGORIES)) {
+      await tx.execute(sql`
+        with old as (select id from categories where slug = ${oldSlug}),
+             tgt as (select id from categories where slug = ${newSlug}),
+             dup as (
+               select os.id as old_sub, ts.id as new_sub
+               from subcategories os join old on os.category_id = old.id
+               join subcategories ts on ts.category_id = (select id from tgt) and ts.slug = os.slug
+             ),
+             moved_opps as (
+               update opportunities o set subcategory_id = dup.new_sub from dup where o.subcategory_id = dup.old_sub
+               returning o.id
+             )
+        delete from subcategories s using dup where s.id = dup.old_sub`);
+      await tx.execute(sql`
+        update subcategories set category_id = (select id from categories where slug = ${newSlug})
+        where category_id = (select id from categories where slug = ${oldSlug})`);
+      await tx.execute(sql`
+        update opportunities set category_id = (select id from categories where slug = ${newSlug})
+        where category_id = (select id from categories where slug = ${oldSlug})`);
+      const res = await tx.execute(sql`delete from categories where slug = ${oldSlug}`);
+      if (res.rowCount) console.log(`Merged category ${oldSlug} into ${newSlug}.`);
+    }
 
     if (categoriesOnly) return;
 
@@ -129,10 +148,7 @@ async function main() {
             isDemo: true,
           })
           .onConflictDoUpdate({
-            target: [
-              schema.opportunities.providerId,
-              schema.opportunities.slug,
-            ],
+            target: [schema.opportunities.providerId, schema.opportunities.slug],
             set: {
               title: o.title,
               summary: o.summary,
@@ -142,9 +158,7 @@ async function main() {
           });
       }
     }
-    console.log(
-      `Seeded ${DEMO_PROVIDERS.length} DEMO providers (is_demo = true).`,
-    );
+    console.log(`Seeded ${DEMO_PROVIDERS.length} DEMO providers (is_demo = true).`);
   });
 
   await pool.end();

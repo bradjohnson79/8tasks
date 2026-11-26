@@ -27,7 +27,7 @@ Phase 1–2: foundation + core discovery MVP.
 
 MVP scope:
 - Responsive, mobile-first homepage
-- 8 mission categories (admin-configurable, with subcategories)
+- 8 mission categories (admin-configurable, with subcategories): Surveys & Polls, App & Website Testing, Paid Research & Focus Groups, Mystery Shopping, Photo Scouting, Product Testing, AI Training & Data Tasks, Transcription & Translation
 - Provider directory + provider profile pages
 - Opportunity listings (provider-level first; individual missions only with authorized data)
 - Search + basic filters (enable a filter only when reliable data supports it)
@@ -51,9 +51,11 @@ Out of scope until approved: user accounts, My Daily 8, creator program, convers
 ## Design direction (proposed — pending founder approval)
 Deep navy/charcoal base, emerald/mint accents, rounded mission cards, generous spacing, strong contrast (WCAG AA), subtle motion. Mobile must feel app-quality. Avoid spammy-survey, crypto, gambling or get-rich-quick aesthetics. Light/dark mode if cheap.
 
+## Launch market (decided 2026-11-26)
+Canada + US only. List only providers/opportunities that accept members in at least one of them (`src/lib/markets.ts`). International expansion later = add country codes there.
+
 ## Pending founder decisions
 - Hosting: Vercel (recommended) vs Cloudflare Pages
-- Launch market: Canada + US together, or US first
 - Final branding/logo/colors
 - First 5–8 providers to apply to (Phase 0, running in parallel)
 

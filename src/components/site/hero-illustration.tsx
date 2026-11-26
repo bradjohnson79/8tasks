@@ -21,10 +21,7 @@ const ROWS = [
 
 export function HeroIllustration() {
   return (
-    <div
-      aria-hidden
-      className="relative mx-auto h-[440px] w-[440px] select-none"
-    >
+    <div aria-hidden className="relative mx-auto h-[440px] w-[440px] select-none">
       {/* Phone */}
       <div className="hero-float absolute top-0 right-6 h-[440px] w-[220px] rounded-[2.25rem] border border-white/15 bg-navy-2 p-2 shadow-2xl shadow-black/40">
         <div className="flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-[#0e1830]">
@@ -49,9 +46,7 @@ export function HeroIllustration() {
                   <Icon className="size-3.5" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[11px] font-medium text-white">
-                    {label}
-                  </span>
+                  <span className="block truncate text-[11px] font-medium text-white">{label}</span>
                   <span className="mt-1 block h-1 w-14 rounded-full bg-white/15" />
                 </span>
               </li>
@@ -78,9 +73,7 @@ export function HeroIllustration() {
             >
               {selected && <span className="size-1.5 rounded-full bg-white" />}
             </span>
-            <span
-              className={`h-1.5 rounded-full bg-slate-200 ${i === 1 ? "w-14" : "w-20"}`}
-            />
+            <span className={`h-1.5 rounded-full bg-slate-200 ${i === 1 ? "w-14" : "w-20"}`} />
           </div>
         ))}
       </div>

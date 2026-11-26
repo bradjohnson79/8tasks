@@ -19,12 +19,8 @@ export function serverEnv(): ServerEnv {
   if (!cached) {
     const parsed = serverEnvSchema.safeParse(process.env);
     if (!parsed.success) {
-      const fields = parsed.error.issues
-        .map((i) => i.path.join("."))
-        .join(", ");
-      throw new Error(
-        `Invalid or missing server environment variables: ${fields}`,
-      );
+      const fields = parsed.error.issues.map((i) => i.path.join(".")).join(", ");
+      throw new Error(`Invalid or missing server environment variables: ${fields}`);
     }
     cached = parsed.data;
   }

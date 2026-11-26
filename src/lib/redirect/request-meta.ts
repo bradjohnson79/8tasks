@@ -1,9 +1,6 @@
-const BOT_RE =
-  /bot|crawler|spider|crawling|preview|facebookexternalhit|slurp|headless/i;
+const BOT_RE = /bot|crawler|spider|crawling|preview|facebookexternalhit|slurp|headless/i;
 
-export function deviceTypeFromUA(
-  ua: string | null,
-): "mobile" | "tablet" | "desktop" | "other" {
+export function deviceTypeFromUA(ua: string | null): "mobile" | "tablet" | "desktop" | "other" {
   if (!ua) return "other";
   if (/ipad|tablet/i.test(ua)) return "tablet";
   if (/mobi|iphone|android/i.test(ua)) return "mobile";
@@ -16,10 +13,7 @@ export function isBotUA(ua: string | null): boolean {
 }
 
 /** Only keeps the path of a same-origin referer; anything else is dropped. */
-export function sourcePathFromReferer(
-  referer: string | null,
-  siteOrigin: string,
-): string | null {
+export function sourcePathFromReferer(referer: string | null, siteOrigin: string): string | null {
   if (!referer) return null;
   try {
     const url = new URL(referer);

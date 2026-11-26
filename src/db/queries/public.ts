@@ -1,9 +1,26 @@
 import "server-only";
-import { asc, count, eq, sql } from "drizzle-orm";
+import { and, arrayOverlaps, asc, count, eq, sql } from "drizzle-orm";
+import { SUPPORTED_COUNTRIES } from "@/lib/markets";
 import { withPublicDb } from "../client";
 import { categories, opportunities, providers } from "../schema";
 
-/** Active categories with the number of published opportunities (RLS-filtered). */
+// Launch markets: only list providers/opportunities available in a supported country.
+const providerInMarket = arrayOverlaps(providers.countries, [...SUPPORTED_COUNTRIES]);
+const opportunityInMarket = arrayOverlaps(opportunities.countries, [...SUPPORTED_COUNTRIES]);
+
+const opportunityCardFields = {
+  id: opportunities.id,
+  title: opportunities.title,
+  summary: opportunities.summary,
+  countries: opportunities.countries,
+  isSponsored: opportunities.isSponsored,
+  isDemo: opportunities.isDemo,
+  hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
+  providerName: providers.name,
+  providerSlug: providers.slug,
+};
+
+/** Active categories with the number of in-market published opportunities (RLS-filtered). */
 export async function getActiveCategories() {
   return withPublicDb((tx) =>
     tx
@@ -16,13 +33,16 @@ export async function getActiveCategories() {
         opportunityCount: count(opportunities.id),
       })
       .from(categories)
-      .leftJoin(opportunities, eq(opportunities.categoryId, categories.id))
+      .leftJoin(
+        opportunities,
+        and(eq(opportunities.categoryId, categories.id), opportunityInMarket),
+      )
       .groupBy(categories.id)
       .orderBy(asc(categories.sortOrder), asc(categories.name)),
   );
 }
 
-/** Published providers. Never selects admin-only columns (blocked by column grants anyway). */
+/** Published, in-market providers. Never selects admin-only columns (blocked by column grants anyway). */
 export async function getPublishedProviders() {
   return withPublicDb((tx) =>
     tx
@@ -31,12 +51,49 @@ export async function getPublishedProviders() {
         slug: providers.slug,
         name: providers.name,
         summary: providers.summary,
+        logoUrl: providers.logoUrl,
         countries: providers.countries,
         isDemo: providers.isDemo,
       })
       .from(providers)
+      .where(providerInMarket)
       .orderBy(asc(providers.name)),
   );
+}
+
+export async function getProviderProfile(slug: string) {
+  return withPublicDb(async (tx) => {
+    const [provider] = await tx
+      .select({
+        id: providers.id,
+        slug: providers.slug,
+        name: providers.name,
+        summary: providers.summary,
+        description: providers.description,
+        websiteUrl: providers.websiteUrl,
+        logoUrl: providers.logoUrl,
+        countries: providers.countries,
+        isDemo: providers.isDemo,
+      })
+      .from(providers)
+      .where(and(eq(providers.slug, slug), providerInMarket))
+      .limit(1);
+    if (!provider) return null;
+
+    const items = await tx
+      .select({
+        ...opportunityCardFields,
+        categoryName: categories.name,
+        categorySlug: categories.slug,
+      })
+      .from(opportunities)
+      .innerJoin(providers, eq(providers.id, opportunities.providerId))
+      .innerJoin(categories, eq(categories.id, opportunities.categoryId))
+      .where(and(eq(opportunities.providerId, provider.id), opportunityInMarket))
+      .orderBy(asc(opportunities.sortOrder), asc(opportunities.title));
+
+    return { provider, items };
+  });
 }
 
 export async function getCategoryWithOpportunities(slug: string) {
@@ -55,20 +112,10 @@ export async function getCategoryWithOpportunities(slug: string) {
     if (!category) return null;
 
     const items = await tx
-      .select({
-        id: opportunities.id,
-        title: opportunities.title,
-        summary: opportunities.summary,
-        countries: opportunities.countries,
-        isSponsored: opportunities.isSponsored,
-        isDemo: opportunities.isDemo,
-        hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
-        providerName: providers.name,
-        providerSlug: providers.slug,
-      })
+      .select(opportunityCardFields)
       .from(opportunities)
       .innerJoin(providers, eq(providers.id, opportunities.providerId))
-      .where(eq(opportunities.categoryId, category.id))
+      .where(and(eq(opportunities.categoryId, category.id), opportunityInMarket))
       .orderBy(asc(opportunities.sortOrder), asc(opportunities.title));
 
     return { category, items };

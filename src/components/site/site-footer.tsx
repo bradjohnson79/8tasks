@@ -12,8 +12,8 @@ export function SiteFooter() {
             <Logo />
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Discover earning opportunities from third-party providers. 8Tasks
-            doesn&apos;t employ taskers, hold funds or pay users.
+            Discover earning opportunities from third-party providers. 8Tasks doesn&apos;t employ
+            taskers, hold funds or pay users.
           </p>
           <AffiliateNotice />
         </div>

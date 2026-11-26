@@ -20,3 +20,13 @@ describe("seed data", () => {
     expect(text).not.toMatch(/\$|€|£|earn up to|per hour|guaranteed/i);
   });
 });
+
+describe("category merges", () => {
+  it("keeps Photo Scouting and retires Micro Tasks into AI & Data", async () => {
+    const { RETIRED_CATEGORIES } = await import("./seed-data");
+    const slugs = CATEGORY_SEED.map((c) => c.slug);
+    expect(slugs).toContain("photo-scouting");
+    expect(slugs).not.toContain("micro-tasks");
+    expect(slugs).toContain(RETIRED_CATEGORIES["micro-tasks"]);
+  });
+});

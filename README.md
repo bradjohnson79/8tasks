@@ -30,7 +30,8 @@ Then:
 npm run db:migrate                # as owner; creates tables, RLS, app_runtime/app_admin roles
 psql -d eighttasks -c "grant app_runtime to eighttasks_app; grant app_admin to eighttasks_admin;"
 npm run db:seed                   # 8 categories + flagged demo providers (never in production)
-npm run dev
+npm run admin:create -- --email you@example.com --name "Your Name"
+npm run dev                       # then sign in at http://localhost:3000/admin/login
 ```
 
 ## Scripts
@@ -41,6 +42,8 @@ npm run dev
 | `npm run db:generate` | Generate a migration from `src/db/schema` |
 | `npm run db:migrate` | Apply migrations (uses `MIGRATION_DATABASE_URL`) |
 | `npm run db:seed [-- --categories-only]` | Seed categories (+ demo data outside production) |
+| `npm run admin:create -- --email you@x.com --name "You"` | Create/promote an admin (prompts for password) |
+| `npm run test:e2e` | Local Playwright admin flow (needs a fresh admin without 2FA; see `tests/e2e/admin-flow.cjs`) |
 
 ## Environment variables
 See [`.env.example`](.env.example). Never commit real values.

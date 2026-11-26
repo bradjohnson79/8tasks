@@ -1,13 +1,23 @@
 /**
  * Seed content.
  *
- * CATEGORY_SEED: the proposed 8 mission categories. Admin-configurable later.
- * Pending founder confirmation against docs/PROJECT_BLUEPRINT.md.
+ * CATEGORY_SEED: the 8 mission categories (founder-reviewed 2026-11-26). Admin-configurable.
+ * Photo Scouting added and Micro Tasks merged into AI & Data on founder request.
  *
  * DEMO_PROVIDERS: fictional placeholders for building the UI. Every row is written
  * with is_demo = true, uses reserved example.com/.test URLs, and states it is a demo.
  * They contain NO payouts, earnings, ratings or endorsements (CLAUDE.md rule 1).
  */
+
+/**
+ * Categories that were merged into another one. The seed moves their subcategories and
+ * opportunities to the target, then removes the old category.
+ * 2026-11-26: Micro Tasks merged into AI Training & Data Tasks (to keep 8 categories
+ * when Photo Scouting was added).
+ */
+export const RETIRED_CATEGORIES: Record<string, string> = {
+  "micro-tasks": "ai-data-tasks",
+};
 
 export type CategorySeed = {
   slug: string;
@@ -34,8 +44,7 @@ export const CATEGORY_SEED: CategorySeed[] = [
   {
     slug: "app-website-testing",
     name: "App & Website Testing",
-    description:
-      "Try new apps and websites and report what works and what doesn't.",
+    description: "Try new apps and websites and report what works and what doesn't.",
     icon: "monitor-smartphone",
     sortOrder: 2,
     subcategories: [
@@ -59,8 +68,7 @@ export const CATEGORY_SEED: CategorySeed[] = [
   {
     slug: "mystery-shopping",
     name: "Mystery Shopping",
-    description:
-      "Visit stores, restaurants or services and report on the experience.",
+    description: "Visit stores, restaurants or services and report on the experience.",
     icon: "shopping-bag",
     sortOrder: 4,
     subcategories: [
@@ -70,11 +78,24 @@ export const CATEGORY_SEED: CategorySeed[] = [
     ],
   },
   {
+    slug: "photo-scouting",
+    name: "Photo Scouting",
+    description:
+      "Photograph storefronts, store shelves, products and places for companies that need real-world images.",
+    icon: "camera",
+    sortOrder: 5,
+    subcategories: [
+      { slug: "storefronts-locations", name: "Storefronts & locations" },
+      { slug: "shelf-checks", name: "Store shelf checks" },
+      { slug: "product-photos", name: "Product photos" },
+    ],
+  },
+  {
     slug: "product-testing",
     name: "Product Testing",
     description: "Try products at home and share honest feedback.",
     icon: "package-open",
-    sortOrder: 5,
+    sortOrder: 6,
     subcategories: [
       { slug: "home-testing", name: "At-home testing" },
       { slug: "taste-tests", name: "Taste tests" },
@@ -84,22 +105,13 @@ export const CATEGORY_SEED: CategorySeed[] = [
     slug: "ai-data-tasks",
     name: "AI Training & Data Tasks",
     description:
-      "Help improve AI systems by rating, labelling and writing examples.",
+      "Help improve AI systems and complete short online tasks: rating, labelling and reviewing content.",
     icon: "sparkles",
-    sortOrder: 6,
+    sortOrder: 7,
     subcategories: [
       { slug: "data-labelling", name: "Data labelling" },
       { slug: "ai-evaluation", name: "AI response evaluation" },
       { slug: "search-evaluation", name: "Search evaluation" },
-    ],
-  },
-  {
-    slug: "micro-tasks",
-    name: "Micro Tasks",
-    description: "Short online tasks you can fit into spare minutes.",
-    icon: "list-checks",
-    sortOrder: 7,
-    subcategories: [
       { slug: "categorisation", name: "Categorisation" },
       { slug: "content-moderation", name: "Content review" },
     ],
@@ -154,8 +166,7 @@ export const DEMO_PROVIDERS: DemoProvider[] = [
         slug: "member-surveys",
         title: "Demo: member surveys",
         category: "surveys",
-        summary:
-          "Placeholder listing showing a provider-level survey opportunity.",
+        summary: "Placeholder listing showing a provider-level survey opportunity.",
       },
     ],
   },
@@ -174,8 +185,7 @@ export const DEMO_PROVIDERS: DemoProvider[] = [
         slug: "website-tests",
         title: "Demo: website usability tests",
         category: "app-website-testing",
-        summary:
-          "Placeholder listing showing a provider-level testing opportunity.",
+        summary: "Placeholder listing showing a provider-level testing opportunity.",
       },
     ],
   },
@@ -194,8 +204,7 @@ export const DEMO_PROVIDERS: DemoProvider[] = [
         slug: "focus-groups",
         title: "Demo: focus groups",
         category: "paid-research",
-        summary:
-          "Placeholder listing showing a provider-level research opportunity.",
+        summary: "Placeholder listing showing a provider-level research opportunity.",
       },
     ],
   },

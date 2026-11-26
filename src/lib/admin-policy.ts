@@ -1,7 +1,5 @@
 export class AdminAuthError extends Error {
-  constructor(
-    public readonly reason: "unauthenticated" | "not_admin" | "mfa_required",
-  ) {
+  constructor(public readonly reason: "unauthenticated" | "not_admin" | "mfa_required") {
     super(`Admin access denied: ${reason}`);
   }
 }

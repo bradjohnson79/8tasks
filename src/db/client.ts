@@ -30,9 +30,7 @@ export function runtimeDb(): Db {
 export async function withPublicDb<T>(fn: (tx: Tx) => Promise<T>): Promise<T> {
   const showDemo = shouldShowDemoData(serverEnv());
   return runtimeDb().transaction(async (tx) => {
-    await tx.execute(
-      sql`select set_config('app.show_demo', ${showDemo ? "on" : "off"}, true)`,
-    );
+    await tx.execute(sql`select set_config('app.show_demo', ${showDemo ? "on" : "off"}, true)`);
     return fn(tx);
   });
 }

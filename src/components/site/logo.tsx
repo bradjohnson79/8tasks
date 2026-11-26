@@ -6,10 +6,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <Link
       href="/"
-      className={cn(
-        "flex items-center gap-2 font-semibold tracking-tight",
-        className,
-      )}
+      className={cn("flex items-center gap-2 font-semibold tracking-tight", className)}
       aria-label="8Tasks home"
     >
       <span className="grid size-8 place-items-center rounded-xl bg-mint text-sm font-bold text-navy">

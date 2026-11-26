@@ -29,6 +29,10 @@ to the opportunity, and logs the click. DB CHECK constraint and route both requi
 Responses are `no-store`, `noindex`, `Referrer-Policy: no-referrer`. Outbound anchors use `rel="sponsored nofollow noopener"`.
 
 ## Admin auth
+Flow: `npm run admin:create` → `/admin/login` → forced `/admin/setup-2fa` (TOTP + backup codes) →
+panel. Until TOTP is enabled, every `/admin/*` page redirects to setup and every action throws.
+Pages use `requireAdminPage()` (redirects); server actions use `requireAdmin()` (throws). Admin pages
+are `noindex`. Affiliate URLs are validated (https, public hostname, no credentials) in Zod and by a DB CHECK.
 Better Auth email/password, public sign-up disabled, 12-char minimum password, built-in rate limiting,
 12h sessions. `requireAdmin()` requires `role = 'admin'`, not banned, and `twoFactorEnabled` (TOTP).
 Every admin page/action must call it server-side.

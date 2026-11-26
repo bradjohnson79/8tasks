@@ -9,9 +9,7 @@ function Sheet(props: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger(
-  props: React.ComponentProps<typeof SheetPrimitive.Trigger>,
-) {
+function SheetTrigger(props: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
@@ -50,16 +48,8 @@ function SheetContent({
   );
 }
 
-function SheetTitle({
-  className,
-  ...props
-}: React.ComponentProps<typeof SheetPrimitive.Title>) {
-  return (
-    <SheetPrimitive.Title
-      className={cn("font-semibold", className)}
-      {...props}
-    />
-  );
+function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {
+  return <SheetPrimitive.Title className={cn("font-semibold", className)} {...props} />;
 }
 
 function SheetDescription({
@@ -74,11 +64,4 @@ function SheetDescription({
   );
 }
 
-export {
-  Sheet,
-  SheetTrigger,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetDescription,
-};
+export { Sheet, SheetTrigger, SheetClose, SheetContent, SheetTitle, SheetDescription };

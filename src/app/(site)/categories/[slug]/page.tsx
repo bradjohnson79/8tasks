@@ -31,9 +31,7 @@ export default async function CategoryPage({ params }: Props) {
           <CategoryIcon name={category.icon} className="size-6" />
         </span>
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {category.name}
-          </h1>
+          <h1 className="text-3xl font-semibold tracking-tight">{category.name}</h1>
           {category.description && (
             <p className="mt-1 text-muted-foreground">{category.description}</p>
           )}
@@ -52,8 +50,8 @@ export default async function CategoryPage({ params }: Props) {
         </>
       ) : (
         <p className="rounded-2xl border border-dashed p-8 text-center text-muted-foreground">
-          No listings in this category yet. We only list providers we have an
-          approved partnership with.
+          No listings in this category yet. We only list providers we have an approved partnership
+          with.
         </p>
       )}
     </div>

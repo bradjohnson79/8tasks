@@ -1,6 +1,8 @@
 import { ExternalLinkIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CountryBadges } from "./country-badges";
+import Link from "next/link";
 
 type Props = {
   id: string;
@@ -11,6 +13,7 @@ type Props = {
   isDemo: boolean;
   hasLink: boolean;
   providerName: string;
+  providerSlug: string;
 };
 
 export function OpportunityCard(o: Props) {
@@ -19,24 +22,24 @@ export function OpportunityCard(o: Props) {
       <div className="flex flex-wrap items-center gap-2">
         {o.isSponsored && <Badge variant="secondary">Sponsored</Badge>}
         {o.isDemo && <Badge variant="warning">Demo</Badge>}
-        {o.countries.length > 0 && (
-          <Badge variant="outline">{o.countries.join(" · ")}</Badge>
-        )}
+        <CountryBadges countries={o.countries} />
       </div>
       <div className="flex-1 space-y-1.5">
         <h3 className="font-semibold leading-snug">{o.title}</h3>
-        <p className="text-sm text-muted-foreground">by {o.providerName}</p>
-        {o.summary && (
-          <p className="text-sm text-muted-foreground">{o.summary}</p>
-        )}
+        <p className="text-sm text-muted-foreground">
+          by{" "}
+          <Link
+            href={`/providers/${o.providerSlug}`}
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            {o.providerName}
+          </Link>
+        </p>
+        {o.summary && <p className="text-sm text-muted-foreground">{o.summary}</p>}
       </div>
       {o.hasLink && (
         <Button asChild className="w-full sm:w-auto">
-          <a
-            href={`/go/${o.id}`}
-            rel="sponsored nofollow noopener"
-            target="_blank"
-          >
+          <a href={`/go/${o.id}`} rel="sponsored nofollow noopener" target="_blank">
             Visit provider <ExternalLinkIcon />
           </a>
         </Button>

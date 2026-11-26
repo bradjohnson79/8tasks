@@ -10,13 +10,7 @@ type Props = {
   opportunityCount: number;
 };
 
-export function CategoryCard({
-  slug,
-  name,
-  description,
-  icon,
-  opportunityCount,
-}: Props) {
+export function CategoryCard({ slug, name, description, icon, opportunityCount }: Props) {
   return (
     <Link
       href={`/categories/${slug}`}
@@ -27,9 +21,7 @@ export function CategoryCard({
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1.5 self-stretch">
         <span className="font-semibold leading-snug">{name}</span>
-        {description && (
-          <span className="text-sm text-muted-foreground">{description}</span>
-        )}
+        {description && <span className="text-sm text-muted-foreground">{description}</span>}
         <span className="mt-auto flex items-center justify-between pt-1 text-sm sm:pt-3">
           <span className="text-muted-foreground">
             {opportunityCount > 0

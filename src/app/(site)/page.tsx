@@ -53,16 +53,11 @@ export default async function HomePage() {
               Find your next <span className="text-mint">mission</span>.
             </h1>
             <p className="mt-5 max-w-xl text-lg text-white/75 text-pretty">
-              Discover surveys, app and website testing, paid research, mystery
-              shopping and more from established third-party providers, all in
-              one place.
+              Discover surveys, app and website testing, paid research, mystery shopping and more
+              from established third-party providers, all in one place.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button
-                asChild
-                size="lg"
-                className="bg-mint text-navy hover:bg-mint/90"
-              >
+              <Button asChild size="lg" className="bg-mint text-navy hover:bg-mint/90">
                 <Link href="#categories">
                   Browse categories <ArrowRightIcon />
                 </Link>
@@ -89,9 +84,7 @@ export default async function HomePage() {
         className="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 sm:py-20"
       >
         <div className="mb-8 flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Mission categories
-          </h2>
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Mission categories</h2>
           <p className="text-muted-foreground">
             Pick a type of task that fits your time and skills.
           </p>
@@ -115,20 +108,15 @@ export default async function HomePage() {
       <section id="how-it-works" className="scroll-mt-20 border-y bg-card">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
           <div className="mb-10 flex flex-col gap-2">
-            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              How 8Tasks works
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">How 8Tasks works</h2>
             <p className="max-w-2xl text-muted-foreground">
-              8Tasks is a discovery site. We don&apos;t employ taskers, hold
-              your money or check your work. Providers do all of that directly.
+              8Tasks is a discovery site. We don&apos;t employ taskers, hold your money or check
+              your work. Providers do all of that directly.
             </p>
           </div>
           <ol className="grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li
-                key={s.title}
-                className="flex gap-4 rounded-2xl bg-background p-5"
-              >
+              <li key={s.title} className="flex gap-4 rounded-2xl bg-background p-5">
                 <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
                   <s.icon className="size-5" aria-hidden />
                 </span>

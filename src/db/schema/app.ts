@@ -22,11 +22,7 @@ import { user } from "./auth";
 
 /** Per-provider affiliate facts default to "unknown" (CLAUDE.md rule 6). */
 export const capability = pgEnum("capability", ["unknown", "yes", "no"]);
-export const publishStatus = pgEnum("publish_status", [
-  "draft",
-  "published",
-  "archived",
-]);
+export const publishStatus = pgEnum("publish_status", ["draft", "published", "archived"]);
 /** Where an opportunity's details come from. Individual missions need authorized data. */
 export const opportunityDataSource = pgEnum("opportunity_data_source", [
   "provider_level",
@@ -109,14 +105,8 @@ export const providers = pgTable(
   },
   (t) => [
     slugCheck("providers_slug_format", t.slug),
-    check(
-      "providers_website_https",
-      sql`${t.websiteUrl} is null or ${t.websiteUrl} ~ '^https://'`,
-    ),
-    check(
-      "providers_logo_https",
-      sql`${t.logoUrl} is null or ${t.logoUrl} ~ '^https://'`,
-    ),
+    check("providers_website_https", sql`${t.websiteUrl} is null or ${t.websiteUrl} ~ '^https://'`),
+    check("providers_logo_https", sql`${t.logoUrl} is null or ${t.logoUrl} ~ '^https://'`),
   ],
 );
 
@@ -140,10 +130,7 @@ export const affiliateLinks = pgTable(
   },
   (t) => [
     index("affiliate_links_provider_idx").on(t.providerId),
-    check(
-      "affiliate_links_destination_https",
-      sql`${t.destinationUrl} ~ '^https://[^\\s]+$'`,
-    ),
+    check("affiliate_links_destination_https", sql`${t.destinationUrl} ~ '^https://[^\\s]+$'`),
   ],
 );
 

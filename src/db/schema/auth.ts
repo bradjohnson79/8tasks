@@ -3,14 +3,7 @@
  * Field names follow Better Auth's expected keys; columns are snake_case via drizzle casing.
  * Admin role lives on `user.role` (replaces the earlier Supabase `profiles` idea).
  */
-import {
-  boolean,
-  index,
-  integer,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { boolean, index, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text().primaryKey(),
