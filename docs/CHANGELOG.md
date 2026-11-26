@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-26: Production launch
+- Founder-approved production deploy of `main` to Vercel; 8tasks.com + www.8tasks.com added to the project.
+- Production env vars (runtime/admin DB roles on Neon `main`, auth secret, BETTER_AUTH_URL=https://8tasks.com). Demo data is off in production.
+
 ## 2026-11-26: Hero artwork restored
 - Founder exception: phone artwork back in the homepage hero on wide screens, restyled to the dark design system, static.
 

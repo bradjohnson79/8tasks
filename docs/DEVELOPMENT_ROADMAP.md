@@ -21,8 +21,11 @@
 - [x] Playwright admin flow script (`npm run test:e2e`, local only)
 - [ ] CI (lint, typecheck, test, build)
 - [x] Neon preview branch + runtime/admin login roles + preview-only Vercel env vars
-- [ ] Production Neon login roles + production env vars
-- [ ] Production deploy (**founder approval required**)
+- [x] Production Neon login roles + production env vars
+- [x] Production deploy (approved 2026-11-26)
+- [ ] Cloudflare DNS for 8tasks.com → Vercel
+- [ ] Create production admin account
+- [ ] Final legal copy before promoting the site
 
 ## Later (not approved yet)
 User accounts, My Daily 8, creator program, conversion ingestion, AI workflows, PWA install.

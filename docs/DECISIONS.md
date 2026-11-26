@@ -24,6 +24,7 @@
 | 2026-11-26 | Saved missions stored on the device (localStorage) | User accounts not yet approved; saving still useful without sign-in |
 | 2026-11-26 | Nearby uses a user-chosen country/region/city, never GPS; providers operating in an area are shown instead of invented local assignments | Update §8 |
 | 2026-11-26 | **Hero artwork restored as the one exception** to the spec's no-graphics rule: static (no float), design-system colours, wide screens (≥1024px) beside the headline; hidden on phones so search and Daily 8 stay near the top | Founder decision |
+| 2026-11-26 | **Production go-live approved by founder**: `main` deployed to Vercel production, domains 8tasks.com (+ www → apex 308), Neon `main` with least-privilege runtime/admin login roles | Founder instruction; production shows real listings only (none yet) |
 
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
