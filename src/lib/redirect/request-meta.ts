@@ -13,11 +13,17 @@ export function isBotUA(ua: string | null): boolean {
 }
 
 /** Only keeps the path of a same-origin referer; anything else is dropped. */
-export function sourcePathFromReferer(referer: string | null, siteOrigin: string): string | null {
+export function sourcePathFromReferer(
+  referer: string | null,
+  siteOrigins: string | string[],
+): string | null {
   if (!referer) return null;
   try {
     const url = new URL(referer);
-    if (url.origin !== new URL(siteOrigin).origin) return null;
+    const allowed = (Array.isArray(siteOrigins) ? siteOrigins : [siteOrigins]).map(
+      (o) => new URL(o).origin,
+    );
+    if (!allowed.includes(url.origin)) return null;
     return url.pathname.slice(0, 256);
   } catch {
     return null;

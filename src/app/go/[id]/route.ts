@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { resolveOpportunityRedirect } from "@/db/queries/public";
 import { serverEnv } from "@/lib/env";
+import { resolveSiteUrls } from "@/lib/site-url";
 import {
   countryFromHeader,
   deviceTypeFromUA,
@@ -28,7 +29,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const ua = req.headers.get("user-agent");
   const url = await resolveOpportunityRedirect(parsed.data, {
-    sourcePath: sourcePathFromReferer(req.headers.get("referer"), serverEnv().BETTER_AUTH_URL),
+    sourcePath: sourcePathFromReferer(
+      req.headers.get("referer"),
+      resolveSiteUrls(serverEnv()).trustedOrigins,
+    ),
     country: countryFromHeader(req.headers.get("x-vercel-ip-country")),
     deviceType: deviceTypeFromUA(ua),
     isBot: isBotUA(ua),

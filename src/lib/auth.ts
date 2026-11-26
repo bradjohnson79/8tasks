@@ -6,6 +6,7 @@ import { admin, twoFactor } from "better-auth/plugins";
 import { runtimeDb } from "@/db/client";
 import * as schema from "@/db/schema";
 import { serverEnv } from "./env";
+import { resolveSiteUrls } from "./site-url";
 
 /**
  * Better Auth: admin-only accounts in Phase 1–2 (no public user accounts yet).
@@ -14,9 +15,11 @@ import { serverEnv } from "./env";
  */
 function createAuth() {
   const env = serverEnv();
+  const { baseURL, trustedOrigins } = resolveSiteUrls(env);
   return betterAuth({
     appName: "8Tasks",
-    baseURL: env.BETTER_AUTH_URL,
+    baseURL,
+    trustedOrigins,
     secret: env.BETTER_AUTH_SECRET,
     database: drizzleAdapter(runtimeDb(), {
       provider: "pg",

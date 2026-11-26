@@ -5,7 +5,11 @@ const serverEnvSchema = z.object({
   DATABASE_URL: z.string().url(),
   ADMIN_DATABASE_URL: z.string().url(),
   BETTER_AUTH_SECRET: z.string().min(32),
-  BETTER_AUTH_URL: z.string().url(),
+  // Optional on Vercel previews, where the URL comes from VERCEL_* system variables.
+  BETTER_AUTH_URL: z.string().url().optional(),
+  VERCEL_URL: z.string().optional(),
+  VERCEL_BRANCH_URL: z.string().optional(),
+  VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
   SHOW_DEMO_DATA: z.enum(["true", "false"]).optional(),
   VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
 });
