@@ -56,4 +56,37 @@ describe("formatCompensation", () => {
     ).toBeUndefined();
     expect(sortableAmount({ type: "commission", recurring: true })).toBeUndefined();
   });
+
+  it("never shows non-cash rewards as cash and never sorts them", () => {
+    const nonCash = [
+      { type: "gift_card", amount: 10, currency: "USD" },
+      { type: "free_product" },
+      { type: "competition_prize" },
+      { type: "licensing_royalties" },
+      { type: "non_cash", label: "Points" },
+    ] as const;
+    for (const c of nonCash) {
+      const d = formatCompensation(c);
+      expect(d.isAmount).toBe(false);
+      expect(sortableAmount(c)).toBeUndefined();
+    }
+    expect(formatCompensation({ type: "gift_card", amount: 10, currency: "USD" }).primary).toBe(
+      "$10 USD gift card",
+    );
+    expect(formatCompensation({ type: "free_product" }).label).toMatch(/not cash/i);
+  });
+  it("shows the commission basis and the unit an amount applies to", () => {
+    expect(
+      formatCompensation({ type: "commission", recurring: false, basis: "percent" }).secondary,
+    ).toBe("Percentage-based · performance-based");
+    // Audio-hour pay is labelled as such, never as an hourly wage.
+    const audio = formatCompensation({
+      type: "fixed",
+      amount: 30,
+      currency: "USD",
+      per: "audio hour",
+    });
+    expect(audio.unit).toBe("USD / audio hour");
+    expect(audio.label).toBe("$30 USD per audio hour");
+  });
 });

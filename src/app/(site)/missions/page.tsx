@@ -7,30 +7,41 @@ import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
 import { FilterChips } from "@/components/app/filter-chips";
 import { MissionGrid } from "@/components/app/mission-card";
 import { PathwayGrid } from "@/components/app/pathway-grid";
+import { SaveSearchButton } from "@/components/app/save-search-button";
+import { SubsectionLinks } from "@/components/app/subsection-links";
 import { SearchBar } from "@/components/app/search-bar";
 import { applyDiscovery, availableFilters, FILTER_BY_ID, HOME_CHIPS } from "@/lib/missions/filters";
 import { buildHref, param, params, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
-import { PATHWAY_BY_SLUG, PATHWAYS, type PathwaySlug } from "@/lib/taxonomy";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
+import { discoveryIcon } from "@/lib/discovery/icons";
 
 export const dynamic = "force-dynamic";
 
 type Props = { searchParams: Promise<SearchParams> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const path = param(await searchParams, "path") as PathwaySlug | undefined;
-  return { title: (path && PATHWAY_BY_SLUG[path]?.title) || "Discover missions" };
+  const path = param(await searchParams, "path");
+  const { pathways } = await getDiscoveryConfig();
+  const pathway = pathways.find((p) => p.slug === path);
+  return {
+    title: pathway?.title || "Discover missions",
+    alternates: { canonical: pathway ? `/missions?path=${pathway.slug}` : "/missions" },
+  };
 }
 
 export default async function MissionsPage({ searchParams }: Props) {
   const sp = await searchParams;
   const q = param(sp, "q");
-  const pathSlug = param(sp, "path") as PathwaySlug | undefined;
-  const pathway = pathSlug ? PATHWAY_BY_SLUG[pathSlug] : undefined;
+  const pathSlug = param(sp, "path");
+  const config = await getDiscoveryConfig();
+  const pathway = config.pathways.find((p) => p.slug === pathSlug);
+  const PathIcon = discoveryIcon(pathway?.icon);
+  const accent = pathway?.accent ?? "#53E6A0";
   const filters = params(sp, "f").filter((id) => FILTER_BY_ID[id] && id !== "for-you");
 
   const all = await loadOpportunities();
-  const scoped = pathway ? applyDiscovery(all, { filters: [pathway.slug] }) : all;
+  const scoped = pathway ? all.filter((o) => o.pathways?.includes(pathway.slug)) : all;
   const available = availableFilters(scoped);
   const items = applyDiscovery(scoped, { q, filters });
 
@@ -59,9 +70,9 @@ export default async function MissionsPage({ searchParams }: Props) {
           <div className="mt-1 flex items-start gap-3">
             <span
               className="grid size-12 shrink-0 place-items-center rounded-xl"
-              style={{ backgroundColor: `${pathway.accent}1f`, color: pathway.accent }}
+              style={{ backgroundColor: `${accent}1f`, color: accent }}
             >
-              <pathway.icon className="size-6" aria-hidden />
+              <PathIcon className="size-6" aria-hidden />
             </span>
             <div>
               <h1 className="text-[28px] leading-tight font-bold tracking-tight sm:text-[32px]">
@@ -93,10 +104,11 @@ export default async function MissionsPage({ searchParams }: Props) {
 
       {!pathway && (
         <section aria-label="Ways to earn">
-          <PathwayGrid pathways={PATHWAYS} />
+          <PathwayGrid pathways={config.pathways} />
         </section>
       )}
 
+      {!pathway && <SubsectionLinks subsections={config.subsections} />}
       <FilterChips chips={chips} label="Quick filters" />
       <AdvancedFilters
         action="/missions"
@@ -106,9 +118,27 @@ export default async function MissionsPage({ searchParams }: Props) {
         open={param(sp, "panel") === "1"}
       />
 
-      <p className="text-sm text-text-2" role="status">
-        {items.length} {items.length === 1 ? "listing" : "listings"}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-text-2" role="status">
+          {items.length} {items.length === 1 ? "listing" : "listings"}
+        </p>
+        {(q || filters.length > 0 || pathway) && (
+          <SaveSearchButton
+            search={{
+              q,
+              f: filters,
+              path: pathway?.slug,
+              label: [
+                q && `“${q}”`,
+                pathway?.title,
+                ...filters.map((id) => FILTER_BY_ID[id]?.label),
+              ]
+                .filter(Boolean)
+                .join(" · "),
+            }}
+          />
+        )}
+      </div>
       {items.length ? (
         <>
           <MissionGrid items={items} headingLevel={2} />

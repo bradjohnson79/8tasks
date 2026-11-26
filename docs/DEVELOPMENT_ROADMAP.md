@@ -29,6 +29,11 @@
 - [x] For Brands page + Staff Admin footer link
 - [ ] Live Impact connector, then Awin, FlexOffers, CJ, Daisycon (after accounts exist)
 - [ ] Import full site_links.json (58 rows) into the earner directory
+- [x] Master prompt PR: DB compensation/attributes, multi-category, discovery groups admin, import, subsections, free access, CoffeeModes features, SEO, About/Contact/Press
+- [ ] Apply migrations 0004/0005 to Neon main + merge the master-prompt PR (founder approval)
+- [ ] Founder: verify Dreamstime/JoinBrands countries + copy, then publish
+- [ ] Email service (Resend) for alerts + report notifications (cost approval)
+- [ ] `opportunity_locations` + Nearby from real data
 - [ ] Final legal copy before promoting the site
 
 ## Later (not approved yet)

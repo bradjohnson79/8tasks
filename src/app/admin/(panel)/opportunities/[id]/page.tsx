@@ -5,7 +5,7 @@ import { FormMessage } from "@/components/admin/form-message";
 import { OpportunityForm } from "@/components/admin/opportunity-form";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { Badge } from "@/components/ui/badge";
-import { getOpportunityFormOptions } from "@/db/queries/admin";
+import { getOpportunityFormOptions, getOpportunityMemberships } from "@/db/queries/admin";
 import { opportunities } from "@/db/schema";
 import { requireAdminPage } from "@/lib/admin";
 import { saveOpportunity } from "../../../actions";
@@ -25,7 +25,10 @@ export default async function EditOpportunityPage({
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const [opportunity] = await db.select().from(opportunities).where(eq(opportunities.id, id));
   if (!opportunity) notFound();
-  const options = await getOpportunityFormOptions(db);
+  const [options, memberships] = await Promise.all([
+    getOpportunityFormOptions(db),
+    getOpportunityMemberships(db, id),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -47,6 +50,7 @@ export default async function EditOpportunityPage({
         action={saveOpportunity.bind(null, opportunity.id)}
         opportunity={opportunity}
         options={options}
+        memberships={memberships}
       />
     </div>
   );

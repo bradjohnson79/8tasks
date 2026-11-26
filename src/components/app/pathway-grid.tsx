@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { Pathway } from "@/lib/taxonomy";
+import type { DiscoveryGroup as Pathway } from "@/lib/discovery/defaults";
+import { discoveryIcon } from "@/lib/discovery/icons";
 import { cn } from "@/lib/utils";
 
 /** "How do you want to earn?" tiles (design update §4–5): 2×2 on mobile, 4 across on desktop. */
@@ -10,7 +11,8 @@ export function PathwayTile({
   pathway: Pathway;
   selected?: boolean;
 }) {
-  const Icon = pathway.icon;
+  const Icon = discoveryIcon(pathway.icon);
+  const accent = pathway.accent ?? "#53E6A0";
   return (
     <Link
       href={`/missions?path=${pathway.slug}`}
@@ -19,11 +21,11 @@ export function PathwayTile({
         "group flex h-full min-h-[76px] items-center gap-3 rounded-2xl border bg-surface p-3 transition-colors hover:border-[color:var(--accent-color)] sm:p-4",
         selected && "border-[color:var(--accent-color)] bg-elevated",
       )}
-      style={{ "--accent-color": pathway.accent } as React.CSSProperties}
+      style={{ "--accent-color": accent } as React.CSSProperties}
     >
       <span
         className="grid size-10 shrink-0 place-items-center rounded-xl"
-        style={{ backgroundColor: `${pathway.accent}1f`, color: pathway.accent }}
+        style={{ backgroundColor: `${accent}1f`, color: accent }}
       >
         <Icon className="size-5" aria-hidden />
       </span>

@@ -64,6 +64,8 @@ export const CATEGORY_SEED: CategorySeed[] = [
     subcategories: [
       { slug: "usability-testing", name: "Usability testing" },
       { slug: "bug-testing", name: "Bug testing" },
+      { slug: "prototype-testing", name: "Prototype testing" },
+      { slug: "video-feedback", name: "Video feedback" },
     ],
   },
   {
@@ -76,6 +78,11 @@ export const CATEGORY_SEED: CategorySeed[] = [
       { slug: "storefronts-locations", name: "Storefronts & locations" },
       { slug: "shelf-checks", name: "Store shelf checks" },
       { slug: "product-photos", name: "Product photos" },
+      { slug: "stock-licensing", name: "Stock photo licensing" },
+      { slug: "property-inspections", name: "Property inspection photos" },
+      { slug: "local-verification", name: "Local verification photos" },
+      { slug: "visual-data-collection", name: "Visual data collection" },
+      { slug: "vehicle-photography", name: "Vehicle photography" },
     ],
   },
   {
@@ -133,6 +140,15 @@ export const CATEGORY_SEED: CategorySeed[] = [
       { slug: "influencer-collaborations", name: "Influencer collaborations" },
       { slug: "brand-ambassador", name: "Brand ambassador opportunities" },
       { slug: "sponsored-newsletters", name: "Sponsored newsletters" },
+      { slug: "direct-brand-collaborations", name: "Direct brand collaborations" },
+      // Not "product-testing": that slug was retired into Paid Research.
+      { slug: "brand-product-testing", name: "Brand product testing" },
+      { slug: "product-descriptions-copywriting", name: "Product descriptions & copywriting" },
+      // Genuine firsthand experiences only.
+      { slug: "video-testimonials", name: "Video testimonials" },
+      { slug: "voiceover-narration", name: "Voiceover & narration" },
+      { slug: "software-reviews", name: "Software reviews" },
+      { slug: "written-reviews", name: "Written reviews" },
     ],
   },
   {
@@ -144,6 +160,9 @@ export const CATEGORY_SEED: CategorySeed[] = [
     subcategories: [
       { slug: "game-testing", name: "Game testing" },
       { slug: "entertainment-feedback", name: "Entertainment feedback" },
+      { slug: "game-studio-playtesting", name: "Game studio playtesting" },
+      { slug: "beta-testing", name: "Beta testing" },
+      { slug: "game-feedback", name: "Game feedback" },
     ],
   },
   {
@@ -158,6 +177,9 @@ export const CATEGORY_SEED: CategorySeed[] = [
       { slug: "academic-studies", name: "Academic studies" },
       { slug: "home-testing", name: "At-home product testing" },
       { slug: "taste-tests", name: "Taste tests" },
+      { slug: "share-your-expertise", name: "Share your expertise" },
+      { slug: "expert-consultations", name: "Expert consultations" },
+      { slug: "professional-research", name: "Professional research" },
     ],
   },
   {
@@ -178,6 +200,8 @@ export const CATEGORY_SEED: CategorySeed[] = [
       { slug: "transcription", name: "Transcription" },
       { slug: "translation", name: "Translation" },
       { slug: "captioning", name: "Captioning" },
+      { slug: "photo-video-collection", name: "Photo & video collection" },
+      { slug: "audio-recording", name: "Audio recording" },
     ],
   },
 ];

@@ -8,12 +8,15 @@ import { CompensationDisplay } from "@/components/app/compensation-display";
 import { Container } from "@/components/app/container";
 import { MissionMetadata } from "@/components/app/mission-metadata";
 import { StatusPill } from "@/components/app/status-pill";
+import { MissionGrid } from "@/components/app/mission-card";
+import { ReportListing } from "@/components/app/report-listing";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
 import { formatCompensation } from "@/lib/missions/compensation";
-import { pathwaysFor } from "@/lib/missions/filters";
-import { allMetadata } from "@/lib/missions/metadata";
-import { loadOpportunity } from "@/lib/missions/source";
+import { applyDiscovery } from "@/lib/missions/filters";
+import { allMetadata, formatVerified, isClosed } from "@/lib/missions/metadata";
+import { loadOpportunities, loadOpportunity } from "@/lib/missions/source";
 import type { Opportunity } from "@/lib/missions/types";
-import { categoryDisplay, PATHWAY_BY_SLUG } from "@/lib/taxonomy";
+import { categoryDisplay } from "@/lib/taxonomy";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +29,14 @@ async function load(id: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const o = await load((await params).id);
-  return o ? { title: o.title, description: o.summary } : {};
+  return o
+    ? {
+        title: o.title,
+        description: o.summary,
+        alternates: { canonical: `/missions/${o.id}` },
+        ...(o.isDemo ? { robots: { index: false } } : {}),
+      }
+    : {};
 }
 
 /** Cash pay, reimbursement and upfront spending shown as separate lines (design update §10). */
@@ -101,7 +111,18 @@ export default async function MissionDetailPage({ params }: Props) {
   const d = categoryDisplay(o.categorySlug);
   const Icon = d.icon;
   const pay = formatCompensation(o.compensation);
-  const canContinue = !o.isDemo && o.hasOutboundLink;
+  const closed = isClosed(o);
+  const canContinue = !o.isDemo && o.hasOutboundLink && !closed;
+  const { pathways } = await getDiscoveryConfig();
+  const pathwayTitles = (o.pathways ?? [])
+    .map((slug) => pathways.find((p) => p.slug === slug)?.title)
+    .filter(Boolean) as string[];
+  // Closed listings keep their page and point to open alternatives in the same category.
+  const alternatives = closed
+    ? applyDiscovery(await loadOpportunities(), { category: o.categorySlug })
+        .filter((x) => x.id !== o.id)
+        .slice(0, 3)
+    : [];
 
   return (
     <Container className="max-w-3xl pt-4 pb-28 sm:pt-6 lg:pb-8">
@@ -145,9 +166,11 @@ export default async function MissionDetailPage({ params }: Props) {
                 {o.isDemo && (
                   <StatusPill tone="warning">Demo example — not a real offer</StatusPill>
                 )}
+                {closed && <StatusPill tone="warning">Closed</StatusPill>}
+                {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
                 {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
-                {pathwaysFor(o).map((p) => (
-                  <StatusPill key={p}>{PATHWAY_BY_SLUG[p].title}</StatusPill>
+                {pathwayTitles.map((t) => (
+                  <StatusPill key={t}>{t}</StatusPill>
                 ))}
               </div>
             </div>
@@ -165,7 +188,31 @@ export default async function MissionDetailPage({ params }: Props) {
             <MissionMetadata items={allMetadata(o)} className="sm:max-w-[60%] sm:justify-end" />
           </div>
           <PaymentBreakdown o={o} />
+          {o.compensationNote && <p className="text-sm text-text-2">{o.compensationNote}</p>}
+          {o.lastVerifiedAt && (
+            <p className="text-xs text-text-2">{formatVerified(o.lastVerifiedAt)}</p>
+          )}
         </header>
+
+        {closed && (
+          <section
+            aria-labelledby="closed-title"
+            className="flex flex-col gap-3 rounded-2xl border border-warning/40 bg-surface p-5"
+          >
+            <h2 id="closed-title" className="text-lg font-semibold">
+              This opportunity has closed
+            </h2>
+            <p className="text-sm text-text-2">
+              The provider&apos;s closing date has passed. We keep this page for reference.
+            </p>
+            {alternatives.length > 0 && (
+              <>
+                <p className="text-sm font-medium">Open opportunities in {o.categoryName}</p>
+                <MissionGrid items={alternatives} />
+              </>
+            )}
+          </section>
+        )}
 
         {(o.summary || o.description) && (
           <section className="flex flex-col gap-2">
@@ -216,6 +263,7 @@ export default async function MissionDetailPage({ params }: Props) {
           site, under their terms. {pay.label}.
         </p>
         <AffiliateDisclosure />
+        {!o.isDemo && <ReportListing opportunityId={o.id} />}
       </article>
 
       {/* Primary action: sticky above the bottom nav on mobile, inline on desktop (design spec §17) */}
@@ -239,7 +287,11 @@ export default async function MissionDetailPage({ params }: Props) {
               aria-disabled="true"
               className="flex h-12 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-elevated text-[15px] font-semibold text-text-2"
             >
-              {o.isDemo ? "Demo listing: no provider link" : "Provider link coming soon"}
+              {closed
+                ? "This opportunity has closed"
+                : o.isDemo
+                  ? "Demo listing: no provider link"
+                  : "Provider link coming soon"}
             </span>
           )}
         </div>

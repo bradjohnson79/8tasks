@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-26: Master prompt (provider integration & feature update), PR for review
+- Migrations 0004 (columns/tables) + 0005 (RLS, grants, alert functions, seeds). Applied locally and to Neon **preview** only.
+- Verified compensation, attribute, deadline, last-verified and editor's-pick columns on opportunities; non-cash types
+  (gift_card, free_product, competition_prize, licensing_royalties) never shown or sorted as cash.
+- One record in many places: `opportunity_categories` (secondary categories) and `opportunity_groups` (subsections/pathways).
+- Pathways, category tabs and /earn subsections moved to the admin-managed `discovery_groups` table (`/admin/discovery`); defaults unchanged visually.
+- 22 new subcategories (CoffeeModes subsections, photography/content/testing/microtasks additions).
+- Admin: provider commercial terms in admin-only `provider_internal`, opportunity compensation/attributes/placement,
+  provider import with preview (always drafts), inbox for reports/submissions/alert subscribers.
+- Public: `/earn/[subsection]`, "Explore Opportunity" CTA, New This Week (7 days), Ending Soon, Editor's Picks, closed
+  listings (auto-closed at deadline, `/go` refuses), Last verified dates, report form, `/submit-provider`, free alerts
+  opt-in (`/alerts`, nothing sent yet), device-local saved searches, About/Contact/Press, `/legal/free-access`,
+  "Always Free. For Everyone." in the footer, sitemap/robots/OG image/canonical URLs.
+- Paywall guard test; fragment-preservation tests; DB integration tests (RLS + drafts).
+- Dreamstime and JoinBrands loaded as drafts (local + preview) from `data/import/claude_integration_package.json`.
+
 ## 2026-11-26: Affiliate earnings feed, For Brands, Staff Admin
 - Migrations 0002/0003: `affiliate_programs`, `affiliate_transactions`, `affiliate_sync_runs` (admin-only RLS),
   `record_affiliate_postback()`, `affiliate_links.subid_param`, `outbound_clicks.click_id`; applied to Neon main + preview.

@@ -48,14 +48,14 @@ inventing or exaggerating information.
 ## Categories (use these exact slugs)
 | slug | category | subcategory slugs |
 | --- | --- | --- |
-| `surveys` | Surveys & Polls | `online-surveys`, `polls`, `receipt-scanning` |
-| `app-website-testing` | App & Website Testing | `usability-testing`, `bug-testing`, `game-testing` |
-| `paid-research` | Paid Research & Focus Groups | `focus-groups`, `interviews`, `academic-studies` |
-| `mystery-shopping` | Mystery Shopping | `in-store`, `dining`, `phone-online` |
-| `photo-scouting` | Photo Scouting | `storefronts-locations`, `shelf-checks`, `product-photos` |
-| `product-testing` | Product Testing | `home-testing`, `taste-tests` |
-| `ai-data-tasks` | AI Training & Data Tasks | `data-labelling`, `ai-evaluation`, `search-evaluation`, `categorisation`, `content-moderation` |
-| `transcription-translation` | Transcription & Translation | `transcription`, `translation`, `captioning` |
+| `surveys` | Surveys | `online-surveys`, `polls`, `receipt-scanning` |
+| `app-website-testing` | App & Website Testing | `usability-testing`, `bug-testing`, `prototype-testing`, `video-feedback` |
+| `photography` | Photography | `storefronts-locations`, `shelf-checks`, `product-photos`, `stock-licensing`, `property-inspections`, `local-verification`, `visual-data-collection`, `vehicle-photography` |
+| `mystery-shopping` | Mystery Shopping | `in-store`, `dining`, `coffee-shops`, `drive-through`, `hotels-hospitality`, `automotive`, `phone-online`, `online-shopping`, `ecommerce`, `retail-audits`, `entertainment-venues`, `customer-service`, `display-photography`, `inventory-verification`, `pricing-verification` |
+| `content-media` | Content & Media | `video-reviewing`, `ad-evaluation`, `trailer-feedback`, `article-evaluation`, `book-reviewing`, `music-reviewing`, `digital-content-evaluation`, `product-concept-feedback`, `design-feedback`, `consumer-feedback`, `blogging`, `vlogging`, `sponsored-articles`, `content-writing`, `sponsored-videos`, `user-generated-content`, `product-demonstrations`, `product-unboxing`, `affiliate-marketing`, `influencer-collaborations`, `brand-ambassador`, `sponsored-newsletters`, `direct-brand-collaborations`, `brand-product-testing`, `product-descriptions-copywriting`, `video-testimonials`, `voiceover-narration`, `software-reviews`, `written-reviews` |
+| `gaming-entertainment` | Gaming & Entertainment | `game-testing`, `entertainment-feedback`, `game-studio-playtesting`, `beta-testing`, `game-feedback` |
+| `paid-research` | Paid Research | `focus-groups`, `interviews`, `academic-studies`, `home-testing`, `taste-tests`, `share-your-expertise`, `expert-consultations`, `professional-research` |
+| `microtasks-ai` | Microtasks & AI | `ai-evaluation`, `fact-checking`, `data-labelling`, `categorisation`, `search-evaluation`, `ai-training`, `content-moderation`, `transcription`, `translation`, `captioning`, `photo-video-collection`, `audio-recording` |
 
 ## Task
 1. Build a candidate list of **about 30 companies**, at least 3 per category. Some starting
@@ -81,7 +81,7 @@ surprising. Then one JSON object per company in a single JSON array:
   "description": "2–4 factual sentences from the company's own materials. No payout amounts.",
   "countries": ["CA", "US"],
   "countries_source": "https://www.example.com/faq#eligibility",
-  "category": "photo-scouting",
+  "category": "photography",
   "subcategory": "shelf-checks",
   "opportunity_title": "Store shelf photo tasks",
   "legitimacy_check": "Trustpilot 4.2 (1,200 reviews), no non-payment pattern found: https://…",

@@ -7,17 +7,15 @@ import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
 import { FilterChips } from "@/components/app/filter-chips";
 import { LocationPicker } from "@/components/app/location-picker";
 import { MissionGrid } from "@/components/app/mission-card";
+import { SubsectionLinks } from "@/components/app/subsection-links";
 import { getActiveCategories, getSubcategories } from "@/db/queries/public";
 import { applyDiscovery } from "@/lib/missions/filters";
 import { describeLocation, inArea, parseLocation } from "@/lib/missions/location";
 import { buildHref, param, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
-import {
-  CATEGORY_TABS,
-  categoryDisplay,
-  LOCATION_CATEGORIES,
-  type CategoryTab,
-} from "@/lib/taxonomy";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
+import type { DiscoveryGroup } from "@/lib/discovery/defaults";
+import { categoryDisplay, LOCATION_CATEGORIES } from "@/lib/taxonomy";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +27,13 @@ async function getCategory(slug: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = await getCategory((await params).slug);
-  return c ? { title: c.name, description: c.description ?? undefined } : {};
+  return c
+    ? {
+        title: c.name,
+        description: c.description ?? undefined,
+        alternates: { canonical: `/categories/${c.slug}` },
+      }
+    : {};
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
@@ -38,14 +42,24 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const category = await getCategory(slug);
   if (!category) notFound();
 
-  // Tabs: curated groups where configured (update §7–8), otherwise one tab per subcategory.
-  const tabs: CategoryTab[] =
-    CATEGORY_TABS[slug] ??
-    (await getSubcategories(slug)).map((s) => ({
+  // Tabs: curated groups where configured (admin: /admin/discovery), otherwise one per subcategory.
+  const config = await getDiscoveryConfig();
+  const tabs: DiscoveryGroup[] =
+    config.tabs[slug] ??
+    (await getSubcategories(slug)).map((s, i) => ({
+      kind: "category_tab" as const,
       slug: s.slug,
-      label: s.name,
-      subcategories: [s.slug],
+      categorySlug: slug,
+      title: s.name,
+      includes: [],
+      subcategorySlugs: [s.slug],
+      categorySlugs: [],
+      sortOrder: i,
     }));
+  const subSlugs = (await getSubcategories(slug)).map((s) => s.slug);
+  const relatedSubsections = config.subsections.filter(
+    (g) => g.categorySlugs.includes(slug) || g.subcategorySlugs.some((s) => subSlugs.includes(s)),
+  );
   const tab = tabs.find((t) => t.slug === param(sp, "tab"));
   const showLocation = LOCATION_CATEGORIES.includes(slug);
   const loc = showLocation
@@ -54,7 +68,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   let items = applyDiscovery(await loadOpportunities(), {
     category: slug,
-    subcategories: tab?.subcategories,
+    group: tab,
   });
   if (loc) items = items.filter((o) => inArea(o, loc));
 
@@ -63,7 +77,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     { id: "all", label: "All", href: buildHref(`/categories/${slug}`, keep), active: !tab },
     ...tabs.map((t) => ({
       id: t.slug,
-      label: t.label,
+      label: t.title,
       href: buildHref(`/categories/${slug}`, { ...keep, tab: t.slug }),
       active: tab?.slug === t.slug,
     })),
@@ -95,6 +109,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         <LocationPicker action={`/categories/${slug}`} value={keep} hidden={{ tab: tab?.slug }} />
       )}
       {tabs.length > 0 && <FilterChips chips={chips} label={`${category.name} types`} />}
+      <SubsectionLinks subsections={relatedSubsections} />
 
       {loc && (
         <p className="text-sm text-text-2" role="status">

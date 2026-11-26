@@ -43,6 +43,7 @@ npm run dev                       # then sign in at http://localhost:3000/admin/
 | `npm run db:migrate` | Apply migrations (uses `MIGRATION_DATABASE_URL`) |
 | `npm run db:seed [-- --categories-only]` | Seed categories (+ demo data outside production) |
 | `npm run admin:create -- --email you@x.com --name "You"` | Create/promote an admin (prompts for password) |
+| `npm run import:providers -- <file>` | Import a provider package as drafts (see `docs/IMPORT_FORMAT.md`) |
 | `npm run test:e2e` | Local Playwright admin flow (needs a fresh admin without 2FA; see `tests/e2e/admin-flow.cjs`) |
 
 ## Environment variables
@@ -51,3 +52,6 @@ See [`.env.example`](.env.example). Never commit real values.
 Set by Brad in Vercel (server-only): `DATABASE_URL`, `ADMIN_DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`,
 `AFFILIATE_POSTBACK_SECRET` (≥ 24 chars), `CRON_SECRET`, and network credentials when accounts exist
 (`IMPACT_SID`/`IMPACT_TOKEN`, `AWIN_*`, `CJ_*`, `FLEXOFFERS_API_KEY`, `DAISYCON_*`). See `docs/AFFILIATE_INTEGRATIONS.md`.
+
+## Specs
+Founder specs live in `docs/specs/` (master prompt, earnings feed, For Brands).

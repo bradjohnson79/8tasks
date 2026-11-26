@@ -16,9 +16,15 @@ const PAGES: Record<string, { title: string; intro: string }> = {
     intro:
       "8Tasks does not employ taskers or pay users, and earnings are never guaranteed. What you can earn, and when you are paid, depends entirely on each provider's own terms.",
   },
+  "free-access": {
+    title: "Free Access Policy",
+    intro:
+      "8Tasks is always free for everyone. Browsing, searching, filtering, saving and opportunity alerts cost nothing, and they always will. There are no paid memberships, premium tiers, locked categories or paid alerts. We earn referral commissions from some providers when you join through our links. That never costs you anything and never unlocks extra listings.",
+  },
   privacy: {
     title: "Privacy Policy",
-    intro: "Our full privacy policy is being prepared.",
+    intro:
+      "Our full privacy policy is being prepared. In short: browsing needs no account. Saved items and saved searches stay on your device. If you sign up for free alerts, report a listing or submit a company, we keep what you send only to provide that service and review it, and you can unsubscribe from alerts at any time.",
   },
   terms: {
     title: "Terms of Use",
@@ -33,8 +39,9 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const p = PAGES[(await params).page];
-  return p ? { title: p.title } : {};
+  const slug = (await params).page;
+  const p = PAGES[slug];
+  return p ? { title: p.title, alternates: { canonical: `/legal/${slug}` } } : {};
 }
 
 export default async function LegalPage({ params }: Props) {

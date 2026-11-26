@@ -9,10 +9,15 @@
 
 export type Currency = "USD" | "CAD";
 
-/** How a listing pays. Only verified terms from the provider may be recorded. */
+/**
+ * How a listing pays. Only verified terms from the provider may be recorded.
+ * Non-cash rewards (gift cards, free products, prizes, other non-cash) and reimbursements
+ * are never displayed or sorted as cash.
+ */
 export type Compensation =
-  | { type: "fixed"; amount: number; currency: Currency }
-  | { type: "range"; min: number; max: number; currency: Currency }
+  /** `per` is the unit the amount applies to, e.g. "task", "audio hour", "article". */
+  | { type: "fixed"; amount: number; currency: Currency; per?: string }
+  | { type: "range"; min: number; max: number; currency: Currency; per?: string }
   | { type: "hourly"; amount: number; currency: Currency }
   | { type: "variable" }
   | {
@@ -29,9 +34,13 @@ export type Compensation =
       item: string;
       maxReimbursement?: number;
     }
-  | { type: "commission"; recurring: boolean }
+  | { type: "commission"; recurring: boolean; basis?: "percent" | "flat" }
   | { type: "hybrid"; baseAmount?: number; currency?: Currency }
   | { type: "non_cash"; label: string }
+  | { type: "gift_card"; amount?: number; currency?: Currency }
+  | { type: "free_product"; label?: string }
+  | { type: "competition_prize"; label?: string }
+  | { type: "licensing_royalties" }
   | { type: "unknown" };
 
 export type CompensationType = Compensation["type"];
@@ -54,7 +63,50 @@ export type OpportunityAttributes = Partial<{
   assessmentRequired: boolean;
   performanceBased: boolean;
   recurringCommission: boolean;
+  /** Done at a specific local place. */
+  localAssignment: boolean;
+  cameraRequired: boolean;
+  /** The brand sends a product (not cash). */
+  productSupplied: boolean;
+  /** Professional experience or a credential is required. */
+  qualificationRequired: boolean;
+  writtenDeliverable: boolean;
+  videoDeliverable: boolean;
+  photoDeliverable: boolean;
+  /** Feedback goes privately to the company, not published. */
+  privateFeedback: boolean;
+  /** The work is published publicly. */
+  publicPublication: boolean;
+  /** Published content must carry an ad/sponsorship disclosure. */
+  sponsorshipDisclosureRequired: boolean;
 }>;
+
+export const ATTRIBUTE_KEYS = [
+  "remote",
+  "online",
+  "inPerson",
+  "smartphoneRequired",
+  "computerRequired",
+  "purchaseRequired",
+  "reimbursementAvailable",
+  "beginnerFriendly",
+  "portfolioRequired",
+  "audienceRequired",
+  "applicationRequired",
+  "assessmentRequired",
+  "performanceBased",
+  "recurringCommission",
+  "localAssignment",
+  "cameraRequired",
+  "productSupplied",
+  "qualificationRequired",
+  "writtenDeliverable",
+  "videoDeliverable",
+  "photoDeliverable",
+  "privateFeedback",
+  "publicPublication",
+  "sponsorshipDisclosureRequired",
+] as const satisfies readonly (keyof OpportunityAttributes)[];
 
 export type OpportunityLocation = {
   country: "CA" | "US";
@@ -77,6 +129,8 @@ export type Opportunity = {
   providerName: string;
   providerSlug?: string;
   compensation: Compensation;
+  /** Short verified note about pay shown on the detail page, e.g. "Some jobs include a free product". */
+  compensationNote?: string;
   durationMinutes?: number;
   /** Countries where members are accepted (launch markets only). */
   countries: string[];
@@ -90,8 +144,20 @@ export type Opportunity = {
   paymentDetails?: string[];
   terms?: string[];
   isSponsored: boolean;
+  /** Unpaid editorial pick. */
+  isFeatured?: boolean;
   isDemo: boolean;
   createdAt: string;
+  /** Real closing date from the provider (ISO). Absent = ongoing. */
+  deadlineAt?: string;
+  /** Date (YYYY-MM-DD) an admin last checked this listing or its provider. */
+  lastVerifiedAt?: string;
+  /** Extra categories/subcategories this record also appears in. */
+  secondary?: { categorySlug: string; subcategorySlug?: string }[];
+  /** Explicit discovery-group memberships, as "kind:slug". */
+  groupKeys?: string[];
+  /** Pathway slugs, precomputed from the admin-managed pathways by the loader. */
+  pathways?: string[];
   /** Whether a validated outbound affiliate link exists (real listings only). */
   hasOutboundLink: boolean;
 };

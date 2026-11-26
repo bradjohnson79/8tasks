@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ExternalLink, Info } from "lucide-react";
 import { Container } from "@/components/app/container";
 import { EmptyState } from "@/components/app/empty-state";
@@ -6,6 +7,7 @@ import { copyFor } from "@/lib/for-brands-copy";
 import { forBrandsOffers, SITE_LINKS } from "@/lib/site-links";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/for-brands" },
   title: "For Brands",
   description: "Tools for brands that 8Tasks refers to as an independent affiliate.",
 };
@@ -61,6 +63,13 @@ export default function ForBrandsPage() {
           })}
         </ul>
       )}
+      <p className="text-sm text-text-2">
+        Does your company pay people for tasks, testing or content?{" "}
+        <Link href="/submit-provider" className="font-medium text-emerald hover:underline">
+          Suggest your company
+        </Link>{" "}
+        for the earner directory. Listing is free and reviewed by hand.
+      </p>
     </Container>
   );
 }

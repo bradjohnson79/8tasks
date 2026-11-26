@@ -31,6 +31,15 @@
 | 2026-11-26 | For Brands renders from `data/site_links.json` in the repo (rebuilt from the founder's link map) | No page code change needed for new live brand offers |
 | 2026-11-26 | Founder admin `8tasks@proton.me` created directly in Neon with a random temporary password (TOTP enrolment forced, password change at `/admin/account`) | Founder request; container cannot reach Neon over TCP for the CLI |
 
+| 2026-11-26 | Master prompt implemented on the dev branch + PR, not deployed to production; migrations only on local + Neon preview | Master prompt §0.8 / CLAUDE.md rule 9 |
+| 2026-11-26 | Internal commission terms live in a separate admin-only table (`provider_internal`) rather than column grants | Simplest way to guarantee app_runtime can never read them |
+| 2026-11-26 | Pathways, tabs and subsections share one `discovery_groups` table; code defaults are the fallback if the table is empty/unreachable | One admin screen, site never breaks on config |
+| 2026-11-26 | Re-importing a provider moves it (and its imported opportunities) back to draft | Spec: "everything imports as draft"; the preview warns first |
+| 2026-11-26 | Alerts: free opt-in stored with consent text; no emails sent until an email service is approved. Existing addresses can't be changed or re-subscribed by third parties | No accounts/email verification yet; CASL/CAN-SPAM consent record |
+| 2026-11-26 | Saved searches are device-local (localStorage), like saved items | Accounts not approved |
+| 2026-11-26 | Report / submission forms store rows for admin review (no email) | No email service yet; never auto-publish |
+| 2026-11-26 | JoinBrands countries set to US only, Dreamstime CA + US, in the draft import | Not verified; founder to confirm before publishing |
+
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo

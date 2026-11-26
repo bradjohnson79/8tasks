@@ -24,16 +24,16 @@ export function formatCompensation(c: Compensation): CompensationDisplay {
     case "fixed":
       return {
         primary: money(c.amount),
-        unit: c.currency,
+        unit: c.per ? `${c.currency} / ${c.per}` : c.currency,
         isAmount: true,
-        label: `${money(c.amount)} ${c.currency}`,
+        label: `${money(c.amount)} ${c.currency}${c.per ? ` per ${c.per}` : ""}`,
       };
     case "range":
       return {
         primary: `${money(c.min)}–${money(c.max)}`,
-        unit: c.currency,
+        unit: c.per ? `${c.currency} / ${c.per}` : c.currency,
         isAmount: true,
-        label: `${money(c.min)} to ${money(c.max)} ${c.currency}`,
+        label: `${money(c.min)} to ${money(c.max)} ${c.currency}${c.per ? ` per ${c.per}` : ""}`,
       };
     case "hourly":
       return {
@@ -61,20 +61,28 @@ export function formatCompensation(c: Compensation): CompensationDisplay {
         label: `${c.item} reimbursed${cap ? `, ${cap.toLowerCase()}` : ""}. No cash payment.`,
       };
     }
-    case "commission":
+    case "commission": {
+      const basis =
+        c.basis === "percent"
+          ? "Percentage-based"
+          : c.basis === "flat"
+            ? "Flat per referral"
+            : null;
+      const secondary = basis ? `${basis} · performance-based` : "Performance-based";
       return c.recurring
         ? {
             primary: "Recurring commissions",
-            secondary: "Performance-based",
+            secondary,
             isAmount: false,
-            label: "Recurring commissions available. Performance-based, not guaranteed.",
+            label: `Recurring commissions available. ${basis ? `${basis}. ` : ""}Performance-based, not guaranteed.`,
           }
         : {
             primary: "Earn commissions",
-            secondary: "Performance-based",
+            secondary,
             isAmount: false,
-            label: "Earn commissions. Performance-based, not guaranteed.",
+            label: `Earn commissions. ${basis ? `${basis}. ` : ""}Performance-based, not guaranteed.`,
           };
+    }
     case "hybrid":
       return c.baseAmount
         ? {
@@ -90,7 +98,43 @@ export function formatCompensation(c: Compensation): CompensationDisplay {
             label: "Base payment plus commission",
           };
     case "non_cash":
-      return { primary: c.label, isAmount: false, label: c.label };
+      return {
+        primary: c.label,
+        secondary: "Not cash",
+        isAmount: false,
+        label: `${c.label}. Not cash.`,
+      };
+    // Non-cash rewards: neutral styling, never an emerald cash amount.
+    case "gift_card": {
+      const value = c.amount !== undefined ? `${money(c.amount)} ${c.currency ?? ""}`.trim() : null;
+      return {
+        primary: value ? `${value} gift card` : "Gift card rewards",
+        secondary: "Not cash",
+        isAmount: false,
+        label: `${value ? `${value} gift card` : "Gift card rewards"}. Not cash.`,
+      };
+    }
+    case "free_product":
+      return {
+        primary: c.label ?? "Free product",
+        secondary: "Not cash",
+        isAmount: false,
+        label: `${c.label ?? "Free product"}. A product, not cash payment.`,
+      };
+    case "competition_prize":
+      return {
+        primary: c.label ?? "Prize competition",
+        secondary: "Not guaranteed",
+        isAmount: false,
+        label: `${c.label ?? "Prize competition"}. Prizes are not guaranteed and are not wages.`,
+      };
+    case "licensing_royalties":
+      return {
+        primary: "Licensing royalties",
+        secondary: "Varies per licence",
+        isAmount: false,
+        label: "Royalties per licence. Amounts vary and are not guaranteed.",
+      };
     case "variable":
       return {
         primary: "Pay varies",

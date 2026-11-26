@@ -3,9 +3,6 @@
  * Page components read from here instead of hardcoding opportunity types.
  * Category names/descriptions/order themselves come from the database (admin-editable);
  * this file adds presentation details and cross-category groupings.
- *
- * Next step (documented in docs/DATABASE.md): move pathways and tab groups into
- * admin-managed tables once the visual structure is approved.
  */
 import type { LucideIcon } from "lucide-react";
 import {
@@ -14,12 +11,9 @@ import {
   Clapperboard,
   ClipboardList,
   Gamepad2,
-  MapPin,
   MessagesSquare,
-  Repeat,
   ShoppingBag,
   Smartphone,
-  Zap,
 } from "lucide-react";
 
 export type CategoryDisplay = {
@@ -50,206 +44,10 @@ export function categoryDisplay(slug: string): CategoryDisplay {
   return CATEGORY_DISPLAY[slug] ?? FALLBACK_CATEGORY_DISPLAY;
 }
 
-// ---------------------------------------------------------------------------
-// Discovery pathways: cross-category ways to earn (update §4). Not categories.
-// ---------------------------------------------------------------------------
-export type PathwaySlug = "quick-earnings" | "local-missions" | "create-earn" | "recurring-income";
-
-export type Pathway = {
-  slug: PathwaySlug;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  accent: string;
-  /** Shown on the pathway's results page. */
-  includes: string[];
-  /** Subcategories that always belong to this pathway. */
-  subcategories: string[];
-  /** Whole categories that belong to this pathway. */
-  categories: string[];
-};
-
-export const PATHWAYS: Pathway[] = [
-  {
-    slug: "quick-earnings",
-    title: "Quick Earnings",
-    description: "Small, simple tasks.",
-    icon: Zap,
-    accent: "#FBBF24",
-    includes: [
-      "Surveys",
-      "Short video reviews",
-      "Quick app tests",
-      "Music reviews",
-      "Content evaluation",
-      "Simple microtasks",
-      "Short consumer feedback",
-    ],
-    categories: ["surveys"],
-    subcategories: [
-      "video-reviewing",
-      "music-reviewing",
-      "digital-content-evaluation",
-      "consumer-feedback",
-      "ad-evaluation",
-      "trailer-feedback",
-      "ai-evaluation",
-      "categorisation",
-      "data-labelling",
-      "search-evaluation",
-      "fact-checking",
-    ],
-  },
-  {
-    slug: "local-missions",
-    title: "Local Missions",
-    description: "Explore your community.",
-    icon: MapPin,
-    accent: "#7DB8FF",
-    includes: [
-      "Mystery shopping",
-      "Retail audits",
-      "Photography assignments",
-      "Restaurant evaluations",
-      "Product display checks",
-      "Automotive evaluations",
-      "In-person research",
-    ],
-    categories: [],
-    subcategories: [
-      "in-store",
-      "dining",
-      "coffee-shops",
-      "drive-through",
-      "hotels-hospitality",
-      "automotive",
-      "retail-audits",
-      "entertainment-venues",
-      "display-photography",
-      "inventory-verification",
-      "pricing-verification",
-      "storefronts-locations",
-      "shelf-checks",
-      "focus-groups",
-    ],
-  },
-  {
-    slug: "create-earn",
-    title: "Create & Earn",
-    description: "Blog, vlog and create.",
-    icon: Clapperboard,
-    accent: "#B5A0F5",
-    includes: [
-      "Sponsored blog posts",
-      "Freelance content writing",
-      "YouTube videos",
-      "Product demonstrations",
-      "User-generated content",
-      "Product photography",
-      "Sponsored newsletters",
-      "Brand collaborations",
-    ],
-    categories: [],
-    subcategories: [
-      "blogging",
-      "vlogging",
-      "sponsored-articles",
-      "content-writing",
-      "sponsored-videos",
-      "user-generated-content",
-      "product-demonstrations",
-      "product-unboxing",
-      "influencer-collaborations",
-      "sponsored-newsletters",
-      "product-photos",
-    ],
-  },
-  {
-    slug: "recurring-income",
-    title: "Recurring Income",
-    description: "Affiliate opportunities.",
-    icon: Repeat,
-    accent: "#53E6A0",
-    includes: [
-      "Affiliate blogging and vlogging",
-      "Publisher networks",
-      "Performance-based promotion",
-      "Brand ambassador programs",
-      "Recurring affiliate commissions",
-    ],
-    categories: [],
-    subcategories: ["affiliate-marketing", "brand-ambassador"],
-  },
-];
-
-export const PATHWAY_BY_SLUG = Object.fromEntries(PATHWAYS.map((p) => [p.slug, p])) as Record<
-  PathwaySlug,
-  Pathway
->;
-
-// ---------------------------------------------------------------------------
-// Category tabs (update §7–8). Each tab is a set of subcategory slugs.
-// ---------------------------------------------------------------------------
-export type CategoryTab = { slug: string; label: string; subcategories: string[] };
-
-export const CATEGORY_TABS: Record<string, CategoryTab[]> = {
-  "content-media": [
-    {
-      slug: "review",
-      label: "Review & Earn",
-      subcategories: [
-        "video-reviewing",
-        "ad-evaluation",
-        "trailer-feedback",
-        "article-evaluation",
-        "book-reviewing",
-        "music-reviewing",
-        "digital-content-evaluation",
-        "product-concept-feedback",
-        "design-feedback",
-        "consumer-feedback",
-      ],
-    },
-    {
-      slug: "blogging",
-      label: "Blogging",
-      subcategories: ["blogging", "sponsored-articles", "content-writing", "sponsored-newsletters"],
-    },
-    { slug: "vlogging", label: "Vlogging", subcategories: ["vlogging", "sponsored-videos"] },
-    {
-      slug: "ugc",
-      label: "UGC",
-      subcategories: ["user-generated-content", "product-demonstrations", "product-unboxing"],
-    },
-    {
-      slug: "affiliate",
-      label: "Affiliate",
-      subcategories: ["affiliate-marketing", "influencer-collaborations", "brand-ambassador"],
-    },
-  ],
-  "mystery-shopping": [
-    { slug: "retail", label: "Retail", subcategories: ["in-store"] },
-    { slug: "dining", label: "Dining", subcategories: ["dining", "coffee-shops", "drive-through"] },
-    {
-      slug: "hospitality",
-      label: "Hospitality",
-      subcategories: ["hotels-hospitality", "entertainment-venues"],
-    },
-    { slug: "automotive", label: "Automotive", subcategories: ["automotive"] },
-    { slug: "telephone", label: "Telephone", subcategories: ["phone-online", "customer-service"] },
-    { slug: "online", label: "Online", subcategories: ["online-shopping", "ecommerce"] },
-    {
-      slug: "audits",
-      label: "Audits",
-      subcategories: [
-        "retail-audits",
-        "display-photography",
-        "inventory-verification",
-        "pricing-verification",
-      ],
-    },
-  ],
-};
+// Pathways, category tabs and /earn subsections now live in the admin-managed
+// `discovery_groups` table (src/lib/discovery). Defaults: src/lib/discovery/defaults.ts.
+export { DEFAULT_PATHWAYS as PATHWAYS } from "./discovery/defaults";
+export type { DiscoveryGroup as Pathway } from "./discovery/defaults";
 
 /** Categories that show the "Find missions near you" location picker. */
 export const LOCATION_CATEGORIES = ["mystery-shopping", "photography"];

@@ -13,9 +13,10 @@ import { getActiveCategories } from "@/db/queries/public";
 import { applyDiscovery, availableFilters, FILTER_BY_ID, HOME_CHIPS } from "@/lib/missions/filters";
 import { buildHref, param, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
-import { PATHWAYS } from "@/lib/taxonomy";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
 
 export const dynamic = "force-dynamic";
+export const metadata = { alternates: { canonical: "/" } };
 
 const FEED_LIMIT = 6;
 
@@ -44,7 +45,11 @@ export default async function DiscoverPage({
 }) {
   const sp = await searchParams;
   const requested = param(sp, "f");
-  const [categories, all] = await Promise.all([getActiveCategories(), loadOpportunities()]);
+  const [categories, all, config] = await Promise.all([
+    getActiveCategories(),
+    loadOpportunities(),
+    getDiscoveryConfig(),
+  ]);
   const available = availableFilters(all);
   const active =
     requested && HOME_CHIPS.includes(requested) && available.has(requested) ? requested : "for-you";
@@ -95,7 +100,7 @@ export default async function DiscoverPage({
       {/* How do you want to earn? (update §4) */}
       <section aria-labelledby="pathways-title">
         <SectionHeader id="pathways-title" title="How do you want to earn?" />
-        <PathwayGrid pathways={PATHWAYS} />
+        <PathwayGrid pathways={config.pathways} />
       </section>
 
       {/* Eight categories */}

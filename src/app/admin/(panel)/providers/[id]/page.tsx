@@ -10,7 +10,13 @@ import { ProviderForm } from "@/components/admin/provider-form";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { affiliateLinks, categories, opportunities, providers } from "@/db/schema";
+import {
+  affiliateLinks,
+  categories,
+  opportunities,
+  providerInternal,
+  providers,
+} from "@/db/schema";
 import { requireAdminPage } from "@/lib/admin";
 import { saveAffiliateLink, saveProvider } from "../../../actions";
 
@@ -29,6 +35,10 @@ export default async function EditProviderPage({
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
 
   const [provider] = await db.select().from(providers).where(eq(providers.id, id));
+  const [internal] = await db
+    .select()
+    .from(providerInternal)
+    .where(eq(providerInternal.providerId, id));
   if (!provider) notFound();
 
   const [links, opps] = await Promise.all([
@@ -86,7 +96,11 @@ export default async function EditProviderPage({
       </div>
       <FormMessage saved={sp.saved} error={sp.error} />
 
-      <ProviderForm action={saveProvider.bind(null, provider.id)} provider={provider} />
+      <ProviderForm
+        action={saveProvider.bind(null, provider.id)}
+        provider={provider}
+        internal={internal ?? null}
+      />
 
       <section className="space-y-4">
         <div>

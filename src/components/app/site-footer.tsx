@@ -3,9 +3,23 @@ import { AffiliateDisclosure } from "./affiliate-disclosure";
 import { BrandWordmark } from "./brand-wordmark";
 import { Container } from "./container";
 
+const EARN_LINKS = [
+  { href: "/earn/capture-earn", label: "Capture & Earn" },
+  { href: "/earn/write-earn", label: "Write & Earn" },
+  { href: "/earn/film-earn", label: "Film & Earn" },
+  { href: "/earn/review-earn", label: "Review & Earn" },
+  { href: "/earn/promote-earn", label: "Promote & Earn" },
+];
+
 const LINKS = [
   { href: "/providers", label: "Providers" },
+  { href: "/about", label: "About" },
+  { href: "/alerts", label: "Free Alerts" },
   { href: "/for-brands", label: "For Brands" },
+  { href: "/submit-provider", label: "Suggest a Company" },
+  { href: "/contact", label: "Contact" },
+  { href: "/press", label: "Press" },
+  { href: "/legal/free-access", label: "Free Access Policy" },
   { href: "/legal/affiliate-disclosure", label: "Affiliate Disclosure" },
   { href: "/legal/earning-disclaimer", label: "Earning Disclaimer" },
   { href: "/legal/privacy", label: "Privacy" },
@@ -21,6 +35,7 @@ export function SiteFooter() {
         <div className="flex flex-col gap-1">
           <BrandWordmark />
           <p className="text-sm font-medium text-emerald">Small Missions. Real Money.</p>
+          <p className="text-sm font-semibold">Always Free. For Everyone.</p>
         </div>
         <p className="max-w-2xl text-[13px] text-text-2">
           8Tasks is an independent discovery site. We don&apos;t employ taskers, hold your money,
@@ -28,6 +43,20 @@ export function SiteFooter() {
           terms.
         </p>
         <AffiliateDisclosure className="max-w-2xl" />
+        <nav aria-label="Ways to earn">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {EARN_LINKS.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="text-text-2 underline-offset-4 hover:text-foreground hover:underline"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <nav aria-label="Legal and site">
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
             {LINKS.map((l) => (

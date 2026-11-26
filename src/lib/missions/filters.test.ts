@@ -7,6 +7,8 @@ import {
   matchesSearch,
   pathwaysFor,
 } from "./filters";
+import { DEFAULT_CATEGORY_TABS, DEFAULT_SUBSECTIONS } from "@/lib/discovery/defaults";
+import { belongsTo } from "@/lib/discovery/membership";
 import type { Opportunity } from "./types";
 
 const now = new Date("2026-11-26T12:00:00Z");
@@ -83,10 +85,8 @@ describe("applyDiscovery", () => {
     expect(ids).not.toContain("demo-coffee-shop-visit");
   });
   it("filters by category tab subcategories", () => {
-    const out = applyDiscovery(demo, {
-      category: "content-media",
-      subcategories: ["user-generated-content"],
-    });
+    const ugc = DEFAULT_CATEGORY_TABS.find((t) => t.slug === "ugc")!;
+    const out = applyDiscovery(demo, { category: "content-media", group: ugc });
     expect(out.map((o) => o.id)).toEqual(["demo-ugc-videos"]);
   });
   it("disables Nearby without a location and enables it with one", () => {
@@ -120,5 +120,63 @@ describe("demo data", () => {
       expect(o.providerName.startsWith("Demo ")).toBe(true);
       expect(o.countries.every((c) => c === "CA" || c === "US")).toBe(true);
     }
+  });
+});
+
+describe("master prompt filters", () => {
+  const day = 86_400_000;
+  const at = (offsetDays: number) => new Date(now.getTime() + offsetDays * day).toISOString();
+
+  it("New This Week uses a 7-day window", () => {
+    const f = FILTER_BY_ID["new"];
+    expect(f.label).toBe("New This Week");
+    expect(f.test({ ...bare, createdAt: at(-6) }, { now })).toBe(true);
+    expect(f.test({ ...bare, createdAt: at(-8) }, { now })).toBe(false);
+  });
+
+  it("Ending Soon needs a real deadline within 7 days and never matches ongoing listings", () => {
+    const f = FILTER_BY_ID["ending-soon"];
+    expect(f.test(bare, { now })).toBe(false);
+    expect(f.test({ ...bare, deadlineAt: at(3) }, { now })).toBe(true);
+    expect(f.test({ ...bare, deadlineAt: at(10) }, { now })).toBe(false);
+    expect(f.test({ ...bare, deadlineAt: at(-1) }, { now })).toBe(false);
+  });
+
+  it("expired listings never appear as open in discovery", () => {
+    const closed = { ...bare, id: "closed", deadlineAt: at(-1) };
+    const open = { ...bare, id: "open", deadlineAt: at(2) };
+    const ids = applyDiscovery([closed, open, bare], {}, { now }).map((o) => o.id);
+    expect(ids).toEqual(["open", "x"]);
+    expect(availableFilters([closed], { now }).has("ending-soon")).toBe(false);
+  });
+
+  it("one record can appear in several categories and subsections without duplicates", () => {
+    const multi: Opportunity = {
+      ...bare,
+      id: "multi",
+      categorySlug: "content-media",
+      subcategorySlug: "user-generated-content",
+      secondary: [{ categorySlug: "photography", subcategorySlug: "product-photos" }],
+    };
+    expect(applyDiscovery([multi], { category: "photography" })).toHaveLength(1);
+    expect(applyDiscovery([multi], { category: "content-media" })).toHaveLength(1);
+    const capture = DEFAULT_SUBSECTIONS.find((g) => g.slug === "capture-earn")!;
+    const film = DEFAULT_SUBSECTIONS.find((g) => g.slug === "film-earn")!;
+    expect(belongsTo(multi, capture)).toBe(true);
+    expect(belongsTo(multi, film)).toBe(true);
+    // Explicit admin membership
+    const promote = DEFAULT_SUBSECTIONS.find((g) => g.slug === "promote-earn")!;
+    expect(belongsTo(multi, promote)).toBe(false);
+    expect(belongsTo({ ...multi, groupKeys: ["subsection:promote-earn"] }, promote)).toBe(true);
+  });
+
+  it("category tabs only match subcategories inside their own category", () => {
+    const review = DEFAULT_CATEGORY_TABS.find((t) => t.slug === "review")!;
+    const elsewhere: Opportunity = {
+      ...bare,
+      categorySlug: "paid-research",
+      subcategorySlug: "consumer-feedback",
+    };
+    expect(belongsTo(elsewhere, review)).toBe(false);
   });
 });

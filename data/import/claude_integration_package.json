@@ -1,0 +1,78 @@
+{
+  "_note": "Built from CLAUDE_CODE_MASTER_PROMPT.md §4 (2026-11-25). Import through /admin/import; everything lands as draft. Internal blocks are admin-only and never rendered. Countries and descriptions must be checked by the founder before publishing (last_verified_at left empty on purpose).",
+  "providers": [
+    {
+      "slug": "dreamstime",
+      "public": {
+        "name": "Dreamstime",
+        "website_url": "https://www.dreamstime.com/",
+        "summary": "Stock photo agency where photographers upload images and earn royalties when they are licensed.",
+        "description": "Upload your photos to Dreamstime's stock library. Images are reviewed before they go on sale, and you earn a royalty each time one is licensed. Royalties vary per licence and are not guaranteed.",
+        "countries": ["CA", "US"],
+        "affiliate_url": "https://www.dreamstime.com/#res62198923",
+        "opportunities": [
+          {
+            "slug": "sell-stock-photos",
+            "title": "Sell your photos as stock",
+            "summary": "Upload photos to a stock library and earn royalties when they're licensed.",
+            "category": "photography",
+            "subcategory": "stock-licensing",
+            "subsections": ["capture-earn"],
+            "compensation_type": "licensing_royalties",
+            "attributes": { "remote": true, "photoDeliverable": true }
+          }
+        ]
+      },
+      "internal": {
+        "commission_model": "contributor_recruitment",
+        "commission_text": "10% of gross value of referred buyers' and contributors' transactions, guaranteed 3 years.",
+        "qualifying_action": "Referred buyer purchases or referred contributor sells",
+        "tracking_window": "30-day cookie",
+        "recurring_commission": true,
+        "source_urls": ["https://www.dreamstime.com/affiliate-referral-program"],
+        "readiness_level": "A",
+        "approval_status": "approved (live link)"
+      }
+    },
+    {
+      "slug": "joinbrands",
+      "public": {
+        "name": "JoinBrands",
+        "website_url": "https://joinbrands.com/",
+        "summary": "Marketplace where brands hire creators for product photos, videos and reviews.",
+        "description": "Apply to brand jobs for user-generated content such as product photos, short videos and reviews. Pay varies by job, and some jobs include a free product instead of or in addition to cash.",
+        "countries": ["US"],
+        "affiliate_url": "https://joinbrands.com/?ref=ccIo2N",
+        "opportunities": [
+          {
+            "slug": "ugc-creator-jobs",
+            "title": "Create UGC for brands",
+            "summary": "Apply to brand jobs for product photos, videos and reviews.",
+            "category": "content-media",
+            "subcategory": "user-generated-content",
+            "secondary": [{ "category": "photography", "subcategory": "product-photos" }],
+            "subsections": ["film-earn", "capture-earn", "review-earn", "promote-earn"],
+            "compensation_type": "variable",
+            "compensation_note": "Pay varies by job; some jobs include a free product (not cash).",
+            "attributes": {
+              "remote": true,
+              "productSupplied": true,
+              "photoDeliverable": true,
+              "videoDeliverable": true
+            }
+          }
+        ]
+      },
+      "internal": {
+        "commission_model": "business_client_referral",
+        "commission_text": "US$30 per referred brand; US$5 per active referred creator; 20% of JoinBrands service fees from referred brands for 1 year.",
+        "commission_currency": "USD",
+        "qualifying_action": "Referred brand's first paid campaign; referred creator's first paid job",
+        "recurring_commission": true,
+        "source_urls": ["https://help.joinbrands.com/en/articles/7910946-creators-affiliate-program"],
+        "readiness_level": "A",
+        "approval_status": "approved (live link)"
+      }
+    }
+  ]
+}

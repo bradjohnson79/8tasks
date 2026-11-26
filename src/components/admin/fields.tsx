@@ -52,8 +52,9 @@ export function TextAreaField(props: {
   defaultValue?: string | null;
   hint?: string;
   rows?: number;
+  idPrefix?: string;
 }) {
-  const id = `f-${props.name}`;
+  const id = `${props.idPrefix ?? "f"}-${props.name}`;
   return (
     <Field label={props.label} htmlFor={id} hint={props.hint}>
       <Textarea
