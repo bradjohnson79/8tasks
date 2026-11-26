@@ -29,6 +29,7 @@ to the opportunity, and logs the click. DB CHECK constraint and route both requi
 Responses are `no-store`, `noindex`, `Referrer-Policy: no-referrer`. Outbound anchors use `rel="sponsored nofollow noopener"`.
 
 ## Admin auth
+Public entry: footer "Staff Admin" → `/admin/login`. Password change at `/admin/account`.
 Flow: `npm run admin:create` → `/admin/login` → forced `/admin/setup-2fa` (TOTP + backup codes) →
 panel. Until TOTP is enabled, every `/admin/*` page redirects to setup and every action throws.
 Pages use `requireAdminPage()` (redirects); server actions use `requireAdmin()` (throws). Admin pages
@@ -36,6 +37,13 @@ are `noindex`. Affiliate URLs are validated (https, public hostname, no credenti
 Better Auth email/password, public sign-up disabled, 12-char minimum password, built-in rate limiting,
 12h sessions. `requireAdmin()` requires `role = 'admin'`, not banned, and `twoFactorEnabled` (TOTP).
 Every admin page/action must call it server-side.
+
+## Affiliate earnings feed
+- Feed tables are `app_admin`-only (RLS). The runtime role can only call `record_affiliate_postback()`.
+- Postbacks need `AFFILIATE_POSTBACK_SECRET` (constant-time compare), are rate-limited, return 403 with no detail,
+  and store a scrubbed payload. Request URLs (which carry the key) are never logged.
+- Cron needs `Bearer $CRON_SECRET`. Connector credentials are env-only, read-only scopes; no payment/withdrawal calls.
+- SubIDs are random click UUIDs only (no PII).
 
 ## Secrets
 Only in env vars (`.env.local` is git-ignored; `.env.example` holds dummy local values).

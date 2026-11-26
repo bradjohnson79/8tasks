@@ -123,6 +123,12 @@ export const affiliateLinks = pgTable(
       .references(() => providers.id, { onDelete: "restrict" }),
     label: text().notNull(),
     destinationUrl: text().notNull(),
+    /**
+     * Documented network SubID parameter to append our click id to (e.g. subId1 for Impact,
+     * clickRef for Awin, fobs for FlexOffers, s2 for MaxBounty). Null = never append
+     * (direct programs such as Dreamstime/JoinBrands keep their exact link). Rule 6.
+     */
+    subidParam: text(),
     isActive: boolean().notNull().default(true),
     adminNotes: text(),
     isDemo: boolean().notNull().default(false),
@@ -180,6 +186,8 @@ export const outboundClicks = pgTable(
   "outbound_clicks",
   {
     id: bigserial({ mode: "number" }).primaryKey(),
+    /** Opaque click id passed to networks as SubID (no PII). */
+    clickId: uuid().notNull().defaultRandom().unique(),
     affiliateLinkId: uuid()
       .notNull()
       .references(() => affiliateLinks.id, { onDelete: "restrict" }),

@@ -5,10 +5,12 @@ import { Container } from "./container";
 
 const LINKS = [
   { href: "/providers", label: "Providers" },
+  { href: "/for-brands", label: "For Brands" },
   { href: "/legal/affiliate-disclosure", label: "Affiliate Disclosure" },
   { href: "/legal/earning-disclaimer", label: "Earning Disclaimer" },
   { href: "/legal/privacy", label: "Privacy" },
   { href: "/legal/terms", label: "Terms" },
+  { href: "/admin/login", label: "Staff Admin" },
 ];
 
 /** Trust, disclosure and legal links (design spec §8 item 11). */

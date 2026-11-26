@@ -47,3 +47,7 @@ npm run dev                       # then sign in at http://localhost:3000/admin/
 
 ## Environment variables
 See [`.env.example`](.env.example). Never commit real values.
+
+Set by Brad in Vercel (server-only): `DATABASE_URL`, `ADMIN_DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`,
+`AFFILIATE_POSTBACK_SECRET` (≥ 24 chars), `CRON_SECRET`, and network credentials when accounts exist
+(`IMPACT_SID`/`IMPACT_TOKEN`, `AWIN_*`, `CJ_*`, `FLEXOFFERS_API_KEY`, `DAISYCON_*`). See `docs/AFFILIATE_INTEGRATIONS.md`.

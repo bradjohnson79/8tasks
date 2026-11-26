@@ -15,6 +15,20 @@
       "when": 1795650544488,
       "tag": "0001_rls_and_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795667986203,
+      "tag": "0002_affiliate_earnings",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795668016383,
+      "tag": "0003_affiliate_rls",
+      "breakpoints": true
     }
   ]
 }

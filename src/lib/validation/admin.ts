@@ -78,6 +78,10 @@ export const providerSchema = z.object({
 export const affiliateLinkSchema = z.object({
   label: trimmed.min(2).max(120),
   destinationUrl: httpsUrlSchema,
+  subidParam: z
+    .union([z.literal(""), z.enum(["subId1", "clickRef", "fobs", "s2", "sid"])])
+    .optional()
+    .transform((v) => v || null),
   isActive: z.boolean(),
   adminNotes: optionalText(2000),
 });

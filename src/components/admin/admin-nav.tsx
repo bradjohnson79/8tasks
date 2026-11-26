@@ -9,7 +9,9 @@ const ITEMS = [
   { href: "/admin/providers", label: "Providers" },
   { href: "/admin/opportunities", label: "Opportunities" },
   { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/earnings", label: "Earnings" },
   { href: "/admin/audit", label: "Audit log" },
+  { href: "/admin/account", label: "Account" },
 ];
 
 export function AdminNav() {

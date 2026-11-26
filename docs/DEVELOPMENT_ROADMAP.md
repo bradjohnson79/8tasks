@@ -24,7 +24,11 @@
 - [x] Production Neon login roles + production env vars
 - [x] Production deploy (approved 2026-11-26)
 - [ ] Cloudflare DNS for 8tasks.com → Vercel
-- [ ] Create production admin account
+- [x] Create production admin account (`8tasks@proton.me`; founder changes temp password)
+- [x] Admin affiliate earnings feed MVP (manual/CSV, postbacks, cron + no-op connectors)
+- [x] For Brands page + Staff Admin footer link
+- [ ] Live Impact connector, then Awin, FlexOffers, CJ, Daisycon (after accounts exist)
+- [ ] Import full site_links.json (58 rows) into the earner directory
 - [ ] Final legal copy before promoting the site
 
 ## Later (not approved yet)

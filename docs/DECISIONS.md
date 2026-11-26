@@ -26,6 +26,11 @@
 | 2026-11-26 | **Hero artwork restored as the one exception** to the spec's no-graphics rule: static (no float), design-system colours, wide screens (≥1024px) beside the headline; hidden on phones so search and Daily 8 stay near the top | Founder decision |
 | 2026-11-26 | **Production go-live approved by founder**: `main` deployed to Vercel production, domains 8tasks.com (+ www → apex 308), Neon `main` with least-privilege runtime/admin login roles | Founder instruction; production shows real listings only (none yet) |
 
+| 2026-11-26 | Earnings rollups computed at query time (no materialized `affiliate_period_stats` table yet) | Volume is tiny; avoids a refresh job. Revisit if the page gets slow |
+| 2026-11-26 | Postback secret via query/header, not path; unknown programs get 202 and are logged, not stored | Networks retry on non-2xx; no guessing which program a conversion belongs to |
+| 2026-11-26 | For Brands renders from `data/site_links.json` in the repo (rebuilt from the founder's link map) | No page code change needed for new live brand offers |
+| 2026-11-26 | Founder admin `8tasks@proton.me` created directly in Neon with a random temporary password (TOTP enrolment forced, password change at `/admin/account`) | Founder request; container cannot reach Neon over TCP for the CLI |
+
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo

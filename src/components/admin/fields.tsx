@@ -74,8 +74,9 @@ export function SelectField(props: {
   hint?: string;
   required?: boolean;
   placeholder?: string;
+  idPrefix?: string;
 }) {
-  const id = `f-${props.name}`;
+  const id = `${props.idPrefix ?? "f"}-${props.name}`;
   return (
     <Field label={props.label} htmlFor={id} hint={props.hint}>
       <NativeSelect

@@ -1,0 +1,28 @@
+{
+  "_note": "Link map from /workspace/8tasks/build_site_links.py. This copy only holds the rows confirmed in the 2026-11-25 change list (the two live providers). Replace this file with the full rebuilt site_links.json; no code change is needed.",
+  "built_at": "2026-11-25T21:21:30-07:00",
+  "providers": [
+    {
+      "provider_id": "joinbrands",
+      "name": "JoinBrands",
+      "status": "live",
+      "affiliate_url": "https://joinbrands.com/?ref=ccIo2N",
+      "sample_url": "https://joinbrands.com",
+      "commission_note": "US$30 per referred brand; US$5 per active referred creator signup; 20% of JoinBrands service fees from referred brands for 1 year (per JoinBrands affiliate page)",
+      "disclosure_needed": "yes",
+      "audience": ["earners", "brands"],
+      "placement": ["directory", "for_brands_page"]
+    },
+    {
+      "provider_id": "dreamstime",
+      "name": "Dreamstime",
+      "status": "live",
+      "affiliate_url": "https://www.dreamstime.com/#res62198923",
+      "sample_url": "https://www.dreamstime.com",
+      "commission_note": "10% of gross value of referred buyers' and contributors' transactions, guaranteed 3 years",
+      "disclosure_needed": "yes",
+      "audience": ["earners"],
+      "placement": ["directory"]
+    }
+  ]
+}

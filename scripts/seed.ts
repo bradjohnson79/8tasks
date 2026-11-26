@@ -18,6 +18,7 @@ import {
   MOVED_SUBCATEGORIES,
   RETIRED_CATEGORIES,
 } from "./seed-data";
+import { AFFILIATE_PROGRAM_SEED } from "./affiliate-programs-data";
 
 config({ path: ".env.local" });
 
@@ -113,6 +114,17 @@ async function main() {
         where slug = ${m.slug} and category_id = (select id from categories where slug = ${m.from})`);
       if (res.rowCount) console.log(`Moved subcategory ${m.slug} from ${m.from} to ${m.to}.`);
     }
+
+    // Affiliate program registry (real data; insert-only so admin edits survive).
+    let added = 0;
+    for (const p of AFFILIATE_PROGRAM_SEED) {
+      const res = await tx
+        .insert(schema.affiliatePrograms)
+        .values(p)
+        .onConflictDoNothing({ target: schema.affiliatePrograms.id });
+      added += res.rowCount ?? 0;
+    }
+    console.log(`Affiliate programs: ${added} added, ${AFFILIATE_PROGRAM_SEED.length - added} already present.`);
 
     if (categoriesOnly) return;
 

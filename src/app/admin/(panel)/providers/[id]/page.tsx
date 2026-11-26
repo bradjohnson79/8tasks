@@ -3,7 +3,8 @@ import { AdminForm } from "@/components/admin/admin-form";
 import { notFound } from "next/navigation";
 import { asc, eq, sql } from "drizzle-orm";
 import { ExternalLinkIcon, PlusIcon } from "lucide-react";
-import { CheckboxField, TextField } from "@/components/admin/fields";
+import { CheckboxField, SelectField, TextField } from "@/components/admin/fields";
+import { SUBID_PARAMS } from "@/lib/redirect/subid";
 import { FormMessage } from "@/components/admin/form-message";
 import { ProviderForm } from "@/components/admin/provider-form";
 import { StatusBadge } from "@/components/admin/status-badge";
@@ -37,6 +38,7 @@ export default async function EditProviderPage({
         label: affiliateLinks.label,
         destinationUrl: affiliateLinks.destinationUrl,
         isActive: affiliateLinks.isActive,
+        subidParam: affiliateLinks.subidParam,
         adminNotes: affiliateLinks.adminNotes,
         isDemo: affiliateLinks.isDemo,
         clicks30d: sql<number>`(select count(*)::int from outbound_clicks oc where oc.affiliate_link_id = "affiliate_links"."id" and not oc.is_bot and oc.clicked_at >= now() - interval '30 days')`,
@@ -114,6 +116,15 @@ export default async function EditProviderPage({
               defaultValue={l.destinationUrl}
               required
             />
+            <SelectField
+              idPrefix={`l-${l.id}`}
+              name="subidParam"
+              label="SubID parameter"
+              defaultValue={l.subidParam}
+              options={[...SUBID_PARAMS]}
+              placeholder="None (use link exactly as stored)"
+              hint="Only for network links with a documented SubID. Leave None for direct programs."
+            />
             <TextField
               idPrefix={`l-${l.id}`}
               name="adminNotes"
@@ -153,6 +164,14 @@ export default async function EditProviderPage({
             label="Tracking URL"
             placeholder="https://"
             required
+          />
+          <SelectField
+            idPrefix="new-link"
+            name="subidParam"
+            label="SubID parameter"
+            options={[...SUBID_PARAMS]}
+            placeholder="None (use link exactly as stored)"
+            hint="Only for network links with a documented SubID."
           />
           <input type="hidden" name="isActive" value="on" />
           <div className="sm:col-span-2">

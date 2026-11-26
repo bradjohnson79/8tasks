@@ -4,7 +4,7 @@ Postgres 17 on Neon: project **`8tasks`** (`purple-firefly-62820848`), region aw
 branch `main`, database `eighttasks`, owner role `eighttasks_owner`. Local dev uses Postgres 16.
 
 Migrations live in `drizzle/` and are tracked in `drizzle.__drizzle_migrations`.
-Both 0000 and 0001 have been applied to Neon `main` (via the Neon MCP connector, with hashes recorded,
+0000–0003 have been applied to Neon `main` and `preview`; 0000 and 0001 were first applied to Neon `main` (via the Neon MCP connector, with hashes recorded,
 so `drizzle-kit migrate` will treat them as done).
 
 ## Tables
@@ -17,6 +17,9 @@ so `drizzle-kit migrate` will treat them as done).
 | `opportunities` | Listings per provider + category; optional `affiliate_link_id`; `data_source` (`provider_level` default; `authorized_feed`/`authorized_manual` for individual missions); `is_sponsored`; `is_demo`. No payout columns until authorized data exists |
 | `outbound_clicks` | Written only by `resolve_outbound_link()`. No IPs. `source_path`, `country`, `device_type`, `is_bot` |
 | `admin_audit_log` | Append-only (UPDATE/DELETE/TRUNCATE blocked by trigger) |
+| `affiliate_programs` | Admin-only registry: `id` slug, `network`, `network_campaign_id`, `payout_method`, `currency_default`, `affiliate_url`, `data_method`, `status` (live/pending_signup/waiting_for_site/paused/not_in_scope), `notes` |
+| `affiliate_transactions` | Admin-only source of truth for 8Tasks affiliate earnings: `type` (conversion/adjustment/payout/summary), `status` (pending/approved/paid/reversed), signed `commission_amount`, `currency`, `source`, unique `(program_id, source, external_id)` when external_id is set |
+| `affiliate_sync_runs` | Log of each sync / import / postback batch |
 | `user`, `session`, `account`, `verification`, `two_factor` | Better Auth. Admin role = `user.role = 'admin'` (replaces the earlier `profiles` idea) |
 
 ## Roles & RLS (summary; details in SECURITY.md)

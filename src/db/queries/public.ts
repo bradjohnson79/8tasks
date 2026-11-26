@@ -1,6 +1,7 @@
 import "server-only";
 import { and, arrayOverlaps, asc, count, eq, sql } from "drizzle-orm";
 import { SUPPORTED_COUNTRIES } from "@/lib/markets";
+import { withSubId } from "@/lib/redirect/subid";
 import { withPublicDb } from "../client";
 import { categories, opportunities, providers, subcategories } from "../schema";
 
@@ -155,9 +156,10 @@ export async function resolveOpportunityRedirect(
       .where(eq(opportunities.id, opportunityId))
       .limit(1);
     if (!opp?.linkId) return null;
-    const res = await tx.execute<{ url: string | null }>(
-      sql`select resolve_outbound_link(${opp.linkId}::uuid, ${opportunityId}::uuid, ${meta.sourcePath}, ${meta.country}, ${meta.deviceType}, ${meta.isBot}) as url`,
+    const res = await tx.execute<{ url: string; click_id: string; subid_param: string | null }>(
+      sql`select url, click_id, subid_param from resolve_outbound_link(${opp.linkId}::uuid, ${opportunityId}::uuid, ${meta.sourcePath}, ${meta.country}, ${meta.deviceType}, ${meta.isBot})`,
     );
-    return res.rows[0]?.url ?? null;
+    const row = res.rows[0];
+    return row ? withSubId(row.url, row.subid_param, row.click_id) : null;
   });
 }

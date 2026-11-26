@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-26: Affiliate earnings feed, For Brands, Staff Admin
+- Migrations 0002/0003: `affiliate_programs`, `affiliate_transactions`, `affiliate_sync_runs` (admin-only RLS),
+  `record_affiliate_postback()`, `affiliate_links.subid_param`, `outbound_clicks.click_id`; applied to Neon main + preview.
+- 30-program registry seeded on Neon main + preview (2 live, 5 pending_signup, 16 waiting_for_site, 1 paused, 6 not_in_scope).
+- `/admin/earnings`: totals by currency, earning vs configured-but-quiet, period picker, last synced; manual entry,
+  CSV import + template, programs registry.
+- Postback endpoint, cron sync route + no-op connectors, SubID click wrapper.
+- `/for-brands` page from `data/site_links.json`; footer links "For Brands" and "Staff Admin" (→ `/admin/login`).
+- `/admin/account`: change password (revokes other sessions). Founder admin `8tasks@proton.me` created on Neon main + preview
+  with a temporary password (must enrol TOTP on first sign-in, then change the password).
+
 ## 2026-11-26: Production launch
 - Founder-approved production deploy of `main` to Vercel; 8tasks.com + www.8tasks.com added to the project.
 - Production env vars (runtime/admin DB roles on Neon `main`, auth secret, BETTER_AUTH_URL=https://8tasks.com). Demo data is off in production.
