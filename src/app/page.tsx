@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { AffiliateNotice } from "@/components/site/affiliate-notice";
 import { CategoryCard } from "@/components/site/category-card";
+import { HeroIllustration } from "@/components/site/hero-illustration";
 import { Button } from "@/components/ui/button";
 import { getActiveCategories } from "@/db/queries/public";
 
@@ -42,37 +43,42 @@ export default async function HomePage() {
           aria-hidden
           className="pointer-events-none absolute -top-40 right-[-10%] size-[520px] rounded-full bg-mint/15 blur-3xl"
         />
-        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-16 sm:px-6 sm:pt-20 sm:pb-24">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/80">
-            <ShieldCheckIcon className="size-3.5 text-mint" aria-hidden />
-            Independent directory of earning opportunities
-          </p>
-          <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-            Find your next <span className="text-mint">mission</span>.
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/75 text-pretty">
-            Discover surveys, app and website testing, paid research, mystery
-            shopping and more from established third-party providers, all in one
-            place.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button
-              asChild
-              size="lg"
-              className="bg-mint text-navy hover:bg-mint/90"
-            >
-              <Link href="#categories">
-                Browse categories <ArrowRightIcon />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
-            >
-              <Link href="#how-it-works">How it works</Link>
-            </Button>
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-16 sm:px-6 sm:pt-20 sm:pb-24 lg:grid-cols-[1fr_auto] lg:py-16">
+          <div>
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/80">
+              <ShieldCheckIcon className="size-3.5 text-mint" aria-hidden />
+              Independent directory of earning opportunities
+            </p>
+            <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+              Find your next <span className="text-mint">mission</span>.
+            </h1>
+            <p className="mt-5 max-w-xl text-lg text-white/75 text-pretty">
+              Discover surveys, app and website testing, paid research, mystery
+              shopping and more from established third-party providers, all in
+              one place.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                className="bg-mint text-navy hover:bg-mint/90"
+              >
+                <Link href="#categories">
+                  Browse categories <ArrowRightIcon />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="#how-it-works">How it works</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <HeroIllustration />
           </div>
         </div>
       </section>
