@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26: Hero artwork
+- Added the approved hero illustration (phone + survey and usability-test cards) on large screens; gentle float animation, off under reduced motion.
+
 ## 2026-11-26: Foundation (first session)
 - Next.js 15 + TypeScript strict + Tailwind v4 + shadcn/ui (new-york, hand-copied components).
 - Switched from Supabase to **Neon + Drizzle + Better Auth** (founder decision).
