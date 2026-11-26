@@ -121,6 +121,8 @@ export const providers = pgTable(
     supportsPostbacks: capability().notNull().default("unknown"),
     providesFeed: capability().notNull().default("unknown"),
     allowsRevenueShare: capability().notNull().default("unknown"),
+    /** Provider allows email-originated traffic (Daily 8). Only "yes" is ever emailed. */
+    allowsEmailTraffic: capability().notNull().default("unknown"),
     /** Admin-only notes. Never selected by public queries. */
     adminNotes: text(),
     /** Date an admin last checked the provider's public facts. Shown publicly. */

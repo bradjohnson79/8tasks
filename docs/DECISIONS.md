@@ -40,6 +40,13 @@
 | 2026-11-26 | Report / submission forms store rows for admin review (no email) | No email service yet; never auto-publish |
 | 2026-11-26 | JoinBrands countries set to US only, Dreamstime CA + US, in the draft import | Not verified; founder to confirm before publishing |
 
+| 2026-11-26 | Email-only subscriptions with double opt-in (no account) and token links; consent wording versioned | Spec §4; CASL/CAN-SPAM |
+| 2026-11-26 | Daily 8 only includes providers with `allows_email_traffic = yes` (default unknown) | Rule 6 + spec §6 |
+| 2026-11-26 | Email buttons go to 8Tasks pages (`/e/…` click log), never straight to affiliate URLs | Keeps /go as the only affiliate redirect; no prohibited params; creator attribution untouched |
+| 2026-11-26 | Click tracking and open tracking in Resend left off; our own redirect counts clicks | Privacy, accuracy |
+| 2026-11-26 | Three gates before automated mail: env `EMAIL_SENDING_ENABLED`, admin pause (default on), postal address | Spec: no production sending before founder approval |
+| 2026-11-26 | Added 8tasks.com to the (shared) Resend account; API key + webhook left for the founder | Secrets never pass through chat |
+
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo

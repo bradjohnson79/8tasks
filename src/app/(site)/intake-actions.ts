@@ -1,12 +1,11 @@
 "use server";
 
 import { headers } from "next/headers";
-import { sql } from "drizzle-orm";
 import { withPublicDb } from "@/db/client";
 import { listingReports, providerSubmissions } from "@/db/schema";
 import { allow } from "@/lib/affiliates/rate-limit";
 import { firstError } from "@/lib/validation/admin";
-import { ALERT_CONSENT, alertSchema, reportSchema, submissionSchema } from "@/lib/intake/schemas";
+import { reportSchema, submissionSchema } from "@/lib/intake/schemas";
 
 /**
  * Public intake (no account needed). Everything lands in an admin review queue
@@ -65,35 +64,5 @@ export async function submitProvider(form: FormData): Promise<IntakeState> {
   }
   return {
     ok: "Thanks. We review every submission by hand. Listing is never automatic and never paid.",
-  };
-}
-
-export async function subscribeToAlerts(form: FormData): Promise<IntakeState> {
-  const g = await guard(form, "alerts");
-  if (g === "rate") return { error: RATE };
-  if (g) return { ok: g };
-  const parsed = alertSchema.safeParse({
-    email: form.get("email"),
-    categories: form.getAll("categories"),
-    q: form.get("q") ?? undefined,
-    frequency: form.get("frequency") ?? undefined,
-    consent: form.get("consent") ?? undefined,
-  });
-  if (!parsed.success) return { error: firstError(parsed.error) };
-  const d = parsed.data;
-  try {
-    // Existing addresses are left unchanged (no one can alter someone else's settings).
-    await withPublicDb((tx) =>
-      tx.execute(
-        // Arrays go in as JSON: drizzle would otherwise expand them into separate parameters.
-        sql`select subscribe_alerts(${d.email}, array(select jsonb_array_elements_text(${JSON.stringify(d.categories)}::jsonb)), ${d.q}, ${d.frequency}::alert_frequency, ${ALERT_CONSENT})`,
-      ),
-    );
-  } catch (err) {
-    console.error("alert subscribe failed", (err as Error).message);
-    return { error: FAIL };
-  }
-  return {
-    ok: "You're on the list. Alerts are free. Every email will include a one-click unsubscribe link.",
   };
 }

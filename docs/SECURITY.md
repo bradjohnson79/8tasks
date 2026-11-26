@@ -54,6 +54,12 @@ Every admin page/action must call it server-side.
 - Imports: Zod-validated, drafts only, affiliate URLs stored verbatim (https only), unknown slugs reject the file.
 - `/go` refuses closed listings (deadline passed). robots.txt disallows `/admin`, `/go/`, `/api/`; previews are noindex.
 
+## Email
+- `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` server env only. Public pages act only through token functions;
+  `app_runtime` cannot read any email table (integration test). Webhooks verified (Svix HMAC, 5-min window).
+- One-click unsubscribe is POST only; confirm/unsubscribe pages use buttons (no GET side effects).
+- Sign-up never reveals whether an address exists and never changes confirmed, bounced or suppressed addresses.
+
 ## Secrets
 Only in env vars (`.env.local` is git-ignored; `.env.example` holds dummy local values).
 The GitHub repo is **public**: never commit real credentials. Nothing secret is sent to the browser:

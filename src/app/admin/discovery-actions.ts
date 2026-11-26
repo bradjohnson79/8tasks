@@ -4,7 +4,6 @@ import { eq, inArray } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
-  alertSubscriptions,
   categories,
   discoveryGroups,
   listingReports,
@@ -202,25 +201,4 @@ export async function reviewIntake(
     return { error: "Couldn't update. Nothing was changed." };
   }
   redirect(`/admin/inbox?saved=${encodeURIComponent("Updated.")}`);
-}
-
-export async function unsubscribeSubscriber(id: string): Promise<State> {
-  const { session, db } = await requireAdmin();
-  if (!/^[0-9a-f-]{36}$/.test(id)) return { error: "Invalid id" };
-  await db.transaction(async (tx) => {
-    await tx
-      .update(alertSubscriptions)
-      .set({ status: "unsubscribed" })
-      .where(eq(alertSubscriptions.id, id));
-    await audit(
-      tx,
-      session.user.id,
-      "alert_subscription.unsubscribe",
-      "alert_subscription",
-      id,
-      null,
-      null,
-    );
-  });
-  redirect(`/admin/inbox?saved=${encodeURIComponent("Unsubscribed.")}`);
 }

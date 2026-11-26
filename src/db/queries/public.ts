@@ -146,6 +146,7 @@ export async function getPublicOpportunityRows() {
         subcategorySlug: subcategories.slug,
         providerName: providers.name,
         providerSlug: providers.slug,
+        emailAllowed: sql<boolean>`${providers.allowsEmailTraffic} = 'yes'`,
       })
       .from(opportunities)
       .innerJoin(providers, eq(providers.id, opportunities.providerId))

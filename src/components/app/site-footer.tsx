@@ -14,7 +14,7 @@ const EARN_LINKS = [
 const LINKS = [
   { href: "/providers", label: "Providers" },
   { href: "/about", label: "About" },
-  { href: "/alerts", label: "Free Alerts" },
+  { href: "/daily-8", label: "My Daily 8 Email" },
   { href: "/for-brands", label: "For Brands" },
   { href: "/submit-provider", label: "Suggest a Company" },
   { href: "/contact", label: "Contact" },

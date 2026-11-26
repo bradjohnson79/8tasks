@@ -32,7 +32,9 @@
 - [x] Master prompt PR: DB compensation/attributes, multi-category, discovery groups admin, import, subsections, free access, CoffeeModes features, SEO, About/Contact/Press
 - [ ] Apply migrations 0004/0005 to Neon main + merge the master-prompt PR (founder approval)
 - [ ] Founder: verify Dreamstime/JoinBrands countries + copy, then publish
-- [ ] Email service (Resend) for alerts + report notifications (cost approval)
+- [x] Resend + My Daily 8 email system (Phase 1–2 built; sending off) — `docs/EMAIL.md`
+- [ ] Founder: DNS records, API key, webhook, postal address, test emails, then enable sending
+- [ ] Phase 3: matching alerts, creator partner mail, report notifications to admin
 - [ ] `opportunity_locations` + Nearby from real data
 - [ ] Final legal copy before promoting the site
 

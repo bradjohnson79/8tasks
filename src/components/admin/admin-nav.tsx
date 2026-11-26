@@ -12,6 +12,7 @@ const ITEMS = [
   { href: "/admin/discovery", label: "Discovery" },
   { href: "/admin/import", label: "Import" },
   { href: "/admin/inbox", label: "Inbox" },
+  { href: "/admin/email", label: "Email" },
   { href: "/admin/earnings", label: "Earnings" },
   { href: "/admin/audit", label: "Audit log" },
   { href: "/admin/account", label: "Account" },

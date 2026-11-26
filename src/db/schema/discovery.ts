@@ -197,29 +197,3 @@ export const providerSubmissions = pgTable(
     index("provider_submissions_status_idx").on(t.status, t.createdAt),
   ],
 );
-
-/** Free opportunity alerts (opt-in). Nothing is sent until an email service is approved. */
-export const alertFrequency = pgEnum("alert_frequency", ["daily", "weekly"]);
-export const alertStatus = pgEnum("alert_status", ["active", "unsubscribed"]);
-
-export const alertSubscriptions = pgTable(
-  "alert_subscriptions",
-  {
-    id: uuid().primaryKey().defaultRandom(),
-    email: text().notNull().unique(),
-    categorySlugs: text()
-      .array()
-      .notNull()
-      .default(sql`'{}'::text[]`),
-    searchQuery: text(),
-    frequency: alertFrequency().notNull().default("weekly"),
-    status: alertStatus().notNull().default("active"),
-    /** Exact consent wording shown at sign-up, and when (CASL / CAN-SPAM record). */
-    consentText: text().notNull(),
-    consentedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    unsubscribeToken: uuid().notNull().defaultRandom().unique(),
-    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  },
-  (t) => [check("alert_subscriptions_email_len", sql`char_length(${t.email}) <= 254`)],
-);

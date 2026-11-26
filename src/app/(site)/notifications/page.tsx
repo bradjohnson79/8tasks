@@ -16,7 +16,7 @@ export default function NotificationsPage() {
         description="In-app notifications need accounts, which aren't available yet. Free email alerts are available now."
       >
         <Link
-          href="/alerts"
+          href="/daily-8#signup"
           className="flex h-11 items-center rounded-xl bg-action px-4 text-sm font-semibold text-action-foreground"
         >
           Get free alerts

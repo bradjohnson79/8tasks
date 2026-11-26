@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-26: Resend + My Daily 8 email (sending off until approved)
+- Migrations 0006–0008: `email_subscribers` (double opt-in, consent records, preferences, tokens), `email_sends`,
+  `email_events`, `email_suppressions`, `email_settings`; `providers.allows_email_traffic`; token-based SECURITY DEFINER
+  functions. Replaces the unused `alert_subscriptions`. Applied locally + Neon preview only.
+- Rules-based Daily 8 recommender (never padded, skips when nothing fits), React Email templates (HTML + text),
+  hourly idempotent scheduler, signed Resend webhook (bounces/complaints → suppression), one-click unsubscribe,
+  click tracking via internal redirect, `/daily-8` sign-up, confirm/preferences/unsubscribe pages, `/admin/email`.
+- 8tasks.com added as a sending domain in Resend (DNS pending). See `docs/EMAIL.md`.
+
 ## 2026-11-26: Master prompt (provider integration & feature update), PR for review
 - Migrations 0004 (columns/tables) + 0005 (RLS, grants, alert functions, seeds). Applied locally and to Neon **preview** only.
 - Verified compensation, attribute, deadline, last-verified and editor's-pick columns on opportunities; non-cash types

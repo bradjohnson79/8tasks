@@ -12,16 +12,19 @@ export function PublicForm({
   action,
   className,
   children,
+  keepForm = false,
 }: {
   action: (form: FormData) => Promise<IntakeState>;
   className?: string;
   children: React.ReactNode;
+  /** Keep the form visible after success (e.g. preferences). */
+  keepForm?: boolean;
 }) {
   const [state, setState] = useState<IntakeState>(undefined);
   const [pending, start] = useTransition();
   const ref = useRef<HTMLFormElement>(null);
 
-  if (state && "ok" in state)
+  if (state && "ok" in state && !keepForm)
     return (
       <p role="status" className="flex items-start gap-2 rounded-xl border bg-surface p-4 text-sm">
         <CircleCheck className="mt-0.5 size-4 shrink-0 text-emerald" aria-hidden />
@@ -46,6 +49,12 @@ export function PublicForm({
           <input name="company_website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
+      {state && "ok" in state && (
+        <p role="status" className="flex items-center gap-2 text-sm">
+          <CircleCheck className="size-4 shrink-0 text-emerald" aria-hidden />
+          {state.ok}
+        </p>
+      )}
       {state && "error" in state && (
         <p role="alert" className="text-sm text-error">
           {state.error}

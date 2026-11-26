@@ -1,20 +1,14 @@
-import { count, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { AdminForm } from "@/components/admin/admin-form";
 import { SelectField, TextField } from "@/components/admin/fields";
 import { FormMessage } from "@/components/admin/form-message";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  alertSubscriptions,
-  listingReports,
-  opportunities,
-  providers,
-  providerSubmissions,
-} from "@/db/schema";
+import { listingReports, opportunities, providers, providerSubmissions } from "@/db/schema";
 import { requireAdminPage } from "@/lib/admin";
 import { REPORT_REASONS } from "@/lib/intake/schemas";
-import { reviewIntake, unsubscribeSubscriber } from "../../discovery-actions";
+import { reviewIntake } from "../../discovery-actions";
 
 export const metadata = { title: "Inbox" };
 
@@ -38,7 +32,7 @@ export default async function InboxPage({
 }) {
   const { db } = await requireAdminPage();
   const sp = await searchParams;
-  const [reports, submissions, subs, [{ active }]] = await Promise.all([
+  const [reports, submissions] = await Promise.all([
     db
       .select({
         r: listingReports,
@@ -51,11 +45,6 @@ export default async function InboxPage({
       .orderBy(desc(listingReports.createdAt))
       .limit(100),
     db.select().from(providerSubmissions).orderBy(desc(providerSubmissions.createdAt)).limit(100),
-    db.select().from(alertSubscriptions).orderBy(desc(alertSubscriptions.createdAt)).limit(200),
-    db
-      .select({ active: count() })
-      .from(alertSubscriptions)
-      .where(eq(alertSubscriptions.status, "active")),
   ]);
 
   return (
@@ -175,49 +164,13 @@ export default async function InboxPage({
         </ul>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Free alert subscribers ({active} active)</h2>
-        <p className="text-sm text-muted-foreground">
-          No alert emails are sent yet (needs an email service and founder approval). Consent
-          wording and time are stored with each address.
-        </p>
-        {subs.length > 0 && (
-          <div className="overflow-x-auto rounded-2xl border">
-            <table className="w-full text-sm">
-              <thead className="text-left text-muted-foreground">
-                <tr>
-                  <th className="p-3 font-medium">Email</th>
-                  <th className="p-3 font-medium">Categories</th>
-                  <th className="p-3 font-medium">Frequency</th>
-                  <th className="p-3 font-medium">Status</th>
-                  <th className="p-3 font-medium">Since</th>
-                  <th className="p-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {subs.map((a) => (
-                  <tr key={a.id} className="border-t">
-                    <td className="p-3">{a.email}</td>
-                    <td className="p-3">{a.categorySlugs.join(", ") || "All"}</td>
-                    <td className="p-3">{a.frequency}</td>
-                    <td className="p-3">{a.status}</td>
-                    <td className="p-3">{fmt.format(a.consentedAt)}</td>
-                    <td className="p-3">
-                      {a.status === "active" && (
-                        <AdminForm action={unsubscribeSubscriber.bind(null, a.id)}>
-                          <Button type="submit" variant="outline" size="sm">
-                            Unsubscribe
-                          </Button>
-                        </AdminForm>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+      <p className="text-sm text-muted-foreground">
+        Email subscribers are on the{" "}
+        <Link className="underline" href="/admin/email">
+          Email
+        </Link>{" "}
+        page.
+      </p>
     </div>
   );
 }

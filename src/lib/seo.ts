@@ -6,7 +6,7 @@ export const STATIC_ROUTES = [
   "/",
   "/missions",
   "/providers",
-  "/alerts",
+  "/daily-8",
   "/about",
   "/contact",
   "/press",

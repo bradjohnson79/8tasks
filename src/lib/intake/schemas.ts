@@ -64,17 +64,3 @@ export const submissionSchema = z.object({
   categorySlug: optionalText(60),
   notes: optionalText(2000),
 });
-
-export const ALERT_CONSENT =
-  "Yes, email me free 8Tasks opportunity alerts. I can unsubscribe at any time.";
-
-export const alertSchema = z.object({
-  email,
-  categories: z
-    .array(z.string().regex(/^[a-z0-9-]{1,60}$/))
-    .max(8)
-    .default([]),
-  q: optionalText(200),
-  frequency: z.enum(["daily", "weekly"]).default("weekly"),
-  consent: z.literal("yes", { message: "Tick the box to agree to receive alerts" }),
-});

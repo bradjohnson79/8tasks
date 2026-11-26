@@ -72,6 +72,7 @@ export const providerSchema = z.object({
   supportsPostbacks: capability,
   providesFeed: capability,
   allowsRevenueShare: capability,
+  allowsEmailTraffic: capability.default("unknown"),
   adminNotes: optionalText(5000),
 });
 

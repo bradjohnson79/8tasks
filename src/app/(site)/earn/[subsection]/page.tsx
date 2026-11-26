@@ -74,7 +74,10 @@ export default async function EarnPage({ params }: Props) {
           title="Nothing listed here yet"
           description="We only list opportunities we've checked. New ones are added as providers are approved."
         >
-          <Link href="/alerts" className="text-sm font-semibold text-emerald hover:underline">
+          <Link
+            href="/daily-8#signup"
+            className="text-sm font-semibold text-emerald hover:underline"
+          >
             Get free alerts
           </Link>
         </EmptyState>

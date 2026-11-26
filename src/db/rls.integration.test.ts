@@ -53,7 +53,11 @@ describe.skipIf(!enabled)("RLS and grants (local database)", () => {
     "provider_internal",
     "listing_reports",
     "provider_submissions",
-    "alert_subscriptions",
+    "email_subscribers",
+    "email_sends",
+    "email_events",
+    "email_suppressions",
+    "email_settings",
     "affiliate_links",
     "affiliate_transactions",
   ])("app_runtime cannot read %s", async (table) => {
@@ -81,6 +85,43 @@ describe.skipIf(!enabled)("RLS and grants (local database)", () => {
         await tx.insert(schema.listingReports).values({ reason: "other", status: "reviewed" });
       }),
     ).rejects.toSatisfy((e) => code(e) === "42501");
+  });
+
+  it("email subscriptions only change through token functions (double opt-in)", async () => {
+    await rolledBack(runtime, async (tx: ReturnType<typeof db>) => {
+      const sub = await tx.execute<{ t: string | null }>(
+        sql`select email_subscribe('rls-test@example.com', '{"frequency":"weekly"}'::jsonb, 'c', 'v1', 'test') as t`,
+      );
+      const confirmToken = sub.rows[0].t;
+      expect(confirmToken).toBeTruthy();
+      // A third party re-submitting before confirmation can't skip the opt-in.
+      const again = await tx.execute<{ t: string | null }>(
+        sql`select email_subscribe('rls-test@example.com', '{}'::jsonb, 'c', 'v1', 'test') as t`,
+      );
+      expect(again.rows[0].t).toBe(confirmToken);
+      const conf = await tx.execute<{ token: string | null }>(
+        sql`select email_confirm(${confirmToken}::uuid) as token`,
+      );
+      const token = conf.rows[0].token;
+      expect(token).toBeTruthy();
+      // Once active, nobody can change it via sign-up (returns null) or re-use the confirm link.
+      const third = await tx.execute<{ t: string | null }>(
+        sql`select email_subscribe('rls-test@example.com', '{"frequency":"daily"}'::jsonb, 'c', 'v1', 'test') as t`,
+      );
+      expect(third.rows[0].t).toBeNull();
+      const reuse = await tx.execute<{ token: string | null }>(
+        sql`select email_confirm(${confirmToken}::uuid) as token`,
+      );
+      expect(reuse.rows[0].token).toBeNull();
+      const prefs = await tx.execute<{ p: { frequency: string; status: string } }>(
+        sql`select email_get_prefs(${token}::uuid) as p`,
+      );
+      expect(prefs.rows[0].p).toMatchObject({ frequency: "weekly", status: "active" });
+      const unsub = await tx.execute<{ ok: boolean }>(
+        sql`select email_unsubscribe(${token}::uuid) as ok`,
+      );
+      expect(unsub.rows[0].ok).toBe(true);
+    });
   });
 
   it("imports land as drafts and stay invisible to the public role", async () => {

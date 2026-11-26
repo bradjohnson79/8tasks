@@ -127,6 +127,12 @@ export function ProviderForm({
             defaultValue={provider?.allowsRevenueShare ?? "unknown"}
             options={CAPABILITY_OPTIONS}
           />
+          <SelectField
+            name="allowsEmailTraffic"
+            label="Allows email-originated traffic (Daily 8)"
+            defaultValue={provider?.allowsEmailTraffic ?? "unknown"}
+            options={CAPABILITY_OPTIONS}
+          />
         </div>
         <TextAreaField
           name="adminNotes"

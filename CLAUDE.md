@@ -40,7 +40,9 @@ Out of scope until approved: user accounts, My Daily 8 personalization, creator 
 Approved 2026-11-25 (master prompt, `docs/specs/CLAUDE_CODE_MASTER_PROMPT.md`): DB compensation/attributes, multi-category
 records, admin-managed discovery groups, draft-only provider import, /earn subsections, free saved searches + free alert
 opt-in, New This Week / Ending Soon / Editor's picks / Last verified, report + company submission forms, SEO,
-About/Contact/Press. **PERMANENT FREE ACCESS POLICY**: never build paywalls, premium tiers, paid alerts or locked
+About/Contact/Press.
+Approved 2026-11-26 (email addendum): Resend + free My Daily 8 email (`docs/EMAIL.md`). Production sending stays off until
+the founder approves test emails, consent flow, limits and sender details. **PERMANENT FREE ACCESS POLICY**: never build paywalls, premium tiers, paid alerts or locked
 listings (`src/lib/free-access.test.ts` guards component names).
 
 ## Hard rules

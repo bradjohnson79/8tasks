@@ -26,6 +26,11 @@ so `drizzle-kit migrate` will treat them as done).
 | `opportunity_groups` | Explicit opportunity ↔ group membership |
 | `listing_reports`, `provider_submissions` | Public intake: app_runtime INSERT only (status must be `new`, no admin note); admin reviews |
 | `alert_subscriptions` | Free alert opt-ins with consent text/time and unsubscribe token. Written only via `subscribe_alerts()` / `unsubscribe_alerts()` (SECURITY DEFINER); admin read |
+| `email_subscribers` | Opt-in subscribers: status (pending/active/unsubscribed/bounced/complained), frequency, preferences, time zone + send hour, consent text/version/source/time, confirm token, manage token. Token functions only for the public |
+| `email_sends` | One row per intended email; unique `send_key`; status queued/sent/failed/skipped/dry_run; items; Resend id |
+| `email_events` | Resend webhook events (idempotent on svix id) and our click events |
+| `email_suppressions` | Never-email list (bounce/complaint/manual) |
+| `email_settings` | Singleton: pause (default on), limits, batch, campaigns, plan quota/cost, sender name/address, reply-to, weekly day |
 | `user`, `session`, `account`, `verification`, `two_factor` | Better Auth. Admin role = `user.role = 'admin'` (replaces the earlier `profiles` idea) |
 
 ## Roles & RLS (summary; details in SECURITY.md)
