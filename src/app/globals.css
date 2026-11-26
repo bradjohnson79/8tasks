@@ -1,26 +1,102 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+/* Dark mode follows the OS setting (prefers-color-scheme). */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+/*
+ * 8Tasks design tokens (proposed, pending founder approval):
+ * deep navy/charcoal base, emerald/mint accents, WCAG AA contrast.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 1rem;
+
+  --background: #f6f8fb;
+  --foreground: #0b1324;
+  --card: #ffffff;
+  --card-foreground: #0b1324;
+  --muted: #eef2f7;
+  --muted-foreground: #4b5568;
+  --primary: #047857; /* emerald-700: 5.5:1 on white */
+  --primary-foreground: #ffffff;
+  --secondary: #e6f4ee;
+  --secondary-foreground: #064e3b;
+  --accent: #e9eef5;
+  --accent-foreground: #0b1324;
+  --border: #dde3ec;
+  --ring: #10b981;
+
+  /* Brand band (hero/header), navy in both modes */
+  --brand-navy: #0b1324;
+  --brand-navy-2: #111c33;
+  --brand-mint: #34d399;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1324;
+    --foreground: #e8edf5;
+    --card: #111c33;
+    --card-foreground: #e8edf5;
+    --muted: #16223b;
+    --muted-foreground: #a3aec2;
+    --primary: #34d399; /* mint: 9:1 on navy */
+    --primary-foreground: #06241a;
+    --secondary: #12302a;
+    --secondary-foreground: #a7f3d0;
+    --accent: #1a2742;
+    --accent-foreground: #e8edf5;
+    --border: #22304d;
+    --ring: #34d399;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-navy: var(--brand-navy);
+  --color-navy-2: var(--brand-navy-2);
+  --color-mint: var(--brand-mint);
+  --radius-lg: var(--radius);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline-color: var(--ring);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
