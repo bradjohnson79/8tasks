@@ -31,7 +31,6 @@ type Props = { params: Promise<{ page: string }> };
 export function generateStaticParams() {
   return Object.keys(PAGES).map((page) => ({ page }));
 }
-export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = PAGES[(await params).page];

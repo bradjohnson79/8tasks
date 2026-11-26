@@ -9,7 +9,8 @@
   audit log. Every mutation: `requireAdmin()` → Zod → app_admin transaction + audit row.
 - `npm run admin:create` bootstrap script; `npm run test:e2e` local Playwright admin flow.
 - Public pages moved into a `(site)` route group so admin has its own layout.
-- Fixed: subquery column ambiguity in admin link counts; forms no longer clear input on error.
+- Fixed: subquery column ambiguity in admin link counts; forms no longer clear input on error;
+  removed site-wide cache revalidation after admin saves (it 404'd the prerendered legal pages).
 
 ## 2026-11-26: Hero artwork
 - Added the approved hero illustration (phone + survey and usability-test cards) on large screens; gentle float animation, off under reduced motion.

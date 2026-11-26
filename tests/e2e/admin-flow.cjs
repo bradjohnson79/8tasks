@@ -19,8 +19,8 @@ function totp(b32) {
   return String(((h.readUInt32BE(o) & 0x7fffffff) % 1e6)).padStart(6, '0');
 }
 const B = process.env.BASE_URL || 'http://localhost:3000';
-const EMAIL = process.env.E2E_ADMIN_EMAIL || EMAIL;
-const PASSWORD = process.env.E2E_ADMIN_PASSWORD || PASSWORD;
+const EMAIL = process.env.E2E_ADMIN_EMAIL || 'admin@8tasks.test';
+const PASSWORD = process.env.E2E_ADMIN_PASSWORD || 'local-dev-admin-pass-1';
 const log = (...a) => console.log('✔', ...a);
 (async () => {
   const b = await chromium.launch();

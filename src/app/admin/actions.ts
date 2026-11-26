@@ -1,7 +1,6 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { affiliateLinks, categories, opportunities, providers, subcategories } from "@/db/schema";
 import { audit, requireAdmin } from "@/lib/admin";
@@ -21,6 +20,8 @@ import {
  *  2. validates input with Zod,
  *  3. writes through the app_admin connection inside a transaction with an audit entry.
  * Records are archived/deactivated rather than deleted, to keep click history intact.
+ * Public data pages render dynamically, so no cache revalidation is needed after a save.
+ * (A site-wide revalidatePath("/", "layout") 404s the prerendered legal pages in Next 15.)
  */
 
 type Result = { ok: true; id: string; message: string } | { ok: false; message: string };
@@ -49,9 +50,6 @@ function dbError(err: unknown): string {
   return "Something went wrong while saving. Nothing was changed.";
 }
 
-function revalidatePublic() {
-  revalidatePath("/", "layout");
-}
 
 // ---------------------------------------------------------------------------
 // Providers
@@ -87,7 +85,6 @@ export async function saveProvider(providerId: string | null, form: FormData) {
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done(path, result, result.ok ? `/admin/providers/${result.id}` : undefined);
 }
 
@@ -140,7 +137,6 @@ export async function saveAffiliateLink(providerId: string, linkId: string | nul
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done(path, result);
 }
 
@@ -236,7 +232,6 @@ export async function saveOpportunity(opportunityId: string | null, form: FormDa
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done(path, result, result.ok ? `/admin/opportunities/${result.id}` : undefined);
 }
 
@@ -265,7 +260,6 @@ export async function saveCategory(categoryId: string, form: FormData) {
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done(path, result);
 }
 
@@ -293,7 +287,6 @@ export async function addSubcategory(form: FormData) {
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done(path, result);
 }
 
@@ -330,6 +323,5 @@ export async function toggleSubcategory(subcategoryId: string) {
   } catch (err) {
     result = { ok: false, message: dbError(err) };
   }
-  revalidatePublic();
   return done("/admin/categories", result);
 }
