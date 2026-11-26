@@ -23,6 +23,7 @@
 | 2026-11-26 | Compensation/attribute model built as a typed display model first; DB columns deferred until the visual structure is approved | Update §18 ("no unnecessary backend complexity"); planned columns in DATABASE.md |
 | 2026-11-26 | Saved missions stored on the device (localStorage) | User accounts not yet approved; saving still useful without sign-in |
 | 2026-11-26 | Nearby uses a user-chosen country/region/city, never GPS; providers operating in an area are shown instead of invented local assignments | Update §8 |
+| 2026-11-26 | **Hero artwork restored as the one exception** to the spec's no-graphics rule: static (no float), design-system colours, wide screens (≥1024px) beside the headline; hidden on phones so search and Daily 8 stay near the top | Founder decision |
 
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`

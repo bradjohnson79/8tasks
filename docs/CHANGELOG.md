@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26: Hero artwork restored
+- Founder exception: phone artwork back in the homepage hero on wide screens, restyled to the dark design system, static.
+
 ## 2026-11-26: Mobile-first design system + discovery update
 - Implemented the founder's design specification and enhancement update (see docs/DESIGN_SYSTEM.md):
   dark tokens, Inter, wordmark, sticky 64px header, five-destination bottom nav (desktop: header nav),

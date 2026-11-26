@@ -39,7 +39,7 @@ icon containers 48px, touch targets ≥ 44px. Motion is minimal and disabled und
 `SearchBar` · `Daily8Card` · `PathwayTile` / `PathwayGrid` · `CategoryTile` / `CategoryGrid` · `FilterChips` ·
 `AdvancedFilters` · `LocationPicker` · `MissionCard` / `MissionGrid` · `CompensationDisplay` · `MissionMetadata` ·
 `BookmarkButton` (+ `saved-store.ts`) · `StatusPill` · `EmptyState` · `MissionCardSkeleton` / `MissionGridSkeleton` ·
-`AffiliateDisclosure` · `DemoBanner` · `SiteFooter` · `ProviderLogo` · `CountryBadges` · `CategoryIcon`.
+`AffiliateDisclosure` · `HeroIllustration` · `DemoBanner` · `SiteFooter` · `ProviderLogo` · `CountryBadges` · `CategoryIcon`.
 
 ## Data-driven configuration (`src/lib/`)
 - `taxonomy.ts`: category display (short label, Lucide icon, accent), the four **pathways** (Quick Earnings,
@@ -54,6 +54,10 @@ icon containers 48px, touch targets ≥ 44px. Motion is minimal and disabled und
 - `missions/metadata.ts`: picks the 2–3 most useful facts for cards; detail pages show all.
 - `missions/demo-data.ts`: 20 labelled demo listings for the prototype; loaded only when
   `shouldShowDemoData()` (never when `VERCEL_ENV=production`), never written to the database.
+
+## Hero artwork
+`HeroIllustration` is the site's only graphic (founder-approved exception): a phone listing four categories with a
+survey card and a usability-test checklist. Static, decorative (`aria-hidden`), no figures; shown at ≥ 1024px only.
 
 ## Rules carried into the UI
 - Provider-level listings say "Provider", use "Explore Provider", show "Subject to eligibility".

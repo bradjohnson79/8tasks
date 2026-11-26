@@ -5,6 +5,7 @@ import { Container, SectionHeader } from "@/components/app/container";
 import { Daily8Card } from "@/components/app/daily8-card";
 import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
 import { FilterChips } from "@/components/app/filter-chips";
+import { HeroIllustration } from "@/components/app/hero-illustration";
 import { MissionGrid } from "@/components/app/mission-card";
 import { PathwayGrid } from "@/components/app/pathway-grid";
 import { SearchBar } from "@/components/app/search-bar";
@@ -61,24 +62,34 @@ export default async function DiscoverPage({
   return (
     <Container className="flex flex-col gap-8 pt-5 sm:pt-8">
       {/* Discovery headline, tagline, search (design spec §8, update §3) */}
-      <section aria-labelledby="hero-title" className="flex flex-col gap-4">
-        <div>
-          <h1
-            id="hero-title"
-            className="text-[28px] leading-tight font-bold tracking-tight sm:text-[32px] lg:text-[40px]"
-          >
-            Your next mission awaits.
-          </h1>
-          <p className="mt-1 text-base font-semibold text-emerald sm:text-lg">
-            Small Missions. Real Money.
-          </p>
-          <p className="mt-2 max-w-2xl text-[15px] text-text-2">
-            Discover legitimate opportunities to earn extra money through simple tasks, testing,
-            research and more.
-          </p>
+      <section
+        aria-labelledby="hero-title"
+        className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-10"
+      >
+        <div className="flex min-w-0 flex-col gap-4">
+          <div>
+            <h1
+              id="hero-title"
+              className="text-[28px] leading-tight font-bold tracking-tight sm:text-[32px] lg:text-[40px]"
+            >
+              Your next mission awaits.
+            </h1>
+            <p className="mt-1 text-base font-semibold text-emerald sm:text-lg">
+              Small Missions. Real Money.
+            </p>
+            <p className="mt-2 max-w-2xl text-[15px] text-text-2">
+              Discover legitimate opportunities to earn extra money through simple tasks, testing,
+              research and more.
+            </p>
+          </div>
+          <SearchBar />
+          <Daily8Card />
         </div>
-        <SearchBar />
-        <Daily8Card />
+        {/* Founder-approved exception: the site's only graphic. Wide screens only, so
+            search and Daily 8 stay near the top on phones. */}
+        <div className="hidden lg:block">
+          <HeroIllustration />
+        </div>
       </section>
 
       {/* How do you want to earn? (update §4) */}
