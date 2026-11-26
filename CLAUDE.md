@@ -12,11 +12,13 @@ Operating model: solo founder (Brad) + automation. Every feature must justify it
 ## Stack
 - Next.js (App Router) + TypeScript (strict)
 - Tailwind CSS + shadcn/ui
-- Supabase: Postgres, Auth, Storage, row-level security
+- Postgres on Neon (project `8tasks`), accessed with Drizzle ORM; row-level security + least-privilege roles
+- Better Auth (email/password + TOTP two-factor, admin role) storing users/sessions in our Postgres
+- File storage: not needed yet; decide when provider logos need uploads
 - Vercel hosting; DNS stays on Cloudflare (8tasks.com)
 - Resend for email (Phase 3+)
 - Zod for validation; Vitest + Playwright for tests
-- Scheduled jobs: Vercel Cron or Supabase pg_cron. No n8n unless approved.
+- Scheduled jobs: Vercel Cron (or a Neon-compatible alternative). No n8n unless approved.
 
 Do not add paid services without listing the recurring cost and getting founder approval.
 
@@ -63,9 +65,9 @@ Deep navy/charcoal base, emerald/mint accents, rounded mission cards, generous s
   `docs/AFFILIATE_INTEGRATIONS.md`, `docs/SECURITY.md`, `docs/DECISIONS.md`, `docs/CHANGELOG.md`.
 - At the end of each phase, report: what was built, files changed, tests run, known limitations, required env vars, unresolved issues, decisions needed, and next steps.
 
-## First session tasks
+## First session tasks (done 2026-11-26; see docs/CHANGELOG.md)
 1. Scaffold Next.js + TypeScript + Tailwind + shadcn/ui; set up git.
 2. Create the `docs/` set above (blueprint already in `docs/PROJECT_BLUEPRINT.md`).
-3. Write the initial Supabase migration: `categories`, `subcategories`, `providers`, `affiliate_links`, `opportunities`, `outbound_clicks`, `profiles` (role), `admin_audit_log`, with RLS.
+3. Write the initial migration: `categories`, `subcategories`, `providers`, `affiliate_links`, `opportunities`, `outbound_clicks`, admin role (on Better Auth `user.role`), `admin_audit_log`, with RLS.
 4. Seed the 8 categories, plus clearly flagged demo providers/opportunities.
 5. Build the layout, navigation and homepage shell.

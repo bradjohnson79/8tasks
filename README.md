@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 8Tasks
 
-## Getting Started
+Affiliate-powered discovery site for earning opportunities ("Missions") from third-party providers.
+Start with [`CLAUDE.md`](CLAUDE.md) and [`docs/`](docs).
 
-First, run the development server:
+## Stack
+Next.js 15 (App Router, TypeScript strict) · Tailwind v4 + shadcn/ui · Postgres on Neon via Drizzle ·
+Better Auth (admin + TOTP MFA) · Zod · Vitest. Hosting target: Vercel.
+
+## Local development
+Requires Node 22 and a local Postgres 16+.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local        # then set BETTER_AUTH_SECRET (openssl rand -base64 32)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create the local database and roles (once), as a Postgres superuser:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sql
+create role eighttasks_owner login createrole password 'owner_local_pw';
+create database eighttasks owner eighttasks_owner;
+create role eighttasks_app   login password 'app_local_pw';
+create role eighttasks_admin login password 'admin_local_pw';
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then:
 
-## Learn More
+```bash
+npm run db:migrate                # as owner; creates tables, RLS, app_runtime/app_admin roles
+psql -d eighttasks -c "grant app_runtime to eighttasks_app; grant app_admin to eighttasks_admin;"
+npm run db:seed                   # 8 categories + flagged demo providers (never in production)
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` / `build` / `start` | Next.js |
+| `npm run lint` / `typecheck` / `test` | ESLint, `tsc --noEmit`, Vitest |
+| `npm run db:generate` | Generate a migration from `src/db/schema` |
+| `npm run db:migrate` | Apply migrations (uses `MIGRATION_DATABASE_URL`) |
+| `npm run db:seed [-- --categories-only]` | Seed categories (+ demo data outside production) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment variables
+See [`.env.example`](.env.example). Never commit real values.
