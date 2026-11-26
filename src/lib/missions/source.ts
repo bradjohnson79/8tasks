@@ -149,6 +149,7 @@ export const loadOpportunities = cache(async (): Promise<Opportunity[]> => {
           .filter((g) => g.opportunityId === r.id)
           .map((g) => `${g.kind}:${g.slug}`),
         hasOutboundLink: r.hasLink,
+        isFreeListing: r.isFreeListing,
         emailAllowed: r.emailAllowed,
       } satisfies Opportunity;
     });

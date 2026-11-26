@@ -36,7 +36,10 @@ export default async function PrivacyPage() {
             Type DELETE to confirm
           </label>
           <input id="del-confirm" name="confirm" autoComplete="off" className={inputClass} />
-          <button type="submit" className="flex h-11 items-center justify-center rounded-xl border border-error/60 px-4 text-sm font-semibold text-error">
+          <button
+            type="submit"
+            className="flex h-11 items-center justify-center rounded-xl border border-error/60 px-4 text-sm font-semibold text-error"
+          >
             Delete my account
           </button>
         </PublicForm>

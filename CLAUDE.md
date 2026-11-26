@@ -35,12 +35,14 @@ MVP scope:
 - Admin: provider, opportunity and affiliate-link management (admin role + MFA)
 - Legal pages: Privacy, Terms, Affiliate Disclosure, Earning Disclaimer
 
-Out of scope until approved: user accounts, My Daily 8 personalization, creator program, conversion ingestion, AI workflows, PWA install, application status tracking, sponsored sales, paid anything.
+Out of scope until approved: creator/promotional partner program (accounts Phase 3), conversion ingestion, AI workflows, PWA install, application status tracking, sponsored sales, paid anything.
 
 Approved 2026-11-25 (master prompt, `docs/specs/CLAUDE_CODE_MASTER_PROMPT.md`): DB compensation/attributes, multi-category
 records, admin-managed discovery groups, draft-only provider import, /earn subsections, free saved searches + free alert
 opt-in, New This Week / Ending Soon / Editor's picks / Last verified, report + company submission forms, SEO,
 About/Contact/Press.
+Approved 2026-11-26 (accounts addendum): optional free accounts Phases 1–2 (magic link/Google, preferences, synced saves,
+personal Daily 8, missions/earnings tracking, export/delete). Partner accounts (Phase 3) need approval.
 Approved 2026-11-26 (email addendum): Resend + free My Daily 8 email (`docs/EMAIL.md`). Production sending stays off until
 the founder approves test emails, consent flow, limits and sender details. **PERMANENT FREE ACCESS POLICY**: never build paywalls, premium tiers, paid alerts or locked
 listings (`src/lib/free-access.test.ts` guards component names).

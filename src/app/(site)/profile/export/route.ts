@@ -1,6 +1,12 @@
 import { sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { userEarnings, userMissions, userProfiles, userSavedItems, userSavedSearches } from "@/db/schema";
+import {
+  userEarnings,
+  userMissions,
+  userProfiles,
+  userSavedItems,
+  userSavedSearches,
+} from "@/db/schema";
 import { getUser, withUserDb } from "@/lib/account";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +22,8 @@ export async function GET() {
     savedSearches: await tx.select().from(userSavedSearches),
     missions: await tx.select().from(userMissions),
     earnings: await tx.select().from(userEarnings),
-    emailSubscription: (await tx.execute<{ s: unknown }>(sql`select email_account_get() as s`)).rows[0]?.s ?? null,
+    emailSubscription:
+      (await tx.execute<{ s: unknown }>(sql`select email_account_get() as s`)).rows[0]?.s ?? null,
     exportedAt: new Date().toISOString(),
   }));
   // The manage-email token is a secret link; leave it out of downloads.

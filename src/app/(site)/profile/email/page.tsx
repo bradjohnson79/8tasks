@@ -16,12 +16,22 @@ export const metadata: Metadata = { title: "Email & Alerts", robots: { index: fa
 
 type Sub = { status: string; frequency: string; consentedAt: string; consentSource: string } | null;
 
-export default async function AccountEmailPage({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
+export default async function AccountEmailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string }>;
+}) {
   const user = await requireUser("/profile/email");
   const sp = await searchParams;
   const [sub, [p], categories, config] = await Promise.all([
-    withUserDb(user.id, async (tx) => (await tx.execute<{ s: Sub }>(sql`select email_account_get() as s`)).rows[0]?.s ?? null),
-    withUserDb(user.id, (tx) => tx.select().from(userProfiles).where(eq(userProfiles.userId, user.id))),
+    withUserDb(
+      user.id,
+      async (tx) =>
+        (await tx.execute<{ s: Sub }>(sql`select email_account_get() as s`)).rows[0]?.s ?? null,
+    ),
+    withUserDb(user.id, (tx) =>
+      tx.select().from(userProfiles).where(eq(userProfiles.userId, user.id)),
+    ),
     getActiveCategories(),
     getDiscoveryConfig(),
   ]);

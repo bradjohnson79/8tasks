@@ -24,6 +24,7 @@ export function MissionCard({
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const href = `/missions/${o.id}`;
   const cta = o.kind === "provider" ? "Explore Opportunity" : "Explore Mission";
+  const pills = o.isDemo || o.isSponsored || o.isFeatured || o.isFreeListing;
 
   return (
     <article className="flex h-full flex-col gap-4 rounded-2xl border bg-surface p-4 transition-colors hover:border-elevated">
@@ -57,11 +58,12 @@ export function MissionCard({
       )}
 
       <div className="mt-auto flex items-center gap-2">
-        {(o.isDemo || o.isSponsored || o.isFeatured) && (
+        {pills && (
           <div className="flex shrink-0 flex-col gap-1">
             {o.isDemo && <StatusPill tone="warning">Demo</StatusPill>}
             {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
             {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
+            {o.isFreeListing && <StatusPill>Free listing</StatusPill>}
           </div>
         )}
         <Link

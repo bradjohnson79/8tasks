@@ -12,9 +12,9 @@ export default async function PromotePage() {
     <Container className="flex max-w-2xl flex-col gap-4 pt-5 pb-10 sm:pt-8">
       <h1 className="text-[28px] font-bold tracking-tight sm:text-[32px]">Promote 8Tasks</h1>
       <p className="text-text-2">
-        A free promotional partner program for creators, bloggers and newsletter writers is
-        planned. Approved partners will get referral links and ready-made materials. Joining will
-        always be free, and earnings are never guaranteed.
+        A free promotional partner program for creators, bloggers and newsletter writers is planned.
+        Approved partners will get referral links and ready-made materials. Joining will always be
+        free, and earnings are never guaranteed.
       </p>
       <p className="text-sm text-text-2">Applications aren&apos;t open yet.</p>
     </Container>

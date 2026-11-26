@@ -48,6 +48,7 @@ export default async function EditProviderPage({
         label: affiliateLinks.label,
         destinationUrl: affiliateLinks.destinationUrl,
         isActive: affiliateLinks.isActive,
+        isAffiliate: affiliateLinks.isAffiliate,
         subidParam: affiliateLinks.subidParam,
         adminNotes: affiliateLinks.adminNotes,
         isDemo: affiliateLinks.isDemo,
@@ -152,6 +153,12 @@ export default async function EditProviderPage({
                 label="Active"
                 defaultChecked={l.isActive}
               />
+              <CheckboxField
+                idPrefix={`l-${l.id}`}
+                name="isAffiliate"
+                label="Affiliate link (earns commission)"
+                defaultChecked={l.isAffiliate}
+              />
               <span className="text-sm text-muted-foreground tabular-nums">
                 {l.clicks30d} clicks (30 days){l.isDemo ? " · demo" : ""}
               </span>
@@ -188,6 +195,12 @@ export default async function EditProviderPage({
             hint="Only for network links with a documented SubID."
           />
           <input type="hidden" name="isActive" value="on" />
+          <CheckboxField
+            idPrefix="l-new"
+            name="isAffiliate"
+            label="Affiliate link (untick for a free listing's official site)"
+            defaultChecked
+          />
           <div className="sm:col-span-2">
             <Button type="submit" size="sm">
               <PlusIcon /> Add link

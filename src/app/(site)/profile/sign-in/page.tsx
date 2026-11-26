@@ -7,7 +7,11 @@ import { SignInForm } from "./sign-in-form";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
   const { next } = await searchParams;
   if (await getUser()) redirect(next && next.startsWith("/") ? next : "/profile");
   return (

@@ -33,21 +33,31 @@ export const userProfiles = pgTable(
     country: text(),
     region: text(),
     city: text(),
-    categories: text().array().notNull().default(sql`'{}'::text[]`),
-    creativeInterests: text().array().notNull().default(sql`'{}'::text[]`),
+    categories: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    creativeInterests: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     workMode: workMode().notNull().default("any"),
     beginnerOnly: boolean().notNull().default(false),
     experienceLevel: experienceLevel(),
-    equipment: text().array().notNull().default(sql`'{}'::text[]`),
-    compensationTypes: text().array().notNull().default(sql`'{}'::text[]`),
+    equipment: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    compensationTypes: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     timeZone: text().notNull().default("America/Vancouver"),
     onboardedAt: timestamp({ withTimezone: true }),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [
-    check("user_profiles_country", sql`${t.country} is null or ${t.country} in ('CA','US')`),
-  ],
+  (t) => [check("user_profiles_country", sql`${t.country} is null or ${t.country} in ('CA','US')`)],
 );
 
 export const userSavedItems = pgTable(
@@ -74,7 +84,10 @@ export const userSavedSearches = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     q: text(),
-    filters: text().array().notNull().default(sql`'{}'::text[]`),
+    filters: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     path: text(),
     label: text().notNull(),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -108,7 +121,10 @@ export const userMissions = pgTable(
   },
   (t) => [
     index("user_missions_user_idx").on(t.userId),
-    check("user_missions_len", sql`char_length(${t.title}) <= 160 and char_length(coalesce(${t.notes}, '')) <= 2000`),
+    check(
+      "user_missions_len",
+      sql`char_length(${t.title}) <= 160 and char_length(coalesce(${t.notes}, '')) <= 2000`,
+    ),
   ],
 );
 

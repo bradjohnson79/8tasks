@@ -10,10 +10,22 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const user = await getUser();
   if (!user) return new NextResponse(null, { status: 401 });
-  const rows = await withUserDb(user.id, (tx) => tx.select().from(userEarnings).orderBy(asc(userEarnings.earnedOn)));
+  const rows = await withUserDb(user.id, (tx) =>
+    tx.select().from(userEarnings).orderBy(asc(userEarnings.earnedOn)),
+  );
   const money = (c: number) => (c / 100).toFixed(2);
   const csv = toCsv([
-    ["date", "provider", "activity", "status", "amount", "expenses", "reimbursed", "currency", "notes"],
+    [
+      "date",
+      "provider",
+      "activity",
+      "status",
+      "amount",
+      "expenses",
+      "reimbursed",
+      "currency",
+      "notes",
+    ],
     ...rows.map((r) => [
       r.earnedOn,
       r.providerName,

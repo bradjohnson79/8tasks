@@ -10,7 +10,20 @@ export async function GET() {
   if (checkAdmin(session?.user)) return new NextResponse(null, { status: 404 });
   const body = toCsv([
     [...CSV_COLUMNS],
-    ["example-program", "direct", "2026-11-30", "approved", "", "", "12.50", "USD", "PayPal", "", "EXAMPLE-DELETE-ME", "Example row: delete before importing"],
+    [
+      "example-program",
+      "direct",
+      "2026-11-30",
+      "approved",
+      "",
+      "",
+      "12.50",
+      "USD",
+      "PayPal",
+      "",
+      "EXAMPLE-DELETE-ME",
+      "Example row: delete before importing",
+    ],
   ]);
   return new NextResponse(body + "\n", {
     headers: {

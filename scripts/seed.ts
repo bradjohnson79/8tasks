@@ -124,7 +124,9 @@ async function main() {
         .onConflictDoNothing({ target: schema.affiliatePrograms.id });
       added += res.rowCount ?? 0;
     }
-    console.log(`Affiliate programs: ${added} added, ${AFFILIATE_PROGRAM_SEED.length - added} already present.`);
+    console.log(
+      `Affiliate programs: ${added} added, ${AFFILIATE_PROGRAM_SEED.length - added} already present.`,
+    );
 
     if (categoriesOnly) return;
 

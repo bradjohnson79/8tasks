@@ -164,4 +164,9 @@ export type Opportunity = {
   emailAllowed?: boolean;
   /** Whether a validated outbound affiliate link exists (real listings only). */
   hasOutboundLink: boolean;
+  /**
+   * Free listing: the outbound link is the provider's plain official site and 8Tasks earns no
+   * commission. Shows the free-listing note instead of the affiliate disclosure.
+   */
+  isFreeListing?: boolean;
 };

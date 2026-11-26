@@ -46,6 +46,14 @@ so `drizzle-kit migrate` will treat them as done).
 `providers.last_verified_at` (public). `affiliate_links.url_template` (unused until the creator program).
 Still planned: `opportunity_locations` (country/region/city) for location-bound missions.
 
+## Migrations 0010–0012 (accounts, free listings)
+- 0010/0011: `user_profiles`, `user_saved_items`, `user_saved_searches`, `user_missions`, `user_earnings` (cents,
+  USD/CAD, self-reported), `email_subscribers.user_id`. RLS: `app_runtime` sees only rows where
+  `user_id = app_user_id()` (`app.user_id`, set per transaction by `withUserDb` after the session is verified); admins
+  have no access. Functions: `email_account_get/subscribe/unsubscribe`, `delete_my_account` (refuses admins).
+- 0012: `affiliate_links.is_affiliate` (default true) + `link_is_affiliate(uuid)` (public flag only).
+- Listings import: see CHANGELOG 2026-11-26 and `scripts/import-listings.ts`.
+
 ## Seed
 `npm run db:seed` seeds categories + 3 demo providers (example.com URLs, `is_demo = true`).
 Neon `main` was seeded with **categories only** (the founder's 8, 62 subcategories). Neon `preview` also has 3 legacy demo providers (hidden from the feed; the richer demo set lives in code).

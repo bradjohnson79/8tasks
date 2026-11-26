@@ -1,5 +1,7 @@
 # Affiliate Integrations
 
+Free listings (no commission) use `is_affiliate = false` links to the provider's official site; they never show the affiliate disclosure.
+
 Live programs (2026-11-26): **Dreamstime** (`https://www.dreamstime.com/#res62198923`) and **JoinBrands**
 (`https://joinbrands.com/?ref=ccIo2N`, PayPal). Every other program is pending signup or waits for the live site.
 The program registry (30 rows, from the founder's `earnings_feed_sources.csv`) is in `affiliate_programs`;

@@ -100,13 +100,22 @@ export async function syncSaved(local: { items: string[]; searches: unknown[] })
     const add = searches.filter((s) => !have.has(key(s)));
     if (add.length)
       await tx.insert(userSavedSearches).values(
-        add.map((s) => ({ userId: user.id, q: s.q ?? null, filters: s.f, path: s.path ?? null, label: s.label })),
+        add.map((s) => ({
+          userId: user.id,
+          q: s.q ?? null,
+          filters: s.f,
+          path: s.path ?? null,
+          label: s.label,
+        })),
       );
     const allItems = await tx
       .select({ itemId: userSavedItems.itemId })
       .from(userSavedItems)
       .orderBy(sql`${userSavedItems.createdAt} desc`);
-    const allSearches = await tx.select().from(userSavedSearches).orderBy(sql`${userSavedSearches.createdAt} desc`);
+    const allSearches = await tx
+      .select()
+      .from(userSavedSearches)
+      .orderBy(sql`${userSavedSearches.createdAt} desc`);
     return {
       items: allItems.map((r) => r.itemId),
       searches: allSearches.map((s) => ({
@@ -151,7 +160,12 @@ export async function setSavedSearch(search: unknown, saved: boolean) {
         label: s.data.label,
       });
     if (!saved && same.length)
-      await tx.delete(userSavedSearches).where(inArray(userSavedSearches.id, same.map((r) => r.id)));
+      await tx.delete(userSavedSearches).where(
+        inArray(
+          userSavedSearches.id,
+          same.map((r) => r.id),
+        ),
+      );
   });
 }
 
@@ -255,8 +269,12 @@ export async function accountUnsubscribe(): Promise<State> {
 // ---------------------------------------------------------------------------
 export async function deleteAccount(form: FormData): Promise<State> {
   const user = await requireUser();
-  if (String(form.get("confirm") ?? "").trim().toUpperCase() !== "DELETE")
-    return { error: 'Type DELETE to confirm.' };
+  if (
+    String(form.get("confirm") ?? "")
+      .trim()
+      .toUpperCase() !== "DELETE"
+  )
+    return { error: "Type DELETE to confirm." };
   const r = await withUserDb(user.id, (tx) =>
     tx.execute<{ ok: boolean }>(sql`select delete_my_account() as ok`),
   );

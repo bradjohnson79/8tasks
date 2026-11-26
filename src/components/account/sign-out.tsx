@@ -9,7 +9,10 @@ export function UserSignOut({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      className={className ?? "text-sm font-medium text-text-2 underline-offset-4 hover:text-foreground hover:underline"}
+      className={
+        className ??
+        "text-sm font-medium text-text-2 underline-offset-4 hover:text-foreground hover:underline"
+      }
       onClick={async () => {
         await authClient.signOut();
         clearLocalAccountCache();

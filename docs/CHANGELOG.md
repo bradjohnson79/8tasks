@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-26: First real listings + optional free accounts (preview only; awaiting "go")
+- **Listings import** (`CLAUDE_LISTINGS_PROMPT.md`): `npm run listings:import -- --file <path> [--include-free-drafts]
+  [--dry-run] [--publish-affiliate]` and `/admin/import` (also at `/admin/listings/import`, linked from Providers) accept
+  the founder's `listings_phase1.json` / `.csv` (`src/lib/import/listings-v1.ts`). Idempotent: providers by slug, links by
+  exact URL, opportunities by (provider, slug), adopting a renamed provider-level listing in the same category instead of
+  duplicating it. Re-imports never change `status` or admin notes, only fill empty internal facts, merge attributes, and
+  never remove placements set in /admin. Audit row per entity. `listings_pending_review.csv` is rejected.
+- Migration 0012: `affiliate_links.is_affiliate` (false = free listing's official site; /go still validates + logs) and
+  `link_is_affiliate()` so public pages learn only the flag. Free listings show a "Free listing" badge, the
+  free-listing note instead of the affiliate disclosure, "Visit official site" and no pay. Publish policy counts only
+  affiliate links (free official links don't block Level D user-value listings).
+- Create & Earn pathway page has subsection tabs (Capture, Write, Film, Review, Promote) from `discovery_groups`.
+- Neon preview: migrations 0010–0012 applied; Dreamstime + JoinBrands published (exact URLs, CA + US), 25 free listings
+  as drafts. Production untouched.
+- **Optional free accounts** (addendum, Phases 1–2): magic-link email sign-in (+ Google when `GOOGLE_CLIENT_ID/SECRET`
+  are set), admin accounts can only sign in with password + TOTP; "Choose your adventure" onboarding (skippable);
+  dashboard; saved items/searches synced from the device; personalized on-site Daily 8; Email & Alerts (account creation
+  never subscribes; explicit consent recorded); My Missions and My Earnings (self-reported, CSV); JSON data export;
+  account deletion; per-user RLS (`app.user_id`, migrations 0010–0011). Promotional partners (Phase 3) not built.
+
 ## 2026-11-26: Founder gap analysis + real integration package + full link map
 - `data/site_links.json` rebuilt from the founder's 86-row link map via `scripts/build-site-links.ts` (commercial
   fields removed: public repo). For Brands still shows only live + for_brands_page rows (JoinBrands).

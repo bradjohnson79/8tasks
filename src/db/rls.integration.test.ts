@@ -124,7 +124,7 @@ describe.skipIf(!enabled)("RLS and grants (local database)", () => {
     });
   });
 
-  it("imports land as drafts and stay invisible to the public role", async () => {
+  it("re-imports never change status or admin notes; new records land as drafts", async () => {
     const parsed = parseImport(
       readFileSync(join(process.cwd(), "data/import/claude_integration_package.json"), "utf8"),
       "json",
@@ -132,29 +132,145 @@ describe.skipIf(!enabled)("RLS and grants (local database)", () => {
     expect(parsed.ok).toBe(true);
     if (!parsed.ok) return;
     const result = await rolledBack(admin, async (tx: ReturnType<typeof db>) => {
-      const l = await importLookups(tx, parsed.providers);
+      // Simulate founder edits in /admin, plus a brand-new provider in the file.
+      await tx.execute(
+        sql`update providers set status = 'archived', admin_notes = 'founder note' where slug = 'dreamstime'`,
+      );
+      const list = [
+        ...parsed.providers,
+        { ...parsed.providers[0], slug: "brand-new-co", listing: undefined },
+      ];
+      const l = await importLookups(tx, list);
       expect(l.errors).toEqual([]);
-      await applyProviders(tx as never, parsed.providers, l, null as never);
-      const provs = await tx.execute<{ slug: string; status: string }>(
-        sql`select slug, status from providers where slug in ('dreamstime','joinbrands')`,
+      await applyProviders(tx as never, list, l, null);
+      await applyProviders(tx as never, list, await importLookups(tx, list), null); // idempotent
+      const provs = await tx.execute<{ slug: string; status: string; notes: string | null }>(
+        sql`select slug, status, admin_notes as notes from providers where slug in ('dreamstime','brand-new-co') order by slug`,
       );
-      const opps = await tx.execute<{ status: string; dest: string | null }>(
-        sql`select o.status, l.destination_url as dest from opportunities o
-            join providers p on p.id = o.provider_id
-            left join affiliate_links l on l.id = o.affiliate_link_id
-            where p.slug in ('dreamstime','joinbrands')`,
+      const opps = await tx.execute<{ slug: string; n: number }>(
+        sql`select p.slug, count(*)::int as n from opportunities o join providers p on p.id = o.provider_id
+            where p.slug in ('dreamstime','joinbrands','brand-new-co') group by p.slug order by p.slug`,
       );
-      const internal = await tx.execute<{ n: number }>(
-        sql`select count(*)::int as n from provider_internal i join providers p on p.id = i.provider_id where p.slug in ('dreamstime','joinbrands')`,
+      const dest = await tx.execute<{ dest: string }>(
+        sql`select l.destination_url as dest from affiliate_links l join providers p on p.id = l.provider_id
+            where p.slug in ('dreamstime','joinbrands') and l.is_affiliate order by 1`,
       );
-      return { provs: provs.rows, opps: opps.rows, internal: internal.rows[0].n };
+      return { provs: provs.rows, opps: opps.rows, dest: dest.rows.map((r) => r.dest) };
     });
-    expect(result.provs.map((p) => p.status)).toEqual(["draft", "draft"]);
-    expect(result.opps.every((o) => o.status === "draft")).toBe(true);
-    expect(result.opps.map((o) => o.dest).sort()).toEqual([
-      "https://joinbrands.com/?ref=ccIo2N",
-      "https://www.dreamstime.com/#res62198923",
+    expect(result.provs).toEqual([
+      { slug: "brand-new-co", status: "draft", notes: expect.anything() },
+      { slug: "dreamstime", status: "archived", notes: "founder note" },
     ]);
-    expect(result.internal).toBe(2);
+    // One listing each: re-runs update, never duplicate.
+    expect(result.opps.map((o) => o.n)).toEqual([1, 1, 1]);
+    expect(result.dest).toContain("https://www.dreamstime.com/#res62198923");
+    expect(result.dest).toContain("https://joinbrands.com/?ref=ccIo2N");
+  });
+
+  it("public role sees only published listings and only the free/affiliate flag of links", async () => {
+    const rows = await rolledBack(runtime, async (tx: ReturnType<typeof db>) => {
+      await tx.execute(sql`select set_config('app.show_demo', 'off', true)`);
+      const drafts = await tx.execute<{ n: number }>(
+        sql`select count(*)::int as n from opportunities where status <> 'published'`,
+      );
+      const flags = await tx.execute<{ free: boolean | null }>(
+        sql`select not link_is_affiliate(affiliate_link_id) as free from opportunities where affiliate_link_id is not null`,
+      );
+      let linksReadable = true;
+      try {
+        await tx.execute(sql`savepoint s`);
+        await tx.execute(sql`select destination_url from affiliate_links limit 1`);
+      } catch {
+        linksReadable = false;
+        await tx.execute(sql`rollback to savepoint s`);
+      }
+      return { drafts: drafts.rows[0].n, flags: flags.rows, linksReadable };
+    });
+    expect(rows.drafts).toBe(0);
+    expect(rows.flags.every((f) => typeof f.free === "boolean")).toBe(true);
+    expect(rows.linksReadable).toBe(false);
+  });
+});
+
+describe.skipIf(!enabled)("user accounts (per-user RLS)", () => {
+  const runtime = enabled ? db(runtimeUrl!) : (null as never);
+  const owner = process.env.MIGRATION_DATABASE_URL;
+  const ownerDb = enabled && isLocal(owner) ? db(owner!) : (null as never);
+
+  it("a user only sees and changes their own rows; guests see none", async () => {
+    const a = `test-a-${Date.now()}`;
+    const b = `test-b-${Date.now()}`;
+    await ownerDb.execute(
+      sql`insert into "user" (id, name, email, email_verified) values (${a}, 'A', ${a + "@example.com"}, true), (${b}, 'B', ${b + "@example.com"}, true)`,
+    );
+    try {
+      const as = (id: string) => sql`select set_config('app.user_id', ${id}, true)`;
+      const out = await rolledBack(runtime, async (tx: ReturnType<typeof db>) => {
+        await tx.execute(as(a));
+        await tx.execute(sql`insert into user_saved_items (user_id, item_id) values (${a}, 'x1')`);
+        await tx.execute(as(b));
+        const seenByB = await tx.execute(sql`select * from user_saved_items`);
+        const upd = await tx.execute(sql`update user_saved_items set item_id = 'hacked'`);
+        let forged = true;
+        try {
+          await tx.execute(sql`savepoint s`);
+          await tx.execute(
+            sql`insert into user_saved_items (user_id, item_id) values (${a}, 'x2')`,
+          );
+        } catch {
+          forged = false;
+          await tx.execute(sql`rollback to savepoint s`);
+        }
+        await tx.execute(as(""));
+        const guest = await tx.execute(sql`select * from user_saved_items`);
+        await tx.execute(as(a));
+        const mine = await tx.execute(sql`select item_id from user_saved_items`);
+        return {
+          seenByB: seenByB.rows.length,
+          updated: upd.rowCount,
+          forged,
+          guest: guest.rows.length,
+          mine: mine.rows,
+        };
+      });
+      expect(out).toEqual({
+        seenByB: 0,
+        updated: 0,
+        forged: false,
+        guest: 0,
+        mine: [{ item_id: "x1" }],
+      });
+    } finally {
+      await ownerDb.execute(sql`delete from "user" where id in (${a}, ${b})`);
+    }
+  });
+
+  it("delete_my_account refuses admins and removes a user's data", async () => {
+    const u = `test-del-${Date.now()}`;
+    await ownerDb.execute(
+      sql`insert into "user" (id, name, email, email_verified) values (${u}, 'D', ${u + "@example.com"}, true)`,
+    );
+    try {
+      await runtime.transaction(async (tx) => {
+        await tx.execute(sql`select set_config('app.user_id', ${u}, true)`);
+        await tx.execute(sql`insert into user_saved_items (user_id, item_id) values (${u}, 'x')`);
+        await tx.execute(sql`select delete_my_account()`);
+      });
+      const left = await ownerDb.execute(sql`select 1 from "user" where id = ${u}`);
+      expect(left.rows.length).toBe(0);
+    } finally {
+      await ownerDb.execute(sql`delete from "user" where id = ${u}`);
+    }
+    const adm = await ownerDb.execute<{ id: string }>(
+      sql`select id from "user" where role = 'admin' limit 1`,
+    );
+    if (adm.rows[0]) {
+      const r = await rolledBack(runtime, async (tx: ReturnType<typeof db>) => {
+        await tx.execute(sql`select set_config('app.user_id', ${adm.rows[0].id}, true)`);
+        return (await tx.execute<{ ok: boolean }>(sql`select delete_my_account() as ok`)).rows[0]
+          .ok;
+      });
+      expect(r).toBe(false);
+    }
   });
 });

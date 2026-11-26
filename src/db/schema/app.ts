@@ -162,6 +162,12 @@ export const affiliateLinks = pgTable(
      */
     urlTemplate: text(),
     isActive: boolean().notNull().default(true),
+    /**
+     * false = plain official link for a free listing (8Tasks earns no commission). Clicks are
+     * still validated and logged by /go, but the UI shows the free-listing note instead of
+     * the affiliate disclosure.
+     */
+    isAffiliate: boolean().notNull().default(true),
     adminNotes: text(),
     isDemo: boolean().notNull().default(false),
     ...timestamps,

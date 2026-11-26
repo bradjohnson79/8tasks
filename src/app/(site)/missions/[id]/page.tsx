@@ -8,6 +8,7 @@ import { CompensationDisplay } from "@/components/app/compensation-display";
 import { Container } from "@/components/app/container";
 import { MissionMetadata } from "@/components/app/mission-metadata";
 import { StatusPill } from "@/components/app/status-pill";
+import { FreeListingNote } from "@/components/app/listing-disclosure";
 import { MissionGrid } from "@/components/app/mission-card";
 import { ReportListing } from "@/components/app/report-listing";
 import { getDiscoveryConfig } from "@/lib/discovery/config";
@@ -169,6 +170,7 @@ export default async function MissionDetailPage({ params }: Props) {
                 {closed && <StatusPill tone="warning">Closed</StatusPill>}
                 {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
                 {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
+                {o.isFreeListing && <StatusPill>Free listing</StatusPill>}
                 {pathwayTitles.map((t) => (
                   <StatusPill key={t}>{t}</StatusPill>
                 ))}
@@ -220,7 +222,9 @@ export default async function MissionDetailPage({ params }: Props) {
               About this {o.kind === "provider" ? "opportunity" : "mission"}
             </h2>
             {o.summary && <p className="text-[15px] text-text-2">{o.summary}</p>}
-            {o.description && <p className="text-[15px] text-text-2">{o.description}</p>}
+            {o.description && o.description !== o.summary && (
+              <p className="text-[15px] text-text-2">{o.description}</p>
+            )}
           </section>
         )}
         <ListSection title="What you'll do" items={o.whatYouWillDo} />
@@ -262,7 +266,7 @@ export default async function MissionDetailPage({ params }: Props) {
           not 8Tasks. You&apos;ll leave 8Tasks to sign up and complete it on the provider&apos;s
           site, under their terms. {pay.label}.
         </p>
-        <AffiliateDisclosure />
+        {o.isFreeListing ? <FreeListingNote /> : <AffiliateDisclosure />}
         {!o.isDemo && <ReportListing opportunityId={o.id} />}
       </article>
 
@@ -275,11 +279,12 @@ export default async function MissionDetailPage({ params }: Props) {
           {canContinue ? (
             <a
               href={`/go/${o.id}`}
-              rel="sponsored nofollow noopener"
+              rel={o.isFreeListing ? "nofollow noopener" : "sponsored nofollow noopener"}
               target="_blank"
               className="flex h-12 items-center justify-center gap-2 rounded-xl bg-action text-[15px] font-semibold text-action-foreground hover:bg-action/80"
             >
-              Continue to Provider <ExternalLink className="size-4" aria-hidden />
+              {o.isFreeListing ? "Visit official site" : "Continue to Provider"}{" "}
+              <ExternalLink className="size-4" aria-hidden />
               <span className="sr-only">(opens {o.providerName} in a new tab)</span>
             </a>
           ) : (

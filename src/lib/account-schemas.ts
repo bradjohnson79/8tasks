@@ -16,7 +16,9 @@ export const profileSchema = prefsObject
 export const missionSchema = z.object({
   providerName: z.string().trim().min(1, "Enter the provider").max(80),
   title: z.string().trim().min(2, "Enter what you're doing").max(160),
-  status: z.enum(["interested", "applied", "in_progress", "completed", "not_pursuing"]).default("interested"),
+  status: z
+    .enum(["interested", "applied", "in_progress", "completed", "not_pursuing"])
+    .default("interested"),
   notes: z.string().trim().max(2000).default(""),
   opportunityId: z.union([z.literal(""), z.string().uuid()]).default(""),
 });
@@ -49,11 +51,26 @@ export const earningSchema = z.object({
 
 /** Totals per currency; reimbursements are tracked separately and never counted as income. */
 export function earningTotals(
-  rows: { currency: string; status: string; amountCents: number; expensesCents: number; reimbursementCents: number }[],
+  rows: {
+    currency: string;
+    status: string;
+    amountCents: number;
+    expensesCents: number;
+    reimbursementCents: number;
+  }[],
 ) {
-  const out: Record<string, { expected: number; received: number; expenses: number; reimbursements: number; net: number }> = {};
+  const out: Record<
+    string,
+    { expected: number; received: number; expenses: number; reimbursements: number; net: number }
+  > = {};
   for (const r of rows) {
-    const t = (out[r.currency] ??= { expected: 0, received: 0, expenses: 0, reimbursements: 0, net: 0 });
+    const t = (out[r.currency] ??= {
+      expected: 0,
+      received: 0,
+      expenses: 0,
+      reimbursements: 0,
+      net: 0,
+    });
     if (r.status === "received") t.received += r.amountCents;
     else t.expected += r.amountCents;
     t.expenses += r.expensesCents;

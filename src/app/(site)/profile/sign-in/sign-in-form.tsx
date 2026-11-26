@@ -57,7 +57,14 @@ export function SignInForm({ google, next }: { google: boolean; next: string }) 
         <label htmlFor="si-email" className={labelClass}>
           Email
         </label>
-        <input id="si-email" name="email" type="email" required autoComplete="email" className={inputClass} />
+        <input
+          id="si-email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          className={inputClass}
+        />
         {error && (
           <p role="alert" className="text-sm text-error">
             {error}

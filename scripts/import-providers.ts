@@ -1,7 +1,7 @@
 /**
- * Imports a provider package (JSON or CSV) as DRAFTS, the same way /admin/import does.
+ * Imports a provider package (JSON or CSV) the same way /admin/import does (new records as drafts).
  *   npm run import:providers -- data/import/claude_integration_package.json
- * Runs as the admin role (ADMIN_DATABASE_URL). Never publishes anything.
+ * Runs as the admin role (ADMIN_DATABASE_URL). Never changes an existing status.
  */
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -25,7 +25,7 @@ async function main() {
   const result = await db.transaction(async (tx) => {
     const l = await importLookups(tx, parsed.providers);
     if (l.errors.length) throw new Error(l.errors.join("\n"));
-    return applyProviders(tx, parsed.providers, l, null as unknown as string);
+    return applyProviders(tx, parsed.providers, l, null);
   });
   console.log(`Imported as drafts: ${JSON.stringify(result)}`);
   await pool.end();

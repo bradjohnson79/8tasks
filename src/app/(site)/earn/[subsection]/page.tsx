@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { ListingDisclosure } from "@/components/app/listing-disclosure";
 import { Container } from "@/components/app/container";
 import { EmptyState } from "@/components/app/empty-state";
 import { MissionGrid } from "@/components/app/mission-card";
@@ -67,7 +67,7 @@ export default async function EarnPage({ params }: Props) {
       {items.length ? (
         <>
           <MissionGrid items={items} headingLevel={2} />
-          <AffiliateDisclosure />
+          <ListingDisclosure items={items} />
         </>
       ) : (
         <EmptyState

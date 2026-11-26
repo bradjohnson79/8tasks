@@ -12,21 +12,29 @@ import { saveProfile, skipOnboarding } from "../actions";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Choose your adventure", robots: { index: false } };
 
-export default async function PreferencesPage({ searchParams }: { searchParams: Promise<{ welcome?: string }> }) {
+export default async function PreferencesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ welcome?: string }>;
+}) {
   const user = await requireUser("/profile/preferences");
   const { welcome } = await searchParams;
   const [[p], categories, config] = await Promise.all([
-    withUserDb(user.id, (tx) => tx.select().from(userProfiles).where(eq(userProfiles.userId, user.id))),
+    withUserDb(user.id, (tx) =>
+      tx.select().from(userProfiles).where(eq(userProfiles.userId, user.id)),
+    ),
     getActiveCategories(),
     getDiscoveryConfig(),
   ]);
   return (
     <Container className="flex max-w-3xl flex-col gap-5 pt-5 pb-10 sm:pt-8">
       <div>
-        <h1 className="text-[28px] font-bold tracking-tight sm:text-[32px]">Choose your adventure</h1>
+        <h1 className="text-[28px] font-bold tracking-tight sm:text-[32px]">
+          Choose your adventure
+        </h1>
         <p className="mt-1 text-text-2">
-          Tell us what you enjoy so My Daily 8 fits you. Everything is optional and you can change it
-          any time.
+          Tell us what you enjoy so My Daily 8 fits you. Everything is optional and you can change
+          it any time.
         </p>
       </div>
       <PublicForm action={saveProfile} className="relative flex flex-col gap-4">
@@ -35,13 +43,24 @@ export default async function PreferencesPage({ searchParams }: { searchParams: 
             <label htmlFor="pr-name" className={labelClass}>
               Display name <span className="font-normal text-text-2">(optional)</span>
             </label>
-            <input id="pr-name" name="displayName" maxLength={60} defaultValue={p?.displayName ?? ""} className={inputClass} />
+            <input
+              id="pr-name"
+              name="displayName"
+              maxLength={60}
+              defaultValue={p?.displayName ?? ""}
+              className={inputClass}
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="pr-exp" className={labelClass}>
               Experience
             </label>
-            <select id="pr-exp" name="experienceLevel" defaultValue={p?.experienceLevel ?? ""} className={inputClass}>
+            <select
+              id="pr-exp"
+              name="experienceLevel"
+              defaultValue={p?.experienceLevel ?? ""}
+              className={inputClass}
+            >
               <option value="">Prefer not to say</option>
               <option value="new">New to this</option>
               <option value="some">Some experience</option>
