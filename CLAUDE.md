@@ -27,7 +27,7 @@ Phase 1–2: foundation + core discovery MVP.
 
 MVP scope:
 - Responsive, mobile-first homepage
-- 8 mission categories (admin-configurable, with subcategories): Surveys & Polls, App & Website Testing, Paid Research & Focus Groups, Mystery Shopping, Photo Scouting, Product Testing, AI Training & Data Tasks, Transcription & Translation
+- 8 mission categories (admin-configurable, with subcategories): Surveys, App & Website Testing, Photography, Mystery Shopping, Content & Media, Gaming & Entertainment, Paid Research, Microtasks & AI
 - Provider directory + provider profile pages
 - Opportunity listings (provider-level first; individual missions only with authorized data)
 - Search + basic filters (enable a filter only when reliable data supports it)
