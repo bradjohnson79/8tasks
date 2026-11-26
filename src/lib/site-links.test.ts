@@ -67,3 +67,19 @@ describe("site links / For Brands", () => {
     ]);
   });
 });
+
+describe("full link map (2026-11-25)", () => {
+  it("parses every row, keeps commercial terms out of the public copy", async () => {
+    const raw = (await import("../../data/site_links.json")).default as { providers: unknown[] };
+    expect(SITE_LINKS.length).toBe(raw.providers.length);
+    expect(JSON.stringify(raw)).not.toMatch(/commission_note|source_note|"notes"/);
+  });
+  it("directory rule: sample or live with directory placement; never review-pending or excluded", async () => {
+    const { directoryLinks } = await import("./site-links");
+    const dir = directoryLinks(SITE_LINKS);
+    expect(dir.length).toBe(17);
+    expect(dir.every((l) => l.status === "live" || l.status === "sample")).toBe(true);
+    expect(forBrandsOffers(SITE_LINKS).map((l) => l.provider_id)).toEqual(["joinbrands"]);
+    expect(SITE_LINKS.find((l) => l.provider_id === "joinbrands")?.name).toBe("JoinBrands");
+  });
+});

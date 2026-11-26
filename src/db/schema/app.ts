@@ -8,6 +8,7 @@ import {
   bigserial,
   boolean,
   check,
+  date,
   index,
   integer,
   jsonb,
@@ -29,6 +30,28 @@ export const opportunityDataSource = pgEnum("opportunity_data_source", [
   "authorized_feed",
   "authorized_manual",
 ]);
+
+/**
+ * How a listing pays (see src/lib/missions/types.ts). Non-cash types (gift_card, free_product,
+ * competition_prize, non_cash) and reimbursements are never shown or sorted as cash.
+ */
+export const compensationType = pgEnum("compensation_type", [
+  "unknown",
+  "fixed",
+  "range",
+  "hourly",
+  "variable",
+  "reimbursement_only",
+  "payment_plus_reimbursement",
+  "commission",
+  "hybrid",
+  "non_cash",
+  "gift_card",
+  "free_product",
+  "competition_prize",
+  "licensing_royalties",
+]);
+export const commissionBasis = pgEnum("commission_basis", ["percent", "flat"]);
 
 const timestamps = {
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
@@ -98,8 +121,12 @@ export const providers = pgTable(
     supportsPostbacks: capability().notNull().default("unknown"),
     providesFeed: capability().notNull().default("unknown"),
     allowsRevenueShare: capability().notNull().default("unknown"),
+    /** Provider allows email-originated traffic (Daily 8). Only "yes" is ever emailed. */
+    allowsEmailTraffic: capability().notNull().default("unknown"),
     /** Admin-only notes. Never selected by public queries. */
     adminNotes: text(),
+    /** Date an admin last checked the provider's public facts. Shown publicly. */
+    lastVerifiedAt: date(),
     isDemo: boolean().notNull().default(false),
     ...timestamps,
   },
@@ -129,6 +156,11 @@ export const affiliateLinks = pgTable(
      * (direct programs such as Dreamstime/JoinBrands keep their exact link). Rule 6.
      */
     subidParam: text(),
+    /**
+     * Future: URL template with documented placeholders (e.g. {click_id}). Unused until the
+     * creator program is approved; /go never reads it today.
+     */
+    urlTemplate: text(),
     isActive: boolean().notNull().default(true),
     adminNotes: text(),
     isDemo: boolean().notNull().default(false),
@@ -166,9 +198,47 @@ export const opportunities = pgTable(
       .default(sql`'{}'::text[]`),
     dataSource: opportunityDataSource().notNull().default("provider_level"),
     status: publishStatus().notNull().default("draft"),
-    /** Paid placement. Must be labelled "Sponsored" in the UI (rule 8). */
+    /** Paid placement. Must be labelled "Sponsored" in the UI (rule 8). Future-only. */
     isSponsored: boolean().notNull().default(false),
+    /** Unpaid editorial pick ("Editor's pick"). Never sold. */
+    isFeatured: boolean().notNull().default(false),
     sortOrder: integer().notNull().default(0),
+
+    // Verified compensation terms only (CLAUDE.md rule 1). Amounts in cents.
+    compensationType: compensationType().notNull().default("unknown"),
+    payMinCents: integer(),
+    payMaxCents: integer(),
+    currency: text(),
+    /** Free text unit for the amount, e.g. "per task", "per audio hour", "per month". */
+    payPeriod: text(),
+    commissionBasis: commissionBasis(),
+    commissionRecurring: boolean(),
+    reimbursementItem: text(),
+    reimbursementMaxCents: integer(),
+    /** Label for non-cash rewards ("Gift cards", "Free product") or a short public pay note. */
+    compensationNote: text(),
+    estimatedMinutes: integer(),
+    /** Verified yes/no facts (see OpportunityAttributes). Absent key = unknown. */
+    attributes: jsonb()
+      .$type<Record<string, boolean>>()
+      .notNull()
+      .default(sql`'{}'::jsonb`),
+    whatYouWillDo: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    eligibility: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    paymentDetails: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    /** Real application/closing deadline from the provider. Null = ongoing. */
+    deadlineAt: timestamp({ withTimezone: true }),
+    lastVerifiedAt: date(),
+
     isDemo: boolean().notNull().default(false),
     ...timestamps,
   },
@@ -176,6 +246,19 @@ export const opportunities = pgTable(
     uniqueIndex("opportunities_provider_slug_key").on(t.providerId, t.slug),
     index("opportunities_category_idx").on(t.categoryId),
     slugCheck("opportunities_slug_format", t.slug),
+    check("opportunities_currency", sql`${t.currency} is null or ${t.currency} in ('USD','CAD')`),
+    check(
+      "opportunities_pay_nonneg",
+      sql`coalesce(${t.payMinCents}, 0) >= 0 and coalesce(${t.payMaxCents}, 0) >= 0 and coalesce(${t.reimbursementMaxCents}, 0) >= 0`,
+    ),
+    check(
+      "opportunities_pay_order",
+      sql`${t.payMinCents} is null or ${t.payMaxCents} is null or ${t.payMinCents} <= ${t.payMaxCents}`,
+    ),
+    check(
+      "opportunities_estimated_minutes",
+      sql`${t.estimatedMinutes} is null or ${t.estimatedMinutes} between 1 and 10080`,
+    ),
   ],
 );
 

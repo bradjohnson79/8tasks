@@ -8,6 +8,7 @@ import { getPublishedProviders } from "@/db/queries/public";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
+  alternates: { canonical: "/providers" },
   title: "Providers",
   description: "Companies in Canada and the US whose earning opportunities are listed on 8Tasks.",
 };

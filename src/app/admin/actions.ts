@@ -1,15 +1,30 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { affiliateLinks, categories, opportunities, providers, subcategories } from "@/db/schema";
+import {
+  affiliateLinks,
+  categories,
+  opportunities,
+  opportunityCategories,
+  opportunityGroups,
+  providerInternal,
+  providers,
+  subcategories,
+} from "@/db/schema";
+import { ATTRIBUTE_KEYS } from "@/lib/missions/types";
+import { providerPublishBlocker } from "@/lib/publish-policy";
 import { audit, requireAdmin } from "@/lib/admin";
 import {
   affiliateLinkSchema,
   categorySchema,
   firstError,
   formToObject,
+  attributesFromForm,
+  membershipsFromForm,
+  opportunityDetailsSchema,
   opportunitySchema,
+  providerInternalSchema,
   providerSchema,
   subcategorySchema,
 } from "@/lib/validation/admin";
@@ -27,6 +42,10 @@ import {
 type Result = { ok: true; id: string; message: string } | { ok: false; message: string };
 
 export type ActionState = { error: string } | undefined;
+
+type AdminTx = Parameters<
+  Parameters<Awaited<ReturnType<typeof requireAdmin>>["db"]["transaction"]>[0]
+>[0];
 
 /** Failure: return the message so the form can show it without losing input. Success: redirect. */
 function done(path: string, result: Result, successPath?: string): ActionState {
@@ -53,11 +72,42 @@ function dbError(err: unknown): string {
 // ---------------------------------------------------------------------------
 // Providers
 // ---------------------------------------------------------------------------
+async function saveInternal(
+  tx: AdminTx,
+  providerId: string,
+  internal: Omit<ReturnType<typeof providerInternalSchema.parse>, "lastVerifiedAt">,
+) {
+  await tx
+    .insert(providerInternal)
+    .values({ providerId, ...internal })
+    .onConflictDoUpdate({ target: providerInternal.providerId, set: internal });
+}
 export async function saveProvider(providerId: string | null, form: FormData) {
   const { session, db } = await requireAdmin();
   const path = providerId ? `/admin/providers/${providerId}` : "/admin/providers/new";
   const parsed = providerSchema.safeParse(formToObject(form, { arrays: ["countries"] }));
   if (!parsed.success) return { error: firstError(parsed.error) };
+  const internalParsed = providerInternalSchema.safeParse(
+    formToObject(form, { booleans: ["userValueListing"] }),
+  );
+  if (!internalParsed.success) return { error: firstError(internalParsed.error) };
+  const { lastVerifiedAt, ...internal } = internalParsed.data;
+  const providerData = { ...parsed.data, lastVerifiedAt };
+
+  if (providerData.status === "published") {
+    const [{ n }] = providerId
+      ? await db
+          .select({ n: sql<number>`count(*)::int` })
+          .from(affiliateLinks)
+          .where(and(eq(affiliateLinks.providerId, providerId), eq(affiliateLinks.isActive, true)))
+      : [{ n: 0 }];
+    const blocker = providerPublishBlocker({
+      readinessLevel: internal.readinessLevel,
+      userValueListing: internal.userValueListing,
+      activeAffiliateLinks: n,
+    });
+    if (blocker) return { error: blocker };
+  }
 
   let result: Result;
   try {
@@ -67,14 +117,22 @@ export async function saveProvider(providerId: string | null, form: FormData) {
         if (!before) return { ok: false as const, message: "Provider not found." };
         const [after] = await tx
           .update(providers)
-          .set(parsed.data)
+          .set(providerData)
           .where(eq(providers.id, providerId))
           .returning();
-        await audit(tx, session.user.id, "provider.update", "provider", providerId, before, after);
+        await saveInternal(tx, providerId, internal);
+        await audit(tx, session.user.id, "provider.update", "provider", providerId, before, {
+          ...after,
+          internal,
+        });
         return { ok: true as const, id: providerId, message: "Provider saved." };
       }
-      const [created] = await tx.insert(providers).values(parsed.data).returning();
-      await audit(tx, session.user.id, "provider.create", "provider", created.id, null, created);
+      const [created] = await tx.insert(providers).values(providerData).returning();
+      await saveInternal(tx, created.id, internal);
+      await audit(tx, session.user.id, "provider.create", "provider", created.id, null, {
+        ...created,
+        internal,
+      });
       return {
         ok: true as const,
         id: created.id,
@@ -142,6 +200,32 @@ export async function saveAffiliateLink(providerId: string, linkId: string | nul
 // ---------------------------------------------------------------------------
 // Opportunities
 // ---------------------------------------------------------------------------
+/** Replaces secondary categories and explicit group memberships (one record, many places). */
+async function saveMemberships(
+  tx: AdminTx,
+  opportunityId: string,
+  primaryCategoryId: string,
+  m: ReturnType<typeof membershipsFromForm>,
+) {
+  await tx
+    .delete(opportunityCategories)
+    .where(eq(opportunityCategories.opportunityId, opportunityId));
+  await tx.delete(opportunityGroups).where(eq(opportunityGroups.opportunityId, opportunityId));
+  // A whole-category entry for the primary category would be redundant.
+  const secondary = m.secondary.filter(
+    (s) => !(s.categoryId === primaryCategoryId && !s.subcategoryId),
+  );
+  if (secondary.length)
+    await tx
+      .insert(opportunityCategories)
+      .values(secondary.map((s) => ({ ...s, opportunityId })))
+      .onConflictDoNothing();
+  if (m.groupIds.length)
+    await tx
+      .insert(opportunityGroups)
+      .values(m.groupIds.map((groupId) => ({ opportunityId, groupId })))
+      .onConflictDoNothing();
+}
 export async function saveOpportunity(opportunityId: string | null, form: FormData) {
   const { session, db } = await requireAdmin();
   const path = opportunityId ? `/admin/opportunities/${opportunityId}` : "/admin/opportunities/new";
@@ -149,7 +233,16 @@ export async function saveOpportunity(opportunityId: string | null, form: FormDa
     formToObject(form, { arrays: ["countries"], booleans: ["isSponsored"] }),
   );
   if (!parsed.success) return { error: firstError(parsed.error) };
-  const data = parsed.data;
+  const details = opportunityDetailsSchema.safeParse(
+    formToObject(form, { booleans: ["commissionRecurring", "isFeatured"] }),
+  );
+  if (!details.success) return { error: firstError(details.error) };
+  const data = {
+    ...parsed.data,
+    ...details.data,
+    attributes: attributesFromForm(form, ATTRIBUTE_KEYS),
+  };
+  const memberships = membershipsFromForm(form);
 
   let result: Result;
   try {
@@ -205,6 +298,7 @@ export async function saveOpportunity(opportunityId: string | null, form: FormDa
           .set(data)
           .where(eq(opportunities.id, opportunityId))
           .returning();
+        await saveMemberships(tx, opportunityId, after.categoryId, memberships);
         await audit(
           tx,
           session.user.id,
@@ -212,20 +306,16 @@ export async function saveOpportunity(opportunityId: string | null, form: FormDa
           "opportunity",
           opportunityId,
           before,
-          after,
+          { ...after, memberships },
         );
         return { ok: true as const, id: opportunityId, message: "Opportunity saved." };
       }
       const [created] = await tx.insert(opportunities).values(data).returning();
-      await audit(
-        tx,
-        session.user.id,
-        "opportunity.create",
-        "opportunity",
-        created.id,
-        null,
-        created,
-      );
+      await saveMemberships(tx, created.id, created.categoryId, memberships);
+      await audit(tx, session.user.id, "opportunity.create", "opportunity", created.id, null, {
+        ...created,
+        memberships,
+      });
       return { ok: true as const, id: created.id, message: "Opportunity created." };
     });
   } catch (err) {

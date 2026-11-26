@@ -1,0 +1,210 @@
+{
+  "generated": "2026-11-25T22:30:00-07:00",
+  "schema_note": "Maps 1:1 onto the live repo schema (bradjohnson79/8tasks: providers, affiliate_links, opportunities tables; category/subcategory slugs from scripts/seed-data.ts) and stays compatible with /workspace/8tasks/site_links.json (provider_id, sample_url, affiliate_url, status, audience, placement). public.* fields may render; internal.* fields are admin-only (providers.admin_notes / affiliate_links). No secrets.",
+  "providers": [
+    {
+      "provider_id": "dreamstime",
+      "existing_record_reference": {
+        "site_links.provider_id": "dreamstime",
+        "providers_round1.name": "Dreamstime",
+        "repo_providers_row": "none yet (AFFILIATE_INTEGRATIONS.md: no providers integrated)"
+      },
+      "public": {
+        "name": "Dreamstime",
+        "slug": "dreamstime",
+        "website_url": "https://www.dreamstime.com",
+        "logo_url": null,
+        "logo_note": "No permitted logo URL confirmed; use text wordmark until Dreamstime brand/banner assets are pulled from the affiliate dashboard (needs account check)",
+        "summary": "Upload your own photos and videos to a long-running stock agency and earn royalties when customers license them.",
+        "description": "Dreamstime is a stock photo and video marketplace. Contributors upload their images, the agency reviews them, and contributors earn a royalty each time a customer licenses one. Income depends on approvals and sales and is not guaranteed.",
+        "primary_category": "photography",
+        "additional_categories": [
+          "content-media"
+        ],
+        "subcategories": [
+          "product-photos",
+          "stock-licensing (NEW — add)"
+        ],
+        "discovery_pathways": [
+          "create-earn"
+        ],
+        "specialized_subsections": [
+          "Capture & Earn"
+        ],
+        "countries": [
+          "CA",
+          "US"
+        ],
+        "opportunity_types": [
+          "Stock photography and licensing",
+          "Stock video"
+        ],
+        "compensation": {
+          "type": "licensing_royalties (NEW — until added use \"variable\")",
+          "display": "Royalties per licence — varies"
+        },
+        "attributes": {
+          "remote": true,
+          "smartphoneRequired": null,
+          "cameraRequired": null,
+          "beginnerFriendly": null,
+          "applicationRequired": true,
+          "photographicDeliverable": true,
+          "purchaseRequired": false
+        },
+        "user_requirements": "Own the rights to the images you upload; Dreamstime reviews submissions (details on Dreamstime).",
+        "remote_or_in_person": "remote",
+        "cta": "Explore Opportunity",
+        "listing_kind": "provider",
+        "disclosure": "8Tasks may earn a commission if you join through this link."
+      },
+      "internal": {
+        "affiliate_link": {
+          "label": "Dreamstime referral (contributors + buyers)",
+          "destination_url": "https://www.dreamstime.com/#res62198923"
+        },
+        "affiliate_network": "Direct",
+        "capabilities": {
+          "supports_sub_ids": "unknown",
+          "supports_postbacks": "unknown",
+          "provides_feed": "unknown",
+          "allows_revenue_share": "unknown"
+        },
+        "attribution_requirements": "Referral fragment #res62198923 must be preserved exactly (it is a URL fragment, not a query param). 30-day memory.",
+        "creator_compatibility": "unknown: one referral ID; no per-creator sub-IDs confirmed, so Creator Partner revenue share cannot be attributed per creator yet",
+        "reporting": "Manual: Dreamstime dashboard / CSV (see earnings_feed_spec_for_claude.md)",
+        "source_urls": [
+          "https://www.dreamstime.com/affiliate-referral-program",
+          "https://www.dreamstime.com/faq23-how-do-i-receive-my-payment"
+        ],
+        "last_verified": "2026-11-25",
+        "approval_status": "approved (account live; referral link issued)",
+        "publication_status": "draft — founder approves publish in /admin",
+        "needs_account_check": [
+          "Banner/logo usage rules",
+          "Whether contributor referrals and buyer referrals report separately"
+        ]
+      }
+    },
+    {
+      "provider_id": "joinbrands",
+      "existing_record_reference": {
+        "site_links.provider_id": "joinbrands",
+        "providers_round1.name": "JoinBrands",
+        "repo_providers_row": "none yet"
+      },
+      "public": {
+        "name": "JoinBrands",
+        "slug": "joinbrands",
+        "website_url": "https://joinbrands.com",
+        "logo_url": null,
+        "logo_note": "No permitted logo confirmed: needs account check for brand assets",
+        "summary": "Create photos and short videos for brands and get paid per job, often with the product supplied.",
+        "description": "JoinBrands connects creators with brands that need user-generated content such as product photos, unboxing and demo videos, and reviews. Brands post jobs; creators apply; pay and any product depend on each job. A large following is not always required. Some jobs supply a free product, which is not cash pay.",
+        "primary_category": "content-media",
+        "additional_categories": [
+          "photography"
+        ],
+        "subcategories": [
+          "user-generated-content",
+          "product-demonstrations",
+          "product-unboxing",
+          "product-photos"
+        ],
+        "discovery_pathways": [
+          "create-earn"
+        ],
+        "specialized_subsections": [
+          "Film & Earn",
+          "Capture & Earn",
+          "Review & Earn"
+        ],
+        "countries": [
+          "CA",
+          "US"
+        ],
+        "countries_note": "Official help lists eligible creator countries incl. Canada and US (also UK, Germany, Australia; out-of-market countries are not listed on 8Tasks)",
+        "opportunity_types": [
+          "UGC videos",
+          "Product photos",
+          "Unboxing",
+          "Product demonstrations",
+          "Honest product reviews"
+        ],
+        "compensation": {
+          "type": "variable",
+          "display": "Pay varies by job; some jobs include a free product (not cash)"
+        },
+        "attributes": {
+          "remote": true,
+          "smartphoneRequired": true,
+          "productSupplied": "sometimes",
+          "audienceRequired": false,
+          "beginnerFriendly": null,
+          "applicationRequired": true,
+          "videoDeliverable": true,
+          "photographicDeliverable": true,
+          "publicContentPublication": "job-dependent",
+          "sponsorshipDisclosureRequired": "when posting publicly"
+        },
+        "user_requirements": "18+; one account per person; brand approval per job (per JoinBrands help).",
+        "remote_or_in_person": "remote",
+        "cta": "Explore Opportunity",
+        "listing_kind": "provider",
+        "audience": [
+          "earners",
+          "brands"
+        ],
+        "placement": [
+          "directory",
+          "for_brands_page"
+        ],
+        "brand_listing": {
+          "title": "Need UGC creators? Try JoinBrands",
+          "page": "/for-brands (footer link)",
+          "spec": "/workspace/8tasks/for_brands_page_spec.md"
+        },
+        "disclosure": "8Tasks may earn a commission if you join through this link."
+      },
+      "internal": {
+        "affiliate_link": {
+          "label": "JoinBrands referral (creators + brands)",
+          "destination_url": "https://joinbrands.com/?ref=ccIo2N"
+        },
+        "affiliate_network": "Direct",
+        "brand_referral_link": "same URL (https://joinbrands.com/?ref=ccIo2N): one ref code serves both audiences per the affiliate settings page; needs account check whether a separate brand URL exists",
+        "capabilities": {
+          "supports_sub_ids": "unknown",
+          "supports_postbacks": "unknown",
+          "provides_feed": "no (no authorized campaign feed known)",
+          "allows_revenue_share": "unknown"
+        },
+        "attribution_requirements": "Keep ?ref=ccIo2N intact. Tracking window unknown.",
+        "creator_compatibility": "unknown: single ref code; no per-creator sub-IDs known",
+        "reporting": "Manual (dashboard); see earnings_feed_spec_for_claude.md",
+        "source_urls": [
+          "https://help.joinbrands.com/en/articles/7910946-creators-affiliate-program",
+          "https://help.joinbrands.com/en/articles/7920858-creators-is-it-possible-to-join-from-a-different-country",
+          "https://help.joinbrands.com/en/articles/11498158-creators-joinbrands-registration-process"
+        ],
+        "last_verified": "2026-11-25",
+        "approval_status": "approved (affiliate link issued; no separate agreement was presented)",
+        "publication_status": "draft — founder approves publish in /admin",
+        "do_not": [
+          "Do not display individual brands or campaigns (no permission confirmed)",
+          "Do not show free products as cash",
+          "Do not publish individual missions (no authorized feed)"
+        ],
+        "needs_account_check": [
+          "Approved promotional materials / logo",
+          "Permission to display participating brands",
+          "Permission to display specific creator campaigns",
+          "Geographic restrictions for referred creators/brands",
+          "Attribution window and reporting (CSV/API)",
+          "Whether creator referral pays on signup or on first paid job ($5 wording differs between sources)"
+        ]
+      }
+    }
+  ],
+  "_public_copy_note": "Commission terms and payout notes removed (public repo). Import the full founder file through /admin/import to load them into the admin-only provider_internal table."
+}

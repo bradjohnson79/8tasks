@@ -31,6 +31,26 @@
 | 2026-11-26 | For Brands renders from `data/site_links.json` in the repo (rebuilt from the founder's link map) | No page code change needed for new live brand offers |
 | 2026-11-26 | Founder admin `8tasks@proton.me` created directly in Neon with a random temporary password (TOTP enrolment forced, password change at `/admin/account`) | Founder request; container cannot reach Neon over TCP for the CLI |
 
+| 2026-11-26 | Master prompt implemented on the dev branch + PR, not deployed to production; migrations only on local + Neon preview | Master prompt §0.8 / CLAUDE.md rule 9 |
+| 2026-11-26 | Internal commission terms live in a separate admin-only table (`provider_internal`) rather than column grants | Simplest way to guarantee app_runtime can never read them |
+| 2026-11-26 | Pathways, tabs and subsections share one `discovery_groups` table; code defaults are the fallback if the table is empty/unreachable | One admin screen, site never breaks on config |
+| 2026-11-26 | Re-importing a provider moves it (and its imported opportunities) back to draft | Spec: "everything imports as draft"; the preview warns first |
+| 2026-11-26 | Alerts: free opt-in stored with consent text; no emails sent until an email service is approved. Existing addresses can't be changed or re-subscribed by third parties | No accounts/email verification yet; CASL/CAN-SPAM consent record |
+| 2026-11-26 | Saved searches are device-local (localStorage), like saved items | Accounts not approved |
+| 2026-11-26 | Report / submission forms store rows for admin review (no email) | No email service yet; never auto-publish |
+| 2026-11-26 | JoinBrands countries set to US only, Dreamstime CA + US, in the draft import | Not verified; founder to confirm before publishing |
+
+| 2026-11-26 | Email-only subscriptions with double opt-in (no account) and token links; consent wording versioned | Spec §4; CASL/CAN-SPAM |
+| 2026-11-26 | Daily 8 only includes providers with `allows_email_traffic = yes` (default unknown) | Rule 6 + spec §6 |
+| 2026-11-26 | Email buttons go to 8Tasks pages (`/e/…` click log), never straight to affiliate URLs | Keeps /go as the only affiliate redirect; no prohibited params; creator attribution untouched |
+| 2026-11-26 | Click tracking and open tracking in Resend left off; our own redirect counts clicks | Privacy, accuracy |
+| 2026-11-26 | Three gates before automated mail: env `EMAIL_SENDING_ENABLED`, admin pause (default on), postal address | Spec: no production sending before founder approval |
+| 2026-11-26 | Added 8tasks.com to the (shared) Resend account; API key + webhook left for the founder | Secrets never pass through chat |
+
+| 2026-11-26 | Public repo: commission notes and deal terms are not committed (link map + package copies are stripped); full files are imported through the admin | Repo is public |
+| 2026-11-26 | Link-map "sample" rows are not published: they have no country data (CA/US rule) and old category names, and the master prompt approves only Dreamstime + JoinBrands | Never guess eligibility |
+| 2026-11-26 | Publishing requires readiness A (D only as founder-flagged user-value listing, no affiliate links) | Gap analysis G-30 |
+
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo

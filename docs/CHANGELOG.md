@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-11-26: Founder gap analysis + real integration package + full link map
+- `data/site_links.json` rebuilt from the founder's 86-row link map via `scripts/build-site-links.ts` (commercial
+  fields removed: public repo). For Brands still shows only live + for_brands_page rows (JoinBrands).
+- Import accepts the founder's `claude_integration_package.json` format directly (`src/lib/import/package-v1.ts`):
+  annotations stripped, unknown/"sometimes" facts dropped, internal context to admin notes. Dreamstime + JoinBrands
+  re-imported as drafts (local + preview) from the real package (JoinBrands CA + US, extra subcategories/subsections).
+- G-30: providers publish only at readiness A, or D as a flagged user-value listing with no affiliate links (0009).
+- G-04: search matches secondary categories and /earn subsection names. G-24: Organization JSON-LD. G-35: CI workflow in `.github/workflows/ci.yml` (moved from docs/ci-workflow.yml).
+
+## 2026-11-26: Resend + My Daily 8 email (sending off until approved)
+- Migrations 0006–0008: `email_subscribers` (double opt-in, consent records, preferences, tokens), `email_sends`,
+  `email_events`, `email_suppressions`, `email_settings`; `providers.allows_email_traffic`; token-based SECURITY DEFINER
+  functions. Replaces the unused `alert_subscriptions`. Applied locally + Neon preview only.
+- Rules-based Daily 8 recommender (never padded, skips when nothing fits), React Email templates (HTML + text),
+  hourly idempotent scheduler, signed Resend webhook (bounces/complaints → suppression), one-click unsubscribe,
+  click tracking via internal redirect, `/daily-8` sign-up, confirm/preferences/unsubscribe pages, `/admin/email`.
+- 8tasks.com added as a sending domain in Resend (DNS pending). See `docs/EMAIL.md`.
+
+## 2026-11-26: Master prompt (provider integration & feature update), PR for review
+- Migrations 0004 (columns/tables) + 0005 (RLS, grants, alert functions, seeds). Applied locally and to Neon **preview** only.
+- Verified compensation, attribute, deadline, last-verified and editor's-pick columns on opportunities; non-cash types
+  (gift_card, free_product, competition_prize, licensing_royalties) never shown or sorted as cash.
+- One record in many places: `opportunity_categories` (secondary categories) and `opportunity_groups` (subsections/pathways).
+- Pathways, category tabs and /earn subsections moved to the admin-managed `discovery_groups` table (`/admin/discovery`); defaults unchanged visually.
+- 22 new subcategories (CoffeeModes subsections, photography/content/testing/microtasks additions).
+- Admin: provider commercial terms in admin-only `provider_internal`, opportunity compensation/attributes/placement,
+  provider import with preview (always drafts), inbox for reports/submissions/alert subscribers.
+- Public: `/earn/[subsection]`, "Explore Opportunity" CTA, New This Week (7 days), Ending Soon, Editor's Picks, closed
+  listings (auto-closed at deadline, `/go` refuses), Last verified dates, report form, `/submit-provider`, free alerts
+  opt-in (`/alerts`, nothing sent yet), device-local saved searches, About/Contact/Press, `/legal/free-access`,
+  "Always Free. For Everyone." in the footer, sitemap/robots/OG image/canonical URLs.
+- Paywall guard test; fragment-preservation tests; DB integration tests (RLS + drafts).
+- Dreamstime and JoinBrands loaded as drafts (local + preview) from `data/import/claude_integration_package.json`.
+
 ## 2026-11-26: Affiliate earnings feed, For Brands, Staff Admin
 - Migrations 0002/0003: `affiliate_programs`, `affiliate_transactions`, `affiliate_sync_runs` (admin-only RLS),
   `record_affiliate_postback()`, `affiliate_links.subid_param`, `outbound_clicks.click_id`; applied to Neon main + preview.

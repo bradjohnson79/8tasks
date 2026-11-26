@@ -1,35 +1,70 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Sparkles } from "lucide-react";
 import { Container } from "@/components/app/container";
-import { EmptyState } from "@/components/app/empty-state";
+import { buttonClass, inputClass, labelClass, PublicForm } from "@/components/app/public-form";
+import { PrefsFields } from "@/components/email/prefs-fields";
+import { getActiveCategories } from "@/db/queries/public";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
+import { CONSENT_TEXT } from "@/lib/email/config";
+import { subscribeDaily8 } from "../email-actions";
 
-export const metadata: Metadata = { title: "My Daily 8" };
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "My Daily 8",
+  description:
+    "Up to eight verified earning opportunities picked for you, by free email. Always free.",
+  alternates: { canonical: "/daily-8" },
+};
 
-export default function Daily8Page() {
+export default async function Daily8Page() {
+  const [categories, config] = await Promise.all([getActiveCategories(), getDiscoveryConfig()]);
   return (
-    <Container className="flex max-w-3xl flex-col gap-5 pt-5 sm:pt-8">
+    <Container className="flex max-w-3xl flex-col gap-5 pt-5 pb-10 sm:pt-8">
       <h1 className="text-[28px] font-bold tracking-tight sm:text-[32px]">My Daily 8</h1>
       <div className="rounded-2xl border border-emerald/15 bg-daily8 p-5">
-        <p className="font-semibold">Discover opportunities matched to you.</p>
+        <p className="font-semibold">A new day. New possibilities.</p>
         <p className="mt-1 text-sm text-text-2">
-          Your Daily 8 will suggest up to eight opportunities each day based on your interests,
-          location and the devices you have. We&apos;ll only show what genuinely fits, even if
-          that&apos;s fewer than eight.
+          Get up to eight verified earning opportunities that fit you, by email, around 8 AM your
+          time. Free, now and always. No account needed. We only send what we&apos;ve checked, so
+          some days there are fewer than eight, and if nothing fits we don&apos;t send anything.
         </p>
       </div>
-      <EmptyState
-        icon={Sparkles}
-        title="No personalized recommendations yet"
-        description="Personalization needs an 8Tasks account, which isn't available yet. Until then, explore by category or by how you want to earn."
-      >
-        <Link
-          href="/"
-          className="flex h-11 items-center rounded-xl bg-action px-4 text-sm font-semibold text-action-foreground"
-        >
-          Explore missions
-        </Link>
-      </EmptyState>
+
+      <section id="signup" aria-labelledby="signup-title" className="scroll-mt-20">
+        <h2 id="signup-title" className="mb-3 text-lg font-semibold">
+          Get My Daily 8 by email
+        </h2>
+        <PublicForm action={subscribeDaily8} className="relative flex flex-col gap-4">
+          <input type="hidden" name="source" value="daily-8-page" />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="d8-email" className={labelClass}>
+              Email
+            </label>
+            <input
+              id="d8-email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              className={inputClass}
+            />
+          </div>
+          <PrefsFields
+            categories={categories.map((c) => ({ value: c.slug, label: c.name }))}
+            subsections={config.subsections.map((s) => ({ value: s.slug, label: s.title }))}
+          />
+          <label className="flex items-start gap-3 text-sm">
+            <input type="checkbox" name="consent" value="yes" required className="mt-0.5 size-4" />
+            {CONSENT_TEXT}
+          </label>
+          <p className="text-xs text-text-2">
+            We&apos;ll email you a confirmation link first. We never sell your address. Every email
+            includes our contact details and a one-click unsubscribe.
+          </p>
+          <button type="submit" className={buttonClass}>
+            Get My Daily 8 free
+          </button>
+        </PublicForm>
+      </section>
     </Container>
   );
 }

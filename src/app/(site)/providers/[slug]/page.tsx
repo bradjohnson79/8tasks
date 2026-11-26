@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLinkIcon } from "lucide-react";
 import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { ReportListing } from "@/components/app/report-listing";
+import { formatVerified } from "@/lib/missions/metadata";
 import { MissionGrid } from "@/components/app/mission-card";
 import { loadOpportunities } from "@/lib/missions/source";
 import { CountryBadges } from "@/components/app/country-badges";
@@ -21,6 +23,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? {
         title: data.provider.name,
         description: data.provider.summary ?? undefined,
+        alternates: { canonical: `/providers/${data.provider.slug}` },
+        // Demo providers never get indexed.
+        ...(data.provider.isDemo ? { robots: { index: false } } : {}),
       }
     : {};
 }
@@ -72,6 +77,11 @@ export default async function ProviderPage({ params }: Props) {
               </div>
             )}
           </dl>
+          {provider.lastVerifiedAt && (
+            <p className="text-xs text-muted-foreground">
+              {formatVerified(provider.lastVerifiedAt)}
+            </p>
+          )}
         </div>
       </header>
 
@@ -95,6 +105,11 @@ export default async function ProviderPage({ params }: Props) {
           </p>
         )}
       </section>
+      {!provider.isDemo && (
+        <div className="mt-8 max-w-3xl">
+          <ReportListing providerId={provider.id} />
+        </div>
+      )}
     </div>
   );
 }

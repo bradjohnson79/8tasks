@@ -1,5 +1,7 @@
-import { PATHWAYS, type PathwaySlug } from "@/lib/taxonomy";
+import { DEFAULT_PATHWAYS, type DiscoveryGroup } from "@/lib/discovery/defaults";
+import { belongsTo, categoriesOf, inCategory, subcategoriesOf } from "@/lib/discovery/membership";
 import { sortableAmount } from "./compensation";
+import { isClosed } from "./metadata";
 import type { Opportunity } from "./types";
 
 /**
@@ -26,21 +28,41 @@ export type FilterDef = {
   disabledHint?: string;
 };
 
-const NEW_WINDOW_DAYS = 14;
+/** "New This Week" (master prompt §3.6.3). */
+export const NEW_WINDOW_DAYS = 7;
+/** "Ending Soon": a real provider deadline within this many days. */
+export const ENDING_SOON_DAYS = 7;
+const DAY = 86_400_000;
+
 const isRecurring = (o: Opportunity) =>
   (o.compensation.type === "commission" && o.compensation.recurring) ||
   o.attributes.recurringCommission === true;
 
-export function pathwaysFor(o: Opportunity): PathwaySlug[] {
-  return PATHWAYS.filter((p) => {
-    if (p.categories.includes(o.categorySlug)) return true;
-    if (o.subcategorySlug && p.subcategories.includes(o.subcategorySlug)) return true;
-    if (p.slug === "local-missions" && o.attributes.inPerson === true) return true;
-    if (p.slug === "quick-earnings" && o.durationMinutes !== undefined && o.durationMinutes <= 15)
-      return true;
-    if (p.slug === "recurring-income" && isRecurring(o)) return true;
-    return false;
-  }).map((p) => p.slug);
+const endingSoon = (o: Opportunity, now: Date) => {
+  if (!o.deadlineAt) return false;
+  const left = new Date(o.deadlineAt).getTime() - now.getTime();
+  return left > 0 && left <= ENDING_SOON_DAYS * DAY;
+};
+
+/**
+ * Pathways a listing belongs to. Uses the admin-managed pathways when given (the
+ * loader precomputes them), otherwise the built-in defaults.
+ */
+export function pathwaysFor(
+  o: Opportunity,
+  pathways: DiscoveryGroup[] = DEFAULT_PATHWAYS,
+): string[] {
+  return pathways
+    .filter((p) => {
+      if (belongsTo(o, p)) return true;
+      if (p.slug === "local-missions" && (o.attributes.inPerson || o.attributes.localAssignment))
+        return true;
+      if (p.slug === "quick-earnings" && o.durationMinutes !== undefined && o.durationMinutes <= 15)
+        return true;
+      if (p.slug === "recurring-income" && isRecurring(o)) return true;
+      return false;
+    })
+    .map((p) => p.slug);
 }
 
 export function matchesLocation(o: Opportunity, loc: FilterContext["location"]): boolean {
@@ -81,11 +103,23 @@ export const FILTERS: FilterDef[] = [
   },
   {
     id: "new",
-    label: "New",
+    label: "New This Week",
     group: "quick",
     test: (o, ctx) =>
-      (ctx.now ?? new Date()).getTime() - new Date(o.createdAt).getTime() <
-      NEW_WINDOW_DAYS * 86_400_000,
+      (ctx.now ?? new Date()).getTime() - new Date(o.createdAt).getTime() < NEW_WINDOW_DAYS * DAY,
+  },
+  {
+    id: "ending-soon",
+    label: "Ending Soon",
+    group: "quick",
+    test: (o, ctx) => endingSoon(o, ctx.now ?? new Date()),
+    disabledHint: "Only listings with a real closing date from the provider",
+  },
+  {
+    id: "featured",
+    label: "Editor's Picks",
+    group: "quick",
+    test: (o) => o.isFeatured === true,
   },
 
   // Location
@@ -185,12 +219,19 @@ export const FILTERS: FilterDef[] = [
     test: (o) => o.attributes.portfolioRequired === true,
   },
 
-  // Pathways (update §4)
-  ...PATHWAYS.map((p): FilterDef => ({
+  {
+    id: "qualification",
+    label: "Professional Experience Required",
+    group: "requirements",
+    test: (o) => o.attributes.qualificationRequired === true,
+  },
+
+  // Pathways (update §4). Listings carry their admin-defined pathways (o.pathways).
+  ...DEFAULT_PATHWAYS.map((p): FilterDef => ({
     id: p.slug,
     label: p.title,
     group: "pathways",
-    test: (o) => pathwaysFor(o).includes(p.slug),
+    test: (o) => (o.pathways ?? pathwaysFor(o)).includes(p.slug),
   })),
 ];
 
@@ -215,9 +256,16 @@ export const ADVANCED_GROUPS: { group: FilterGroup; ids: string[] }[] = [
   },
   {
     group: "requirements",
-    ids: ["beginner", "no-purchase", "smartphone-only", "no-audience", "portfolio"],
+    ids: [
+      "beginner",
+      "no-purchase",
+      "smartphone-only",
+      "no-audience",
+      "portfolio",
+      "qualification",
+    ],
   },
-  { group: "pathways", ids: PATHWAYS.map((p) => p.slug) },
+  { group: "pathways", ids: DEFAULT_PATHWAYS.map((p) => p.slug) },
 ];
 
 export const HOME_CHIPS = [
@@ -227,6 +275,7 @@ export const HOME_CHIPS = [
   "quick-tasks",
   "highest-paying",
   "new",
+  "ending-soon",
 ];
 
 // ---------------------------------------------------------------------------
@@ -245,7 +294,7 @@ function derivedKeywords(o: Opportunity): string[] {
   if (o.attributes.inPerson) words.push("local", "nearby", "person", "community");
   if (o.attributes.smartphoneRequired) words.push("phone", "mobile", "smartphone");
   if (o.durationMinutes !== undefined && o.durationMinutes <= 15) words.push("quick", "short");
-  for (const p of pathwaysFor(o)) words.push(...p.split("-"));
+  for (const p of o.pathways ?? pathwaysFor(o)) words.push(...p.split("-"));
   return words;
 }
 
@@ -267,7 +316,10 @@ export function matchesSearch(o: Opportunity, q: string): boolean {
     o.summary ?? "",
     o.providerName,
     o.categoryName,
-    o.subcategorySlug?.replace(/-/g, " ") ?? "",
+    ...subcategoriesOf(o).map((s) => s.replace(/-/g, " ")),
+    // Secondary categories and /earn subsections ("Capture & Earn", "Write & Earn", …).
+    ...categoriesOf(o).map((c) => c.replace(/-/g, " ")),
+    ...(o.subsectionTitles ?? []),
     ...derivedKeywords(o),
   ]
     .join(" ")
@@ -286,8 +338,10 @@ export type DiscoveryQuery = {
   q?: string;
   filters?: string[];
   category?: string;
-  /** Subcategory slugs from a category tab. */
-  subcategories?: string[];
+  /** A category tab or other group the listing must belong to. */
+  group?: DiscoveryGroup;
+  /** Closed listings (deadline passed) are hidden from discovery unless asked for. */
+  includeClosed?: boolean;
 };
 
 export function applyDiscovery(
@@ -296,15 +350,18 @@ export function applyDiscovery(
   ctx: FilterContext = {},
 ): Opportunity[] {
   const active = (query.filters ?? []).map((id) => FILTER_BY_ID[id]).filter(Boolean);
+  const now = ctx.now ?? new Date();
   let out = items.filter(
     (o) =>
-      (!query.category || o.categorySlug === query.category) &&
-      (!query.subcategories?.length ||
-        (o.subcategorySlug && query.subcategories.includes(o.subcategorySlug))) &&
+      (query.includeClosed || !isClosed(o, now)) &&
+      (!query.category || inCategory(o, query.category)) &&
+      (!query.group || belongsTo(o, query.group)) &&
       (!query.q || matchesSearch(o, query.q)) &&
       active.every((f) => f.test(o, ctx)),
   );
-  if (query.filters?.includes("highest-paying")) {
+  if (query.filters?.includes("ending-soon")) {
+    out = [...out].sort((a, b) => (a.deadlineAt ?? "").localeCompare(b.deadlineAt ?? ""));
+  } else if (query.filters?.includes("highest-paying")) {
     out = [...out].sort(
       (a, b) => (sortableAmount(b.compensation) ?? 0) - (sortableAmount(a.compensation) ?? 0),
     );
@@ -317,6 +374,7 @@ export function applyDiscovery(
 /** Which filters have at least one matching listing in `items` (so the chip can be enabled). */
 export function availableFilters(items: Opportunity[], ctx: FilterContext = {}): Set<string> {
   const set = new Set<string>();
-  for (const f of FILTERS) if (items.some((o) => f.test(o, ctx))) set.add(f.id);
+  const open = items.filter((o) => !isClosed(o, ctx.now ?? new Date()));
+  for (const f of FILTERS) if (open.some((o) => f.test(o, ctx))) set.add(f.id);
   return set;
 }

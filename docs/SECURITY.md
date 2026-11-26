@@ -45,6 +45,21 @@ Every admin page/action must call it server-side.
 - Cron needs `Bearer $CRON_SECRET`. Connector credentials are env-only, read-only scopes; no payment/withdrawal calls.
 - SubIDs are random click UUIDs only (no PII).
 
+## Public intake and internal data (master prompt)
+- `provider_internal` (commission terms, contacts) has no app_runtime grant; integration test proves it.
+- Report/submission forms: honeypot + per-IP rate limit (5 per 10 min), insert-only role, RLS forces `status = 'new'`.
+  Shown to admins as plain text; submitted URLs are never rendered as links.
+- Alerts: SECURITY DEFINER functions only; third parties cannot change or re-subscribe an existing address;
+  unsubscribe requires a button press (no GET side effects).
+- Imports: Zod-validated, drafts only, affiliate URLs stored verbatim (https only), unknown slugs reject the file.
+- `/go` refuses closed listings (deadline passed). robots.txt disallows `/admin`, `/go/`, `/api/`; previews are noindex.
+
+## Email
+- `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` server env only. Public pages act only through token functions;
+  `app_runtime` cannot read any email table (integration test). Webhooks verified (Svix HMAC, 5-min window).
+- One-click unsubscribe is POST only; confirm/unsubscribe pages use buttons (no GET side effects).
+- Sign-up never reveals whether an address exists and never changes confirmed, bounced or suppressed addresses.
+
 ## Secrets
 Only in env vars (`.env.local` is git-ignored; `.env.example` holds dummy local values).
 The GitHub repo is **public**: never commit real credentials. Nothing secret is sent to the browser:

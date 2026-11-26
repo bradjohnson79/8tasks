@@ -1,4 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "crons": [{ "path": "/api/cron/affiliate-sync", "schedule": "0 14 * * *" }]
+  "crons": [
+    {
+      "path": "/api/cron/affiliate-sync",
+      "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/email",
+      "schedule": "7 * * * *"
+    }
+  ]
 }

@@ -13,9 +13,11 @@ import { getActiveCategories } from "@/db/queries/public";
 import { applyDiscovery, availableFilters, FILTER_BY_ID, HOME_CHIPS } from "@/lib/missions/filters";
 import { buildHref, param, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
-import { PATHWAYS } from "@/lib/taxonomy";
+import { getDiscoveryConfig } from "@/lib/discovery/config";
+import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+export const metadata = { alternates: { canonical: "/" } };
 
 const FEED_LIMIT = 6;
 
@@ -44,7 +46,11 @@ export default async function DiscoverPage({
 }) {
   const sp = await searchParams;
   const requested = param(sp, "f");
-  const [categories, all] = await Promise.all([getActiveCategories(), loadOpportunities()]);
+  const [categories, all, config] = await Promise.all([
+    getActiveCategories(),
+    loadOpportunities(),
+    getDiscoveryConfig(),
+  ]);
   const available = availableFilters(all);
   const active =
     requested && HOME_CHIPS.includes(requested) && available.has(requested) ? requested : "for-you";
@@ -61,6 +67,21 @@ export default async function DiscoverPage({
 
   return (
     <Container className="flex flex-col gap-8 pt-5 sm:pt-8">
+      {/* Organization structured data only (no ratings or reviews). */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "8Tasks",
+            url: SITE_URL,
+            slogan: "Small Missions. Real Money. Always Free. For Everyone.",
+            description:
+              "A free discovery site for legitimate ways to earn extra money in Canada and the United States.",
+          }),
+        }}
+      />
       {/* Discovery headline, tagline, search (design spec §8, update §3) */}
       <section
         aria-labelledby="hero-title"
@@ -95,7 +116,7 @@ export default async function DiscoverPage({
       {/* How do you want to earn? (update §4) */}
       <section aria-labelledby="pathways-title">
         <SectionHeader id="pathways-title" title="How do you want to earn?" />
-        <PathwayGrid pathways={PATHWAYS} />
+        <PathwayGrid pathways={config.pathways} />
       </section>
 
       {/* Eight categories */}

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { AdminForm } from "@/components/admin/admin-form";
-import type { providers } from "@/db/schema";
+import type { providerInternal, providers } from "@/db/schema";
 import {
   CAPABILITY_OPTIONS,
+  CheckboxField,
   CountriesField,
   STATUS_OPTIONS,
   SelectField,
@@ -11,14 +12,33 @@ import {
 } from "./fields";
 
 type Provider = typeof providers.$inferSelect;
+type Internal = typeof providerInternal.$inferSelect;
+
+const COMMISSION_MODEL_OPTIONS = [
+  { value: "unknown", label: "Unknown" },
+  { value: "contributor_recruitment", label: "Contributor recruitment" },
+  { value: "business_client_referral", label: "Business client referral" },
+  { value: "product_sales", label: "Product sales" },
+  { value: "personal_referral", label: "Personal referral" },
+  { value: "none", label: "None" },
+];
+const TRI_OPTIONS = [
+  { value: "", label: "Unknown" },
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
+];
+const READINESS_OPTIONS = ["A", "B", "C", "D", "E"].map((l) => ({ value: l, label: l }));
 
 export function ProviderForm({
   action,
   provider,
+  internal,
 }: {
   action: (form: FormData) => Promise<{ error: string } | undefined | void>;
   provider?: Provider;
+  internal?: Internal | null;
 }) {
+  const tri = (v: boolean | null | undefined) => (v === true ? "yes" : v === false ? "no" : "");
   return (
     <AdminForm action={action} className="flex flex-col gap-6">
       <section className="grid gap-4 sm:grid-cols-2">
@@ -108,6 +128,12 @@ export function ProviderForm({
             defaultValue={provider?.allowsRevenueShare ?? "unknown"}
             options={CAPABILITY_OPTIONS}
           />
+          <SelectField
+            name="allowsEmailTraffic"
+            label="Allows email-originated traffic (Daily 8)"
+            defaultValue={provider?.allowsEmailTraffic ?? "unknown"}
+            options={CAPABILITY_OPTIONS}
+          />
         </div>
         <TextAreaField
           name="adminNotes"
@@ -115,6 +141,96 @@ export function ProviderForm({
           defaultValue={provider?.adminNotes}
           hint="Never shown on the site. Record where each fact came from."
         />
+        <TextField
+          name="lastVerifiedAt"
+          label="Last verified (public)"
+          type="date"
+          defaultValue={provider?.lastVerifiedAt}
+          hint="Date you last checked the provider's public facts. Shown as “Last verified”."
+        />
+      </section>
+
+      <section className="flex flex-col gap-4 rounded-xl border border-dashed p-4">
+        <div>
+          <h2 className="text-base font-semibold">Commercial terms (admin only)</h2>
+          <p className="text-xs text-muted-foreground">
+            Stored in an admin-only table. Never rendered on public pages. Record only what the
+            provider&apos;s own terms or written confirmation say.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <SelectField
+            name="commissionModel"
+            label="Commission model"
+            defaultValue={internal?.commissionModel ?? "unknown"}
+            options={COMMISSION_MODEL_OPTIONS}
+          />
+          <SelectField
+            name="readinessLevel"
+            label="Readiness level (A required to publish)"
+            defaultValue={internal?.readinessLevel}
+            options={READINESS_OPTIONS}
+            placeholder="Not set"
+          />
+          <TextField
+            name="commissionText"
+            label="Commission terms"
+            defaultValue={internal?.commissionText}
+          />
+          <TextField
+            name="commissionCurrency"
+            label="Commission currency"
+            defaultValue={internal?.commissionCurrency}
+            placeholder="USD"
+          />
+          <TextField
+            name="qualifyingAction"
+            label="Qualifying action"
+            defaultValue={internal?.qualifyingAction}
+          />
+          <TextField
+            name="trackingWindow"
+            label="Tracking window"
+            defaultValue={internal?.trackingWindow}
+            placeholder="30-day cookie"
+          />
+          <SelectField
+            name="recurringCommission"
+            label="Recurring commission"
+            defaultValue={tri(internal?.recurringCommission)}
+            options={TRI_OPTIONS}
+          />
+          <CheckboxField
+            name="userValueListing"
+            label="User-value listing (Level D)"
+            defaultChecked={internal?.userValueListing}
+            hint="Listed for usefulness only: no affiliate links, no commission claims."
+          />
+          <TextField
+            name="approvalStatus"
+            label="Approval status"
+            defaultValue={internal?.approvalStatus}
+            placeholder="approved / applied / not applied"
+          />
+          <TextField
+            name="businessContact"
+            label="Business contact"
+            defaultValue={internal?.businessContact}
+          />
+          <TextField
+            name="missionAlignment"
+            label="Mission alignment notes"
+            defaultValue={internal?.missionAlignment}
+          />
+          <div className="sm:col-span-2">
+            <TextAreaField
+              name="sourceUrls"
+              label="Source URLs (one per line, https)"
+              defaultValue={internal?.sourceUrls.join("\n")}
+              rows={3}
+            />
+          </div>
+        </div>
       </section>
 
       <div>

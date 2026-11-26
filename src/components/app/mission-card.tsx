@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { cardMetadata } from "@/lib/missions/metadata";
+import { cardMetadata, formatVerified } from "@/lib/missions/metadata";
 import type { Opportunity } from "@/lib/missions/types";
 import { categoryDisplay } from "@/lib/taxonomy";
 import { BookmarkButton } from "./bookmark-button";
@@ -23,7 +23,7 @@ export function MissionCard({
   const Icon = d.icon;
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const href = `/missions/${o.id}`;
-  const cta = o.kind === "provider" ? "Explore Provider" : "Explore Mission";
+  const cta = o.kind === "provider" ? "Explore Opportunity" : "Explore Mission";
 
   return (
     <article className="flex h-full flex-col gap-4 rounded-2xl border bg-surface p-4 transition-colors hover:border-elevated">
@@ -52,11 +52,15 @@ export function MissionCard({
       </div>
 
       <MissionMetadata items={cardMetadata(o)} />
+      {o.lastVerifiedAt && (
+        <p className="-mt-2 text-xs text-text-2">{formatVerified(o.lastVerifiedAt)}</p>
+      )}
 
       <div className="mt-auto flex items-center gap-2">
-        {(o.isDemo || o.isSponsored) && (
+        {(o.isDemo || o.isSponsored || o.isFeatured) && (
           <div className="flex shrink-0 flex-col gap-1">
             {o.isDemo && <StatusPill tone="warning">Demo</StatusPill>}
+            {o.isFeatured && <StatusPill tone="success">Editor&apos;s pick</StatusPill>}
             {o.isSponsored && <StatusPill tone="info">Sponsored</StatusPill>}
           </div>
         )}

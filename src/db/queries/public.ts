@@ -3,7 +3,15 @@ import { and, arrayOverlaps, asc, count, eq, sql } from "drizzle-orm";
 import { SUPPORTED_COUNTRIES } from "@/lib/markets";
 import { withSubId } from "@/lib/redirect/subid";
 import { withPublicDb } from "../client";
-import { categories, opportunities, providers, subcategories } from "../schema";
+import {
+  categories,
+  discoveryGroups,
+  opportunities,
+  opportunityCategories,
+  opportunityGroups,
+  providers,
+  subcategories,
+} from "../schema";
 
 // Launch markets: only list providers/opportunities available in a supported country.
 const providerInMarket = arrayOverlaps(providers.countries, [...SUPPORTED_COUNTRIES]);
@@ -74,6 +82,7 @@ export async function getProviderProfile(slug: string) {
         websiteUrl: providers.websiteUrl,
         logoUrl: providers.logoUrl,
         countries: providers.countries,
+        lastVerifiedAt: providers.lastVerifiedAt,
         isDemo: providers.isDemo,
       })
       .from(providers)
@@ -109,14 +118,35 @@ export async function getPublicOpportunityRows() {
         countries: opportunities.countries,
         dataSource: opportunities.dataSource,
         isSponsored: opportunities.isSponsored,
+        isFeatured: opportunities.isFeatured,
         isDemo: opportunities.isDemo,
         createdAt: opportunities.createdAt,
+        compensationType: opportunities.compensationType,
+        payMinCents: opportunities.payMinCents,
+        payMaxCents: opportunities.payMaxCents,
+        currency: opportunities.currency,
+        payPeriod: opportunities.payPeriod,
+        commissionBasis: opportunities.commissionBasis,
+        commissionRecurring: opportunities.commissionRecurring,
+        reimbursementItem: opportunities.reimbursementItem,
+        reimbursementMaxCents: opportunities.reimbursementMaxCents,
+        compensationNote: opportunities.compensationNote,
+        estimatedMinutes: opportunities.estimatedMinutes,
+        attributes: opportunities.attributes,
+        whatYouWillDo: opportunities.whatYouWillDo,
+        eligibility: opportunities.eligibility,
+        paymentDetails: opportunities.paymentDetails,
+        deadlineAt: opportunities.deadlineAt,
+        lastVerifiedAt: sql<
+          string | null
+        >`coalesce(${opportunities.lastVerifiedAt}, ${providers.lastVerifiedAt})::text`,
         hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
         categorySlug: categories.slug,
         categoryName: categories.name,
         subcategorySlug: subcategories.slug,
         providerName: providers.name,
         providerSlug: providers.slug,
+        emailAllowed: sql<boolean>`${providers.allowsEmailTraffic} = 'yes'`,
       })
       .from(opportunities)
       .innerJoin(providers, eq(providers.id, opportunities.providerId))
@@ -125,6 +155,30 @@ export async function getPublicOpportunityRows() {
       .where(opportunityInMarket)
       .orderBy(asc(opportunities.sortOrder), asc(opportunities.title)),
   );
+}
+
+/** Secondary categories and explicit group memberships of visible opportunities. */
+export async function getOpportunityLinks() {
+  return withPublicDb(async (tx) => {
+    const secondary = await tx
+      .select({
+        opportunityId: opportunityCategories.opportunityId,
+        categorySlug: categories.slug,
+        subcategorySlug: subcategories.slug,
+      })
+      .from(opportunityCategories)
+      .innerJoin(categories, eq(categories.id, opportunityCategories.categoryId))
+      .leftJoin(subcategories, eq(subcategories.id, opportunityCategories.subcategoryId));
+    const groups = await tx
+      .select({
+        opportunityId: opportunityGroups.opportunityId,
+        kind: discoveryGroups.kind,
+        slug: discoveryGroups.slug,
+      })
+      .from(opportunityGroups)
+      .innerJoin(discoveryGroups, eq(discoveryGroups.id, opportunityGroups.groupId));
+    return { secondary, groups };
+  });
 }
 
 /** Active subcategories of a category, in admin order. */
@@ -151,11 +205,13 @@ export async function resolveOpportunityRedirect(
 ) {
   return withPublicDb(async (tx) => {
     const [opp] = await tx
-      .select({ linkId: opportunities.affiliateLinkId })
+      .select({ linkId: opportunities.affiliateLinkId, deadlineAt: opportunities.deadlineAt })
       .from(opportunities)
       .where(eq(opportunities.id, opportunityId))
       .limit(1);
     if (!opp?.linkId) return null;
+    // Closed listings: the outbound button is disabled and /go refuses too.
+    if (opp.deadlineAt && opp.deadlineAt.getTime() <= Date.now()) return null;
     const res = await tx.execute<{ url: string; click_id: string; subid_param: string | null }>(
       sql`select url, click_id, subid_param from resolve_outbound_link(${opp.linkId}::uuid, ${opportunityId}::uuid, ${meta.sourcePath}, ${meta.country}, ${meta.deviceType}, ${meta.isBot})`,
     );

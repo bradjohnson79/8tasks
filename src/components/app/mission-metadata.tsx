@@ -15,6 +15,18 @@ import {
   UserCheck,
   Briefcase,
   CalendarClock,
+  CalendarX,
+  Camera,
+  Clapperboard,
+  EyeOff,
+  GraduationCap,
+  Image,
+  Megaphone,
+  Package,
+  PenLine,
+  Store,
+  Timer,
+  Globe2,
 } from "lucide-react";
 import type { MetaItem, MetaKey } from "@/lib/missions/metadata";
 import { cn } from "@/lib/utils";
@@ -37,6 +49,18 @@ const ICONS: Record<MetaKey, LucideIcon> = {
   computer: Laptop,
   country: Globe,
   availability: CalendarClock,
+  deadline: Timer,
+  closed: CalendarX,
+  "local-assignment": Store,
+  camera: Camera,
+  "product-supplied": Package,
+  qualification: GraduationCap,
+  written: PenLine,
+  video: Clapperboard,
+  photo: Image,
+  "private-feedback": EyeOff,
+  public: Globe2,
+  "sponsorship-disclosure": Megaphone,
 };
 
 /** Small icon + text facts. Purchase disclosures are tinted so they aren't missed. */
@@ -49,7 +73,10 @@ export function MissionMetadata({ items, className }: { items: MetaItem[]; class
         return (
           <li
             key={m.key}
-            className={cn("flex items-center gap-1.5", m.key === "purchase" && "text-warning")}
+            className={cn(
+              "flex items-center gap-1.5",
+              (m.key === "purchase" || m.key === "closed") && "text-warning",
+            )}
           >
             <Icon className="size-3.5 shrink-0" aria-hidden />
             {m.label}

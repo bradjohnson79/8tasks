@@ -14,11 +14,14 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
     "admin:create": "tsx scripts/create-admin.ts",
-    "test:e2e": "mkdir -p test-results && node tests/e2e/admin-flow.cjs"
+    "test:e2e": "mkdir -p test-results && node tests/e2e/admin-flow.cjs",
+    "import:providers": "tsx scripts/import-providers.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.3.1",
     "@radix-ui/react-slot": "^1.5.0",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.3.1",
     "better-auth": "^1.7.28",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -29,6 +32,7 @@
     "qrcode": "^1.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "resend": "^6.40.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.1",
     "zod": "^4.6.7"
