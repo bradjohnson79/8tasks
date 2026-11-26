@@ -64,6 +64,13 @@
       "when": 1795679871004,
       "tag": "0008_email_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795709850177,
+      "tag": "0009_user_value_listing",
+      "breakpoints": true
     }
   ]
 }

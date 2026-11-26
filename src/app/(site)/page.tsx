@@ -14,6 +14,7 @@ import { applyDiscovery, availableFilters, FILTER_BY_ID, HOME_CHIPS } from "@/li
 import { buildHref, param, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
 import { getDiscoveryConfig } from "@/lib/discovery/config";
+import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const metadata = { alternates: { canonical: "/" } };
@@ -66,6 +67,21 @@ export default async function DiscoverPage({
 
   return (
     <Container className="flex flex-col gap-8 pt-5 sm:pt-8">
+      {/* Organization structured data only (no ratings or reviews). */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "8Tasks",
+            url: SITE_URL,
+            slogan: "Small Missions. Real Money. Always Free. For Everyone.",
+            description:
+              "A free discovery site for legitimate ways to earn extra money in Canada and the United States.",
+          }),
+        }}
+      />
       {/* Discovery headline, tagline, search (design spec §8, update §3) */}
       <section
         aria-labelledby="hero-title"

@@ -1,28 +1,1677 @@
 {
-  "_note": "Link map from /workspace/8tasks/build_site_links.py. This copy only holds the rows confirmed in the 2026-11-25 change list (the two live providers). Replace this file with the full rebuilt site_links.json; no code change is needed.",
-  "built_at": "2026-11-25T21:21:30-07:00",
+  "_note": "Public copy of the founder's link map (scripts/build-site-links.ts). Commercial terms are omitted on purpose. Rebuild instead of editing.",
+  "generated": "2026-11-25T22:11:54-07:00",
+  "policy": {
+    "free_access": "8Tasks stays free for everyone: no paid memberships, premium tiers, paid alerts, locked categories or premium-only missions. Revenue comes only from approved affiliate commissions, commercial referral agreements and possibly approved, disclosed sponsored placements later.",
+    "tagline": "Always Free. For Everyone.",
+    "sponsored_placements": "Future sponsored or featured placements must be clearly disclosed and must never affect provider assessments. Not built in this release."
+  },
+  "taxonomy": {
+    "categories": [
+      "Surveys",
+      "App & Website Testing",
+      "Photography",
+      "Mystery Shopping",
+      "Content & Media",
+      "Gaming & Entertainment",
+      "Paid Research",
+      "Microtasks & AI"
+    ],
+    "subsections": {
+      "Paid Research": [
+        "Share Your Expertise",
+        "Expert Consultations",
+        "Professional Research"
+      ],
+      "Content & Media": [
+        "Brand Ambassador Opportunities",
+        "Direct Brand Collaborations",
+        "Product Testing",
+        "Sponsored Content"
+      ],
+      "Gaming & Entertainment": [
+        "Game Studio Playtesting",
+        "Beta Testing",
+        "Game Feedback"
+      ]
+    }
+  },
   "providers": [
     {
-      "provider_id": "joinbrands",
-      "name": "JoinBrands",
-      "status": "live",
-      "affiliate_url": "https://joinbrands.com/?ref=ccIo2N",
-      "sample_url": "https://joinbrands.com",
-      "commission_note": "US$30 per referred brand; US$5 per active referred creator signup; 20% of JoinBrands service fees from referred brands for 1 year (per JoinBrands affiliate page)",
+      "provider_id": "freecash",
+      "provider": "Freecash",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://freecash.com/en",
       "disclosure_needed": "yes",
-      "audience": ["earners", "brands"],
-      "placement": ["directory", "for_brands_page"]
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "swagbucks",
+      "provider": "Swagbucks (Prodege)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.swagbucks.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "branded-surveys",
+      "provider": "Branded Surveys",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://surveys.gobranded.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
     },
     {
       "provider_id": "dreamstime",
-      "name": "Dreamstime",
+      "provider": "Dreamstime",
+      "category": "Photo Scouting",
+      "subsection": "",
       "status": "live",
       "affiliate_url": "https://www.dreamstime.com/#res62198923",
       "sample_url": "https://www.dreamstime.com",
-      "commission_note": "10% of gross value of referred buyers' and contributors' transactions, guaranteed 3 years",
       "disclosure_needed": "yes",
-      "audience": ["earners"],
-      "placement": ["directory"]
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "pinecone-research",
+      "provider": "Pinecone Research (NielsenIQ)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.pineconeresearch.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "user-interviews",
+      "provider": "User Interviews",
+      "category": "Paid Research & Focus Groups",
+      "subsection": "Share Your Expertise",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.userinterviews.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "pawns-app",
+      "provider": "Pawns.app",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://pawns.app",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "pond5",
+      "provider": "Pond5",
+      "category": "Photo Scouting",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.pond5.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "ipsos-isay",
+      "provider": "Ipsos iSay",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.ipsosisay.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "survey-junkie",
+      "provider": "Survey Junkie",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://lp.surveyjunkie.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "joinbrands",
+      "provider": "JoinBrands",
+      "category": "Photo Scouting",
+      "subsection": "Direct Brand Collaborations",
+      "status": "live",
+      "affiliate_url": "https://joinbrands.com/?ref=ccIo2N",
+      "sample_url": "https://joinbrands.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners",
+        "brands"
+      ],
+      "placement": [
+        "directory",
+        "for_brands_page"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "slicethepie",
+      "provider": "Slicethepie",
+      "category": "Content & Media Review",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.slicethepie.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "maxbounty-affiliate-referral",
+      "provider": "MaxBounty affiliate referral",
+      "category": "Create & Earn (blogging, vlogging, UGC)",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://maxbounty.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "bitlabs",
+      "provider": "BitLabs (survey offerwall SDK)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://bitlabs.ai",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "cpx-research",
+      "provider": "CPX Research (survey offerwall SDK)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://cpx-research.com/en/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "nielseniq-homescan",
+      "provider": "NielsenIQ Homescan",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://panel.nielseniq.com/global/en/home/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "mypoints",
+      "provider": "MyPoints (Prodege)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.mypoints.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "flexoffers-flexcash",
+      "provider": "FlexOffers FlexCash",
+      "category": "Create & Earn (blogging, vlogging, UGC)",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.flexoffers.com/publishers/flexcash/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "mobile-xpression",
+      "provider": "Mobile Xpression",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.mobilexpression.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "billo",
+      "provider": "Billo",
+      "category": "Photo Scouting",
+      "subsection": "Direct Brand Collaborations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://billo.app",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "prime-opinion",
+      "provider": "Prime Opinion",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.primeopinion.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "yougov",
+      "provider": "YouGov",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://yougov.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "toluna-influencers",
+      "provider": "Toluna Influencers",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.toluna.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "lifepoints",
+      "provider": "LifePoints",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.lifepointspanel.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "justplay",
+      "provider": "JustPlay",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://justplayapps.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "field-agent",
+      "provider": "Field Agent (US + Field Agent Canada)",
+      "category": "Photo Scouting",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://storesight.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "bestmark",
+      "provider": "BestMark",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.bestmark.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "market-force",
+      "provider": "Market Force",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.marketforce.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "shoppers-view",
+      "provider": "Shoppers' View",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://shoppersview.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "ishopfor-ipsos",
+      "provider": "iShopFor Ipsos",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://ishopforipsos.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "secret-shopper",
+      "provider": "Secret Shopper (Vatic)",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.secretshopper.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "shoppers-confidential",
+      "provider": "Shoppers Confidential",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://shoppersconfidential.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "observa",
+      "provider": "Observa",
+      "category": "Photo Scouting",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.observa.ai",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "intellishop",
+      "provider": "IntelliShop",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://intelli-shop.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "second-to-none",
+      "provider": "Second To None",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.second-to-none.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "bare-international",
+      "provider": "BARE International",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.bareinternational.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "shared-insight",
+      "provider": "Shared Insight",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://shoppers.sharedinsight.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "sqm",
+      "provider": "SQM (Sensors Quality Management)",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.sqm.ca/index.php/en/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "helion-research",
+      "provider": "Helion Research",
+      "category": "Mystery Shopping",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://shoppers.helionresearch.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "panelplace",
+      "provider": "PanelPlace",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.panelplace.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "besitos",
+      "provider": "Besitos",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://besitoscorp.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "torox",
+      "provider": "Torox",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://torox.io",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "revu",
+      "provider": "RevU",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://revu.co",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "mychips",
+      "provider": "MyChips (LoyaltyPlay / Mistplay)",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://business.mistplay.com/publishers/loyaltyplay",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "ayet-studios",
+      "provider": "ayeT-Studios",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.ayetstudios.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "lootably",
+      "provider": "Lootably",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://lootably.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "rapidoreach",
+      "provider": "RapidoReach",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.rapidoreach.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "offerjuice",
+      "provider": "OfferJuice (Dynata)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.offerjuice.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "sayso-rewards",
+      "provider": "SaySo Rewards (Research For Good)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.saysorewards.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "valued-opinions",
+      "provider": "Valued Opinions",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.valuedopinions.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "yoursurveys",
+      "provider": "YourSurveys (Cint)",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://your-surveys.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "opinion-outpost",
+      "provider": "Opinion Outpost",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "sample",
+      "affiliate_url": "",
+      "sample_url": "https://www.opinionoutpost.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "grabpoints",
+      "provider": "GrabPoints",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://grabpoints.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "intouch-insight",
+      "provider": "Intouch Insight (Intouch Shoppers)",
+      "category": "Mystery Shopping / Field Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.intouchinsight.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "tapresearch",
+      "provider": "TapResearch",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.tapresearch.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "tapjoy",
+      "provider": "Tapjoy (Unity Grow Offerwall)",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://unity.com/products/tapjoy",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "pollfish",
+      "provider": "Pollfish",
+      "category": "Surveys & Polls",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.pollfish.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "playtime",
+      "provider": "Playtime (Adjoe)",
+      "category": "Game Testing / Rewarded Gaming",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://adjoe.io",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "bold-insight",
+      "provider": "Bold Insight",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://boldinsight.com/participate",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "end-to-end-user-research",
+      "provider": "End to End User Research",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.endtoenduserresearch.com/participate.html",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "gotoresearch",
+      "provider": "gotoresearch",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.gotoresearch.com/panel/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "dropbox-research-participant-panel",
+      "provider": "Dropbox Research Participant Panel",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.dropbox.com/research",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "gift_card",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "estee-lauder-consumer-product-testing",
+      "provider": "Estée Lauder Consumer Product Testing",
+      "category": "Content & Media",
+      "subsection": "Product Testing",
+      "status": "excluded",
+      "affiliate_url": "",
+      "sample_url": "https://www.elcompanies.com/en/innovation/driving-innovation-together/clinical-research-center",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "le-opinions",
+      "provider": "L&E Opinions",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.leopinions.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "le-b2b-professional-research-panel",
+      "provider": "L&E B2B Professional Research Panel",
+      "category": "Paid Research",
+      "subsection": "Professional Research",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.leopinions.com/b2b-panel/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "fieldwork",
+      "provider": "Fieldwork",
+      "category": "Paid Research",
+      "subsection": "",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.fieldwork.com/join/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "glg",
+      "provider": "GLG",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://glg.com/for-experts",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "guidepoint",
+      "provider": "Guidepoint",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.guidepoint.com/experts/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "expertconnect",
+      "provider": "ExpertConnect",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.expertconnect.net/Home/ExpertConnect",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "apex-leaders",
+      "provider": "Apex Leaders",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://apexleaders.com/advisors/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "wefranch",
+      "provider": "Wefranch",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://wefranch.com/expert-network",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "the-continental-exchange",
+      "provider": "The Continental Exchange",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.usatce.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "alphasights",
+      "provider": "AlphaSights",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.alphasights.com/experts/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "cash",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "third-bridge",
+      "provider": "Third Bridge",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.thirdbridge.com/en-us/experts",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "coleman-research",
+      "provider": "Coleman Research",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.colemanrg.com/become-an-expert",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "newtonx",
+      "provider": "NewtonX",
+      "category": "Paid Research",
+      "subsection": "Expert Consultations",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://experts.newtonx.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "gift_card",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "aerie-realmakers",
+      "provider": "Aerie Realmakers",
+      "category": "Content & Media",
+      "subsection": "Brand Ambassador Opportunities",
+      "status": "excluded",
+      "affiliate_url": "",
+      "sample_url": "https://www.ae.com/us/en/content/aerie-realmakers-community",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "hollister-style-hub",
+      "provider": "Hollister Style Hub",
+      "category": "Content & Media",
+      "subsection": "Brand Ambassador Opportunities",
+      "status": "excluded",
+      "affiliate_url": "",
+      "sample_url": "https://community.hollisterco.com/account/create",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "me-at-uo-creator-community",
+      "provider": "Me@UO Creator Community",
+      "category": "Content & Media",
+      "subsection": "Brand Ambassador Opportunities",
+      "status": "excluded",
+      "affiliate_url": "",
+      "sample_url": "https://www.urbanoutfitters.com/me-at-uo",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "abercrombie-creator-suite",
+      "provider": "Abercrombie Creator Suite",
+      "category": "Content & Media",
+      "subsection": "Brand Ambassador Opportunities",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://community.abercrombie.com/creator/create",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "riot-games",
+      "provider": "Riot Games",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.riotgames.com/en/playtest",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "activision",
+      "provider": "Activision",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "excluded",
+      "affiliate_url": "",
+      "sample_url": "https://www.activision.com/company/playtest",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "electronic-arts",
+      "provider": "Electronic Arts",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.ea.com/playtesting",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "ubisoft",
+      "provider": "Ubisoft",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://playtest.ubisoft.com",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "mixed",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "warner-bros-games",
+      "provider": "Warner Bros. Games",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://warnerbrosgames.com/playtest/",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "gift_card",
+      "last_verified": "2026-11-25",
+      "sponsored": false
+    },
+    {
+      "provider_id": "xbox-research",
+      "provider": "Xbox Research",
+      "category": "Gaming & Entertainment",
+      "subsection": "Game Studio Playtesting",
+      "status": "founder_review_pending",
+      "affiliate_url": "",
+      "sample_url": "https://www.xbox.com/en-US/community/research",
+      "disclosure_needed": "yes",
+      "audience": [
+        "earners"
+      ],
+      "placement": [
+        "directory"
+      ],
+      "reward_type": "unknown",
+      "last_verified": "2026-11-25",
+      "sponsored": false
     }
   ]
 }

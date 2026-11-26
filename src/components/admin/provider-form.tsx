@@ -3,6 +3,7 @@ import { AdminForm } from "@/components/admin/admin-form";
 import type { providerInternal, providers } from "@/db/schema";
 import {
   CAPABILITY_OPTIONS,
+  CheckboxField,
   CountriesField,
   STATUS_OPTIONS,
   SelectField,
@@ -166,7 +167,7 @@ export function ProviderForm({
           />
           <SelectField
             name="readinessLevel"
-            label="Readiness level"
+            label="Readiness level (A required to publish)"
             defaultValue={internal?.readinessLevel}
             options={READINESS_OPTIONS}
             placeholder="Not set"
@@ -198,6 +199,12 @@ export function ProviderForm({
             label="Recurring commission"
             defaultValue={tri(internal?.recurringCommission)}
             options={TRI_OPTIONS}
+          />
+          <CheckboxField
+            name="userValueListing"
+            label="User-value listing (Level D)"
+            defaultChecked={internal?.userValueListing}
+            hint="Listed for usefulness only: no affiliate links, no commission claims."
           />
           <TextField
             name="approvalStatus"

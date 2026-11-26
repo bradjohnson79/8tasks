@@ -1,5 +1,5 @@
 import { DEFAULT_PATHWAYS, type DiscoveryGroup } from "@/lib/discovery/defaults";
-import { belongsTo, inCategory, subcategoriesOf } from "@/lib/discovery/membership";
+import { belongsTo, categoriesOf, inCategory, subcategoriesOf } from "@/lib/discovery/membership";
 import { sortableAmount } from "./compensation";
 import { isClosed } from "./metadata";
 import type { Opportunity } from "./types";
@@ -317,6 +317,9 @@ export function matchesSearch(o: Opportunity, q: string): boolean {
     o.providerName,
     o.categoryName,
     ...subcategoriesOf(o).map((s) => s.replace(/-/g, " ")),
+    // Secondary categories and /earn subsections ("Capture & Earn", "Write & Earn", …).
+    ...categoriesOf(o).map((c) => c.replace(/-/g, " ")),
+    ...(o.subsectionTitles ?? []),
     ...derivedKeywords(o),
   ]
     .join(" ")

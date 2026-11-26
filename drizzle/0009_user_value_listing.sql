@@ -1,0 +1,1 @@
+ALTER TABLE "provider_internal" ADD COLUMN "user_value_listing" boolean DEFAULT false NOT NULL;

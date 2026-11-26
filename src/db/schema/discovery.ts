@@ -48,6 +48,11 @@ export const providerInternal = pgTable("provider_internal", {
     .notNull()
     .default(sql`'{}'::text[]`),
   readinessLevel: readinessLevel(),
+  /**
+   * Level D providers may be listed for user value only when the founder sets this, with no
+   * affiliate links and no commission claims (master prompt §6).
+   */
+  userValueListing: boolean().notNull().default(false),
   approvalStatus: text(),
   missionAlignment: text(),
   businessContact: text(),

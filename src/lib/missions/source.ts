@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { getOpportunityLinks, getPublicOpportunityRows } from "@/db/queries/public";
 import { getDiscoveryConfig } from "@/lib/discovery/config";
+import { belongsTo } from "@/lib/discovery/membership";
 import { shouldShowDemoData } from "@/lib/demo";
 import { getDemoOpportunities } from "./demo-data";
 import { pathwaysFor } from "./filters";
@@ -152,7 +153,11 @@ export const loadOpportunities = cache(async (): Promise<Opportunity[]> => {
       } satisfies Opportunity;
     });
   const all = showDemo ? [...real, ...getDemoOpportunities()] : real;
-  return all.map((o) => ({ ...o, pathways: pathwaysFor(o, config.pathways) }));
+  return all.map((o) => ({
+    ...o,
+    pathways: pathwaysFor(o, config.pathways),
+    subsectionTitles: config.subsections.filter((g) => belongsTo(o, g)).map((g) => g.title),
+  }));
 });
 
 export async function loadOpportunity(id: string): Promise<Opportunity | undefined> {

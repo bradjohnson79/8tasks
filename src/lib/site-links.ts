@@ -22,20 +22,24 @@ const httpsOrEmpty = z
   .optional()
   .transform((v) => (v && /^https:\/\/[^\s]+$/.test(v) ? v : ""));
 
-export const siteLinkSchema = z.object({
-  provider_id: z
-    .string()
-    .trim()
-    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
-  name: z.string().trim().optional(),
-  status: z.string().trim(),
-  affiliate_url: httpsOrEmpty,
-  sample_url: httpsOrEmpty,
-  commission_note: z.string().optional(),
-  disclosure_needed: z.string().optional(),
-  audience: list.default(["earners"]),
-  placement: list.default(["directory"]),
-});
+export const siteLinkSchema = z
+  .object({
+    provider_id: z
+      .string()
+      .trim()
+      .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+    name: z.string().trim().optional(),
+    /** Display name in the current builder output (older copies used "name"). */
+    provider: z.string().trim().optional(),
+    status: z.string().trim(),
+    affiliate_url: httpsOrEmpty,
+    sample_url: httpsOrEmpty,
+    commission_note: z.string().optional(),
+    disclosure_needed: z.string().optional(),
+    audience: list.default(["earners"]),
+    placement: list.default(["directory"]),
+  })
+  .transform(({ provider, ...r }) => ({ ...r, name: r.name ?? provider }));
 
 export type SiteLink = z.infer<typeof siteLinkSchema>;
 
@@ -45,6 +49,16 @@ export function parseSiteLinks(data: unknown): SiteLink[] {
     const p = siteLinkSchema.safeParse(r);
     return p.success ? [p.data] : [];
   });
+}
+
+/**
+ * Earner directory rule from the link map: placement includes directory and status is sample
+ * or live. founder_review_pending / excluded rows are never returned.
+ */
+export function directoryLinks(links: SiteLink[]): SiteLink[] {
+  return links.filter(
+    (l) => l.placement.includes("directory") && (l.status === "live" || l.status === "sample"),
+  );
 }
 
 /** For Brands page: placement includes for_brands_page AND status is live (spec). */

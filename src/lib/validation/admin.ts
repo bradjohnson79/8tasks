@@ -338,4 +338,5 @@ export const providerInternalSchema = z.object({
   approvalStatus: optionalText(120),
   missionAlignment: optionalText(1000),
   businessContact: optionalText(300),
+  userValueListing: z.boolean().default(false),
 });

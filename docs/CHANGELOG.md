@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-26: Founder gap analysis + real integration package + full link map
+- `data/site_links.json` rebuilt from the founder's 86-row link map via `scripts/build-site-links.ts` (commercial
+  fields removed: public repo). For Brands still shows only live + for_brands_page rows (JoinBrands).
+- Import accepts the founder's `claude_integration_package.json` format directly (`src/lib/import/package-v1.ts`):
+  annotations stripped, unknown/"sometimes" facts dropped, internal context to admin notes. Dreamstime + JoinBrands
+  re-imported as drafts (local + preview) from the real package (JoinBrands CA + US, extra subcategories/subsections).
+- G-30: providers publish only at readiness A, or D as a flagged user-value listing with no affiliate links (0009).
+- G-04: search matches secondary categories and /earn subsection names. G-24: Organization JSON-LD. G-35: CI workflow in `docs/ci-workflow.yml` (founder adds it to `.github/workflows/`).
+
 ## 2026-11-26: Resend + My Daily 8 email (sending off until approved)
 - Migrations 0006–0008: `email_subscribers` (double opt-in, consent records, preferences, tokens), `email_sends`,
   `email_events`, `email_suppressions`, `email_settings`; `providers.allows_email_traffic`; token-based SECURITY DEFINER

@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import {
   affiliateLinks,
@@ -13,6 +13,7 @@ import {
   subcategories,
 } from "@/db/schema";
 import { ATTRIBUTE_KEYS } from "@/lib/missions/types";
+import { providerPublishBlocker } from "@/lib/publish-policy";
 import { audit, requireAdmin } from "@/lib/admin";
 import {
   affiliateLinkSchema,
@@ -86,10 +87,27 @@ export async function saveProvider(providerId: string | null, form: FormData) {
   const path = providerId ? `/admin/providers/${providerId}` : "/admin/providers/new";
   const parsed = providerSchema.safeParse(formToObject(form, { arrays: ["countries"] }));
   if (!parsed.success) return { error: firstError(parsed.error) };
-  const internalParsed = providerInternalSchema.safeParse(formToObject(form));
+  const internalParsed = providerInternalSchema.safeParse(
+    formToObject(form, { booleans: ["userValueListing"] }),
+  );
   if (!internalParsed.success) return { error: firstError(internalParsed.error) };
   const { lastVerifiedAt, ...internal } = internalParsed.data;
   const providerData = { ...parsed.data, lastVerifiedAt };
+
+  if (providerData.status === "published") {
+    const [{ n }] = providerId
+      ? await db
+          .select({ n: sql<number>`count(*)::int` })
+          .from(affiliateLinks)
+          .where(and(eq(affiliateLinks.providerId, providerId), eq(affiliateLinks.isActive, true)))
+      : [{ n: 0 }];
+    const blocker = providerPublishBlocker({
+      readinessLevel: internal.readinessLevel,
+      userValueListing: internal.userValueListing,
+      activeAffiliateLinks: n,
+    });
+    if (blocker) return { error: blocker };
+  }
 
   let result: Result;
   try {

@@ -8,41 +8,85 @@ const pkg = readFileSync(
   "utf8",
 );
 
-describe("provider import parsing", () => {
-  it("accepts the integration package and keeps exact affiliate URLs", () => {
+const native = {
+  providers: [
+    {
+      slug: "example-co",
+      public: {
+        name: "Example Co",
+        countries: ["CA"],
+        affiliate_url: "https://example.com/?ref=1",
+        opportunities: [{ slug: "tasks", title: "Example tasks", category: "surveys" }],
+      },
+    },
+  ],
+};
+
+describe("founder integration package (adapter)", () => {
+  it("maps both providers, keeps exact affiliate URLs and never invents facts", () => {
     const r = parseImport(pkg, "json");
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    expect(r.providers.map((p) => p.slug)).toEqual(["dreamstime", "joinbrands"]);
-    expect(r.providers[0].public.affiliate_url).toBe("https://www.dreamstime.com/#res62198923");
-    expect(r.providers[1].public.affiliate_url).toBe("https://joinbrands.com/?ref=ccIo2N");
-    expect(r.providers[1].public.opportunities[0].subsections).toContain("film-earn");
+    const [ds, jb] = r.providers;
+    expect(ds.slug).toBe("dreamstime");
+    expect(ds.public.affiliate_url).toBe("https://www.dreamstime.com/#res62198923");
+    expect(jb.public.affiliate_url).toBe("https://joinbrands.com/?ref=ccIo2N");
+    expect(jb.public.countries).toEqual(["CA", "US"]);
+    const dso = ds.public.opportunities[0];
+    // "stock-licensing (NEW — add)" and "licensing_royalties (NEW — …)" annotations are stripped.
+    expect(dso.subcategory).toBe("product-photos");
+    expect(dso.secondary).toEqual(
+      expect.arrayContaining([
+        { category: "content-media", subcategory: null },
+        { category: "photography", subcategory: "stock-licensing" },
+      ]),
+    );
+    expect(dso.compensation_type).toBe("licensing_royalties");
+    expect(dso.subsections).toEqual(["capture-earn"]);
+    expect(dso.pathways).toEqual(["create-earn"]);
+    // Only true/false facts survive; null, "sometimes" and "job-dependent" are unknown.
+    expect(dso.attributes).toEqual({
+      remote: true,
+      applicationRequired: true,
+      photoDeliverable: true,
+      purchaseRequired: false,
+    });
+    const jbo = jb.public.opportunities[0];
+    expect(jbo.attributes).not.toHaveProperty("productSupplied");
+    expect(jbo.compensation_note).toMatch(/free product \(not cash\)/);
+    expect(jbo.subsections).toEqual(["film-earn", "capture-earn", "review-earn"]);
+    expect(jbo.eligibility[0]).toMatch(/18\+/);
+    expect(jb.internal.capabilities?.provides_feed).toBe("no");
+    expect(jb.internal.admin_notes).toMatch(/Do not display individual brands/);
   });
+});
 
+describe("native import format", () => {
   it("rejects unsupported countries, non-https URLs and duplicate slugs", () => {
-    const base = JSON.parse(pkg);
-    const bad = structuredClone(base);
+    const bad = structuredClone(native);
     bad.providers[0].public.countries = ["GB"];
     expect(parseImport(JSON.stringify(bad), "json").ok).toBe(false);
-    const http = structuredClone(base);
+    const http = structuredClone(native);
     http.providers[0].public.affiliate_url = "http://example.com/x";
     expect(parseImport(JSON.stringify(http), "json").ok).toBe(false);
-    const dup = structuredClone(base);
-    dup.providers[1].slug = "dreamstime";
-    const r = parseImport(JSON.stringify(dup), "json");
-    expect(r.ok).toBe(false);
+    const dup = { providers: [native.providers[0], native.providers[0]] };
+    expect(parseImport(JSON.stringify(dup), "json").ok).toBe(false);
   });
 
-  it("drops unknown attribute keys and has no status field to set", () => {
-    const base = JSON.parse(pkg);
+  it("drops unknown attribute keys and ignores any status field", () => {
+    const base = structuredClone(native) as unknown as {
+      providers: {
+        public: Record<string, unknown> & { opportunities: Record<string, unknown>[] };
+      }[];
+    };
     base.providers[0].public.status = "published";
     base.providers[0].public.opportunities[0].status = "published";
-    base.providers[0].public.opportunities[0].attributes.madeUp = true;
+    base.providers[0].public.opportunities[0].attributes = { remote: true, madeUp: true };
     const r = parseImport(JSON.stringify(base), "json");
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(JSON.stringify(r.providers)).not.toContain("published");
-    expect(r.providers[0].public.opportunities[0].attributes).not.toHaveProperty("madeUp");
+    expect(r.providers[0].public.opportunities[0].attributes).toEqual({ remote: true });
   });
 
   it("parses the equivalent CSV into the same structure", () => {

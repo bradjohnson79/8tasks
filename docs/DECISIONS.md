@@ -47,6 +47,10 @@
 | 2026-11-26 | Three gates before automated mail: env `EMAIL_SENDING_ENABLED`, admin pause (default on), postal address | Spec: no production sending before founder approval |
 | 2026-11-26 | Added 8tasks.com to the (shared) Resend account; API key + webhook left for the founder | Secrets never pass through chat |
 
+| 2026-11-26 | Public repo: commission notes and deal terms are not committed (link map + package copies are stripped); full files are imported through the admin | Repo is public |
+| 2026-11-26 | Link-map "sample" rows are not published: they have no country data (CA/US rule) and old category names, and the master prompt approves only Dreamstime + JoinBrands | Never guess eligibility |
+| 2026-11-26 | Publishing requires readiness A (D only as founder-flagged user-value listing, no affiliate links) | Gap analysis G-30 |
+
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo

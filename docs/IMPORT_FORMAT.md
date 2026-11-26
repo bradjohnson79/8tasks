@@ -6,6 +6,16 @@ were already published (the preview warns). Publishing is always a manual admin 
 CLI equivalent (local/admin DB): `npm run import:providers -- <file>`.
 Example: `data/import/claude_integration_package.json` (Dreamstime + JoinBrands).
 
+## Founder package format
+`/admin/import` also accepts the founder's `claude_integration_package.json` (providers[].provider_id with
+`public`/`internal` blocks) as-is. Mapping (`src/lib/import/package-v1.ts`): `primary_category` + the first
+subcategory in it → primary; other subcategories and `additional_categories` → secondary; `specialized_subsections`
+names → /earn subsections; `discovery_pathways` → pathways; only true/false attributes kept (null, "sometimes",
+"job-dependent" = unknown); `compensation.display` kept as the pay note for "variable"; internal commission text →
+admin-only `provider_internal`; attribution/logo/needs-account-check/do-not notes → `providers.admin_notes`;
+capabilities → provider capability flags. One provider-level opportunity is created, titled from the first
+opportunity type (edit titles in admin). Readiness level is left unset (set A before publishing).
+
 ## JSON
 ```json
 {

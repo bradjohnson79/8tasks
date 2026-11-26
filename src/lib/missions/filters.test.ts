@@ -180,3 +180,19 @@ describe("master prompt filters", () => {
     expect(belongsTo(elsewhere, review)).toBe(false);
   });
 });
+
+describe("search covers subsections and secondary categories", () => {
+  it("finds a UGC listing by 'photograph' (secondary) and 'film' (subsection)", () => {
+    const o: Opportunity = {
+      ...bare,
+      title: "Create UGC for brands",
+      categorySlug: "content-media",
+      categoryName: "Content & Media",
+      secondary: [{ categorySlug: "photography", subcategorySlug: "product-photos" }],
+      subsectionTitles: ["Film & Earn"],
+    };
+    expect(matchesSearch(o, "photograph")).toBe(true);
+    expect(matchesSearch(o, "film")).toBe(true);
+    expect(matchesSearch(o, "transcription")).toBe(false);
+  });
+});

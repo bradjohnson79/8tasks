@@ -8,6 +8,7 @@ import {
   slugSchema,
 } from "@/lib/validation/admin";
 import { SUPPORTED_COUNTRIES } from "@/lib/markets";
+import { fromIntegrationPackage, isIntegrationPackage } from "./package-v1";
 
 /**
  * Provider import format (master prompt §3.1). JSON:
@@ -42,6 +43,7 @@ const attributes = z
     return out;
   });
 
+const capability = z.enum(["unknown", "yes", "no"]);
 const placement = z.object({ category: slugSchema, subcategory: slugSchema.optional().nullable() });
 
 export const importOpportunitySchema = z.object({
@@ -53,6 +55,8 @@ export const importOpportunitySchema = z.object({
   subcategory: slugSchema.optional().nullable(),
   secondary: z.array(placement).max(20).default([]),
   subsections: z.array(slugSchema).max(10).default([]),
+  pathways: z.array(slugSchema).max(10).default([]),
+  eligibility: z.array(z.string().trim().min(1).max(300)).max(20).default([]),
   compensation_type: z.enum(COMPENSATION_TYPES).default("unknown"),
   compensation_note: text(200),
   attributes,
@@ -82,6 +86,7 @@ export const importProviderSchema = z.object({
       .optional()
       .nullable()
       .transform((v) => v || null),
+    affiliate_label: text(120),
     opportunities: z.array(importOpportunitySchema).max(50).default([]),
   }),
   internal: z
@@ -105,6 +110,18 @@ export const importProviderSchema = z.object({
       approval_status: text(120),
       mission_alignment: text(1000),
       business_contact: text(300),
+      /** Admin-only context -> providers.admin_notes (never rendered). */
+      admin_notes: text(5000),
+      affiliate_network: text(120),
+      capabilities: z
+        .object({
+          supports_sub_ids: capability,
+          supports_postbacks: capability,
+          provides_feed: capability,
+          allows_revenue_share: capability,
+        })
+        .partial()
+        .optional(),
     })
     .default({
       commission_model: "unknown",
@@ -118,6 +135,8 @@ export const importProviderSchema = z.object({
       approval_status: null,
       mission_alignment: null,
       business_contact: null,
+      admin_notes: null,
+      affiliate_network: null,
     }),
 });
 
@@ -241,6 +260,8 @@ export function parseImport(raw: string, format: "json" | "csv"): ImportResult {
   let data: unknown;
   try {
     data = format === "json" ? JSON.parse(raw) : csvToImport(raw);
+    if (format === "json" && isIntegrationPackage(data))
+      data = fromIntegrationPackage(data as never);
   } catch {
     return { ok: false, errors: ["The file isn't valid JSON."] };
   }

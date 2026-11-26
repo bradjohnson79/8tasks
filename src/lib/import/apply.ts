@@ -34,9 +34,9 @@ export async function importLookups(db: Db | Tx, list: ImportProvider[]) {
       })
       .from(subcategories),
     db
-      .select({ id: discoveryGroups.id, slug: discoveryGroups.slug })
+      .select({ id: discoveryGroups.id, slug: discoveryGroups.slug, kind: discoveryGroups.kind })
       .from(discoveryGroups)
-      .where(eq(discoveryGroups.kind, "subsection")),
+      .where(inArray(discoveryGroups.kind, ["subsection", "pathway"])),
     db
       .select()
       .from(providers)
@@ -65,7 +65,11 @@ export async function importLookups(db: Db | Tx, list: ImportProvider[]) {
           errors.push(`${where}: unknown secondary subcategory "${s.category}/${s.subcategory}"`);
       }
       for (const g of o.subsections)
-        if (!groups.some((x) => x.slug === g)) errors.push(`${where}: unknown subsection "${g}"`);
+        if (!groups.some((x) => x.kind === "subsection" && x.slug === g))
+          errors.push(`${where}: unknown subsection "${g}"`);
+      for (const g of o.pathways)
+        if (!groups.some((x) => x.kind === "pathway" && x.slug === g))
+          errors.push(`${where}: unknown pathway "${g}"`);
     }
   return { catId, subId, groups, existing, errors };
 }
@@ -91,6 +95,20 @@ export async function applyProviders(
       countries: [...new Set(p.public.countries)].sort(),
       lastVerifiedAt: p.public.last_verified_at,
       status: "draft" as const, // never published by an import
+      ...(p.internal.admin_notes ? { adminNotes: p.internal.admin_notes } : {}),
+      ...(p.internal.affiliate_network ? { affiliateNetwork: p.internal.affiliate_network } : {}),
+      ...(p.internal.capabilities?.supports_sub_ids
+        ? { supportsSubIds: p.internal.capabilities.supports_sub_ids }
+        : {}),
+      ...(p.internal.capabilities?.supports_postbacks
+        ? { supportsPostbacks: p.internal.capabilities.supports_postbacks }
+        : {}),
+      ...(p.internal.capabilities?.provides_feed
+        ? { providesFeed: p.internal.capabilities.provides_feed }
+        : {}),
+      ...(p.internal.capabilities?.allows_revenue_share
+        ? { allowsRevenueShare: p.internal.capabilities.allows_revenue_share }
+        : {}),
     };
     const [before] = await tx.select().from(providers).where(eq(providers.slug, p.slug));
     const [prov] = before
@@ -136,7 +154,7 @@ export async function applyProviders(
             .insert(affiliateLinks)
             .values({
               providerId: prov.id,
-              label: "Imported",
+              label: p.public.affiliate_label ?? "Imported",
               destinationUrl: p.public.affiliate_url,
             })
             .returning({ id: affiliateLinks.id })
@@ -158,6 +176,7 @@ export async function applyProviders(
         compensationType: o.compensation_type,
         compensationNote: o.compensation_note,
         attributes: o.attributes,
+        eligibility: o.eligibility,
         lastVerifiedAt: o.last_verified_at ?? p.public.last_verified_at,
         status: "draft" as const,
       };
@@ -179,10 +198,10 @@ export async function applyProviders(
       }));
       if (secondary.length)
         await tx.insert(opportunityCategories).values(secondary).onConflictDoNothing();
-      const groups = o.subsections.map((g) => ({
-        opportunityId: op.id,
-        groupId: l.groups.find((x) => x.slug === g)!.id,
-      }));
+      const groups = [
+        ...o.subsections.map((g) => l.groups.find((x) => x.kind === "subsection" && x.slug === g)!),
+        ...o.pathways.map((g) => l.groups.find((x) => x.kind === "pathway" && x.slug === g)!),
+      ].map((g) => ({ opportunityId: op.id, groupId: g.id }));
       if (groups.length) await tx.insert(opportunityGroups).values(groups).onConflictDoNothing();
     }
     await tx.insert(adminAuditLog).values({

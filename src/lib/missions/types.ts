@@ -158,6 +158,8 @@ export type Opportunity = {
   groupKeys?: string[];
   /** Pathway slugs, precomputed from the admin-managed pathways by the loader. */
   pathways?: string[];
+  /** /earn subsection titles this listing belongs to (for search), precomputed by the loader. */
+  subsectionTitles?: string[];
   /** Provider confirmed email-originated traffic is allowed (Daily 8). Undefined = unknown. */
   emailAllowed?: boolean;
   /** Whether a validated outbound affiliate link exists (real listings only). */
