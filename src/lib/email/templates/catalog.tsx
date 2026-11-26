@@ -190,3 +190,23 @@ export function adminProviderAlertEmail(a: {
     ),
   };
 }
+
+export function magicLinkEmail(a: { url: string; footer: FooterProps }): Built {
+  return {
+    stream: "transactional",
+    subject: "Your 8Tasks sign-in link",
+    react: (
+      <SimpleEmail
+        preview="Sign in to 8Tasks"
+        heading="Sign in to 8Tasks"
+        paragraphs={[
+          "Use the button below to sign in. The link works once and expires in 15 minutes.",
+          "Signing in never subscribes you to promotional emails, and 8Tasks is always free.",
+        ]}
+        action={{ label: "Sign in", href: a.url }}
+        afterAction={["Didn't ask for this? Ignore this email and nothing will happen."]}
+        footer={a.footer}
+      />
+    ),
+  };
+}

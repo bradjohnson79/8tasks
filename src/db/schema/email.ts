@@ -19,6 +19,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { opportunities } from "./app";
+import { user } from "./auth";
 
 export const subscriberStatus = pgEnum("subscriber_status", [
   "pending",
@@ -41,6 +42,8 @@ export const emailSubscribers = pgTable(
   {
     id: uuid().primaryKey().defaultRandom(),
     email: text().notNull().unique(),
+    /** Set when the subscription belongs to a signed-in account (verified address). */
+    userId: text().references(() => user.id, { onDelete: "set null" }),
     status: subscriberStatus().notNull().default("pending"),
     frequency: emailFrequency().notNull().default("daily"),
     // Preferences (rules-based personalisation)

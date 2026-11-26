@@ -11,6 +11,9 @@ const serverEnvSchema = z.object({
   VERCEL_BRANCH_URL: z.string().optional(),
   VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
   SHOW_DEMO_DATA: z.enum(["true", "false"]).optional(),
+  // Optional: Google sign-in for free user accounts (set by the founder in Vercel).
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
   VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
 });
 
