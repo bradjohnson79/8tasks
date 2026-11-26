@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLinkIcon } from "lucide-react";
-import { AffiliateNotice } from "@/components/site/affiliate-notice";
-import { CountryBadges } from "@/components/site/country-badges";
-import { OpportunityCard } from "@/components/site/opportunity-card";
-import { ProviderLogo } from "@/components/site/provider-logo";
+import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { MissionGrid } from "@/components/app/mission-card";
+import { loadOpportunities } from "@/lib/missions/source";
+import { CountryBadges } from "@/components/app/country-badges";
+import { ProviderLogo } from "@/components/app/provider-logo";
 import { Badge } from "@/components/ui/badge";
 import { getProviderProfile } from "@/db/queries/public";
 import { COUNTRY_LABELS, isSupportedCountry } from "@/lib/markets";
@@ -27,7 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProviderPage({ params }: Props) {
   const data = await getProviderProfile((await params).slug);
   if (!data) notFound();
-  const { provider, items } = data;
+  const { provider } = data;
+  const items = (await loadOpportunities()).filter((o) => o.providerSlug === provider.slug);
   const markets = provider.countries.filter(isSupportedCountry).map((c) => COUNTRY_LABELS[c]);
 
   return (
@@ -84,14 +86,8 @@ export default async function ProviderPage({ params }: Props) {
         <h2 className="mb-4 text-xl font-semibold">Opportunities</h2>
         {items.length > 0 ? (
           <>
-            <AffiliateNotice className="mb-6" />
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((o) => (
-                <li key={o.id}>
-                  <OpportunityCard {...o} />
-                </li>
-              ))}
-            </ul>
+            <AffiliateDisclosure className="mb-6" />
+            <MissionGrid items={items} />
           </>
         ) : (
           <p className="rounded-2xl border border-dashed p-8 text-center text-muted-foreground">

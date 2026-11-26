@@ -16,8 +16,15 @@
 | 2026-11-26 | Admin records are archived/deactivated, not deleted | Preserves click history and FK integrity; audit trail stays meaningful |
 | 2026-11-26 | Opportunities can't be published without an affiliate link from the same provider | Prevents dead "Visit provider" buttons and cross-provider link mix-ups |
 | 2026-11-26 | Admin forms submit via a client wrapper (no auto-reset) | Keeps typed input when validation fails |
+| 2026-11-26 | **Vercel** hosting (project `8tasks`, team anoint). Production branch `main`; previews use Neon branch `preview` with preview-only env vars | Founder set up Vercel; production deploys still need explicit approval |
+| 2026-11-26 | **Design specification adopted**: dark-only tokens, Inter, mobile bottom nav, discovery-first homepage | Founder specs. Supersedes the earlier hero artwork (spec avoids hero banners and floating graphics); `hero-illustration.tsx` removed |
+| 2026-11-26 | **Categories = founder's 8**: Surveys, App & Website Testing, Photography, Mystery Shopping, Content & Media, Gaming & Entertainment, Paid Research, Microtasks & AI. Old slugs merged via `RETIRED_CATEGORIES` (Photo Scouting→Photography, AI & Data + Transcription→Microtasks & AI, Product Testing→Paid Research) | Founder spec §12, applied to local + Neon main + preview |
+| 2026-11-26 | Four discovery pathways are cross-category filters defined in `taxonomy.ts`, not categories | Update §4 |
+| 2026-11-26 | Compensation/attribute model built as a typed display model first; DB columns deferred until the visual structure is approved | Update §18 ("no unnecessary backend complexity"); planned columns in DATABASE.md |
+| 2026-11-26 | Saved missions stored on the device (localStorage) | User accounts not yet approved; saving still useful without sign-in |
+| 2026-11-26 | Nearby uses a user-chosen country/region/city, never GPS; providers operating in an area are shown instead of invented local assignments | Update §8 |
 
 ## Open (founder)
 - Add `docs/PROJECT_BLUEPRINT.md`
-- Hosting (Vercel recommended), final branding
+- Final logo
 - Neon compute: project was created with min/max 1 CU; consider 0.25 CU min + scale-to-zero to cut cost

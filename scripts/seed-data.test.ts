@@ -26,8 +26,14 @@ describe("category merges", () => {
     const { RETIRED_CATEGORIES, MOVED_SUBCATEGORIES } = await import("./seed-data");
     const slugs = CATEGORY_SEED.map((c) => c.slug);
     expect(slugs).toEqual([
-      "surveys", "app-website-testing", "photography", "mystery-shopping",
-      "content-media", "gaming-entertainment", "paid-research", "microtasks-ai",
+      "surveys",
+      "app-website-testing",
+      "photography",
+      "mystery-shopping",
+      "content-media",
+      "gaming-entertainment",
+      "paid-research",
+      "microtasks-ai",
     ]);
     for (const [oldSlug, target] of Object.entries(RETIRED_CATEGORIES)) {
       expect(slugs).not.toContain(oldSlug);

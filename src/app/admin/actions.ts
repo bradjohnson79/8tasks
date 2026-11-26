@@ -50,7 +50,6 @@ function dbError(err: unknown): string {
   return "Something went wrong while saving. Nothing was changed.";
 }
 
-
 // ---------------------------------------------------------------------------
 // Providers
 // ---------------------------------------------------------------------------

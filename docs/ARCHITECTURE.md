@@ -21,7 +21,8 @@ Browser ──► Next.js (Vercel, Node runtime)
 | `src/lib/demo.ts` | Demo-data visibility (always off when `VERCEL_ENV=production`) |
 | `src/app/go/[id]/route.ts` | Affiliate redirect + click logging |
 | `src/components/ui/` | shadcn/ui components (hand-copied; registry blocked in the build container) |
-| `src/components/site/` | Header, footer, cards, disclosure notice |
+| `src/components/app/` | Design-system components (see docs/DESIGN_SYSTEM.md) |
+| `src/lib/taxonomy.ts`, `src/lib/missions/` | Central discovery config, opportunity model, filters, demo data (non-production only) |
 | `scripts/seed*.ts` | Idempotent seed (categories; demo data refused in production) |
 
 ## Rendering

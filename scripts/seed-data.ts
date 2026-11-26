@@ -163,7 +163,8 @@ export const CATEGORY_SEED: CategorySeed[] = [
   {
     slug: "microtasks-ai",
     name: "Microtasks & AI",
-    description: "Short online tasks: AI evaluation, fact-checking, labelling, transcription and more.",
+    description:
+      "Short online tasks: AI evaluation, fact-checking, labelling, transcription and more.",
     icon: "brain-circuit",
     sortOrder: 8,
     subcategories: [

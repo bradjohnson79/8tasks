@@ -1,59 +1,130 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AffiliateNotice } from "@/components/site/affiliate-notice";
-import { CategoryIcon } from "@/components/site/category-icon";
-import { OpportunityCard } from "@/components/site/opportunity-card";
-import { getCategoryWithOpportunities } from "@/db/queries/public";
+import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { Container } from "@/components/app/container";
+import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
+import { FilterChips } from "@/components/app/filter-chips";
+import { LocationPicker } from "@/components/app/location-picker";
+import { MissionGrid } from "@/components/app/mission-card";
+import { getActiveCategories, getSubcategories } from "@/db/queries/public";
+import { applyDiscovery } from "@/lib/missions/filters";
+import { describeLocation, inArea, parseLocation } from "@/lib/missions/location";
+import { buildHref, param, type SearchParams } from "@/lib/missions/query";
+import { loadOpportunities } from "@/lib/missions/source";
+import {
+  CATEGORY_TABS,
+  categoryDisplay,
+  LOCATION_CATEGORIES,
+  type CategoryTab,
+} from "@/lib/taxonomy";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string }>; searchParams: Promise<SearchParams> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const data = await getCategoryWithOpportunities((await params).slug);
-  return data
-    ? {
-        title: data.category.name,
-        description: data.category.description ?? undefined,
-      }
-    : {};
+async function getCategory(slug: string) {
+  return (await getActiveCategories()).find((c) => c.slug === slug);
 }
 
-export default async function CategoryPage({ params }: Props) {
-  const data = await getCategoryWithOpportunities((await params).slug);
-  if (!data) notFound();
-  const { category, items } = data;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const c = await getCategory((await params).slug);
+  return c ? { title: c.name, description: c.description ?? undefined } : {};
+}
+
+export default async function CategoryPage({ params, searchParams }: Props) {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const category = await getCategory(slug);
+  if (!category) notFound();
+
+  // Tabs: curated groups where configured (update §7–8), otherwise one tab per subcategory.
+  const tabs: CategoryTab[] =
+    CATEGORY_TABS[slug] ??
+    (await getSubcategories(slug)).map((s) => ({
+      slug: s.slug,
+      label: s.name,
+      subcategories: [s.slug],
+    }));
+  const tab = tabs.find((t) => t.slug === param(sp, "tab"));
+  const showLocation = LOCATION_CATEGORIES.includes(slug);
+  const loc = showLocation
+    ? parseLocation(param(sp, "country"), param(sp, "region"), param(sp, "city"))
+    : undefined;
+
+  let items = applyDiscovery(await loadOpportunities(), {
+    category: slug,
+    subcategories: tab?.subcategories,
+  });
+  if (loc) items = items.filter((o) => inArea(o, loc));
+
+  const keep = { country: loc?.country, region: loc?.region, city: loc?.city };
+  const chips = [
+    { id: "all", label: "All", href: buildHref(`/categories/${slug}`, keep), active: !tab },
+    ...tabs.map((t) => ({
+      id: t.slug,
+      label: t.label,
+      href: buildHref(`/categories/${slug}`, { ...keep, tab: t.slug }),
+      active: tab?.slug === t.slug,
+    })),
+  ];
+  const d = categoryDisplay(slug);
+  const Icon = d.icon;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <header className="mb-8 flex items-start gap-4">
-        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-secondary text-secondary-foreground">
-          <CategoryIcon name={category.icon} className="size-6" />
+    <Container className="flex flex-col gap-5 pt-5 sm:pt-8">
+      <Link href="/" className="w-fit text-sm text-text-2 hover:text-foreground">
+        ← Discover
+      </Link>
+      <header className="flex items-start gap-3">
+        <span
+          className="grid size-12 shrink-0 place-items-center rounded-xl bg-surface"
+          style={{ color: d.accent }}
+        >
+          <Icon className="size-6" aria-hidden />
         </span>
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{category.name}</h1>
-          {category.description && (
-            <p className="mt-1 text-muted-foreground">{category.description}</p>
-          )}
+          <h1 className="text-[28px] leading-tight font-bold tracking-tight sm:text-[32px]">
+            {category.name}
+          </h1>
+          {category.description && <p className="text-text-2">{category.description}</p>}
         </div>
       </header>
-      {items.length > 0 ? (
-        <>
-          <AffiliateNotice className="mb-6" />
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((o) => (
-              <li key={o.id}>
-                <OpportunityCard {...o} />
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <p className="rounded-2xl border border-dashed p-8 text-center text-muted-foreground">
-          No listings in this category yet. We only list providers we have an approved partnership
-          with.
+
+      {showLocation && (
+        <LocationPicker action={`/categories/${slug}`} value={keep} hidden={{ tab: tab?.slug }} />
+      )}
+      {tabs.length > 0 && <FilterChips chips={chips} label={`${category.name} types`} />}
+
+      {loc && (
+        <p className="text-sm text-text-2" role="status">
+          Showing missions in {describeLocation(loc)} and providers that operate there.{" "}
+          <Link
+            href={buildHref(`/categories/${slug}`, { tab: tab?.slug })}
+            className="font-medium text-emerald hover:underline"
+          >
+            Clear location
+          </Link>
         </p>
       )}
-    </div>
+
+      {items.length ? (
+        <>
+          <MissionGrid items={items} headingLevel={2} />
+          <AffiliateDisclosure />
+        </>
+      ) : (
+        <EmptyState
+          title={NO_MATCHES}
+          description={
+            loc ? "We only list missions that providers have confirmed for an area." : undefined
+          }
+        >
+          <Link href="/missions" className="text-sm font-semibold text-emerald hover:underline">
+            See all missions
+          </Link>
+        </EmptyState>
+      )}
+    </Container>
   );
 }

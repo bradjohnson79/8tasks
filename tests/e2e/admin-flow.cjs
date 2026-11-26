@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- plain Node script, run without a bundler */
 /**
  * End-to-end admin flow against a LOCAL dev database (never production):
  * login, mandatory TOTP enrolment, provider + affiliate link + opportunity creation,
@@ -57,7 +58,6 @@ const log = (...a) => console.log('✔', ...a);
   await p.check('input[name=countries][value=CA]'); await p.check('input[name=countries][value=US]');
   await p.fill('#f-websiteUrl', 'https://photo-co.example.com'); await p.fill('#f-summary', 'E2E test provider (local only).');
   await p.click('button:has-text("Create provider")'); await p.waitForURL(/\/admin\/providers\/[0-9a-f-]{36}/); log('provider created');
-  const providerUrl = p.url();
   // bad link then good link
   await p.fill('#new-link-label', 'Main'); await p.fill('#new-link-destinationUrl', 'http://insecure.example.com');
   await p.click('button:has-text("Add link")'); await p.locator('p[role=alert]').waitFor(); log('http link rejected:', await p.locator('p[role=alert]').innerText());

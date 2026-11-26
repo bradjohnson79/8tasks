@@ -12,11 +12,16 @@
 - [x] Admin bootstrap CLI (`npm run admin:create`)
 - [x] Admin UI: login + mandatory TOTP, providers, affiliate links, opportunities, categories/subcategories, audit log (all via `requireAdmin()`, audit-logged)
 - [ ] Provider onboarding: research + affiliate applications (Grok prompt in `docs/GROK_PROVIDER_RESEARCH_PROMPT.md`)
-- [ ] Search + basic filters (only where data is reliable)
+- [x] Mobile-first design system + discovery UI (demo data)
+- [x] Search + filters (keyword search; filters only on verified data)
+- [ ] Add compensation/attribute/location columns + admin fields (DATABASE.md "Planned columns")
+- [ ] Move pathways/category tabs into admin-managed tables
+- [ ] PWA manifest + icons (needs final logo)
 - [ ] Final legal copy (founder/legal review)
 - [x] Playwright admin flow script (`npm run test:e2e`, local only)
 - [ ] CI (lint, typecheck, test, build)
-- [ ] Neon runtime/admin login roles + Vercel env vars, preview deploys on Neon branches
+- [x] Neon preview branch + runtime/admin login roles + preview-only Vercel env vars
+- [ ] Production Neon login roles + production env vars
 - [ ] Production deploy (**founder approval required**)
 
 ## Later (not approved yet)

@@ -2,7 +2,7 @@ import "server-only";
 import { and, arrayOverlaps, asc, count, eq, sql } from "drizzle-orm";
 import { SUPPORTED_COUNTRIES } from "@/lib/markets";
 import { withPublicDb } from "../client";
-import { categories, opportunities, providers } from "../schema";
+import { categories, opportunities, providers, subcategories } from "../schema";
 
 // Launch markets: only list providers/opportunities available in a supported country.
 const providerInMarket = arrayOverlaps(providers.countries, [...SUPPORTED_COUNTRIES]);
@@ -96,30 +96,46 @@ export async function getProviderProfile(slug: string) {
   });
 }
 
-export async function getCategoryWithOpportunities(slug: string) {
-  return withPublicDb(async (tx) => {
-    const [category] = await tx
+/** All in-market published opportunities with the fields the discovery feed needs. */
+export async function getPublicOpportunityRows() {
+  return withPublicDb((tx) =>
+    tx
       .select({
-        id: categories.id,
-        slug: categories.slug,
-        name: categories.name,
-        description: categories.description,
-        icon: categories.icon,
+        id: opportunities.id,
+        title: opportunities.title,
+        summary: opportunities.summary,
+        description: opportunities.description,
+        countries: opportunities.countries,
+        dataSource: opportunities.dataSource,
+        isSponsored: opportunities.isSponsored,
+        isDemo: opportunities.isDemo,
+        createdAt: opportunities.createdAt,
+        hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
+        categorySlug: categories.slug,
+        categoryName: categories.name,
+        subcategorySlug: subcategories.slug,
+        providerName: providers.name,
+        providerSlug: providers.slug,
       })
-      .from(categories)
-      .where(eq(categories.slug, slug))
-      .limit(1);
-    if (!category) return null;
-
-    const items = await tx
-      .select(opportunityCardFields)
       .from(opportunities)
       .innerJoin(providers, eq(providers.id, opportunities.providerId))
-      .where(and(eq(opportunities.categoryId, category.id), opportunityInMarket))
-      .orderBy(asc(opportunities.sortOrder), asc(opportunities.title));
+      .innerJoin(categories, eq(categories.id, opportunities.categoryId))
+      .leftJoin(subcategories, eq(subcategories.id, opportunities.subcategoryId))
+      .where(opportunityInMarket)
+      .orderBy(asc(opportunities.sortOrder), asc(opportunities.title)),
+  );
+}
 
-    return { category, items };
-  });
+/** Active subcategories of a category, in admin order. */
+export async function getSubcategories(categorySlug: string) {
+  return withPublicDb((tx) =>
+    tx
+      .select({ slug: subcategories.slug, name: subcategories.name })
+      .from(subcategories)
+      .innerJoin(categories, eq(categories.id, subcategories.categoryId))
+      .where(eq(categories.slug, categorySlug))
+      .orderBy(asc(subcategories.sortOrder)),
+  );
 }
 
 /** Looks up the affiliate link id for an opportunity, then resolves + logs via the DB function. */

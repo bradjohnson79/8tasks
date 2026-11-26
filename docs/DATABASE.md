@@ -24,9 +24,27 @@ so `drizzle-kit migrate` will treat them as done).
 - `app_admin`: CRUD on content tables, read clicks, insert/read audit log, read limited `user` columns.
 - Demo rows are visible only when the transaction sets `app.show_demo = 'on'`.
 
+## Planned columns (design specs; not yet migrated)
+The UI already supports these via `src/lib/missions/types.ts`; DB listings currently render as
+provider-level cards with "See provider details" until the columns exist.
+
+| Table | Planned column | Type | Notes |
+| --- | --- | --- | --- |
+| opportunities | `compensation_type` | enum: fixed, range, hourly, variable, reimbursement_only, payment_plus_reimbursement, commission, hybrid, non_cash, unknown | default `unknown` |
+| opportunities | `pay_min_cents`, `pay_max_cents`, `currency` | int, int, enum USD/CAD | verified amounts only |
+| opportunities | `reimbursement_item`, `reimbursement_max_cents` | text, int | never added to pay |
+| opportunities | `commission_recurring` | boolean null | |
+| opportunities | `non_cash_label` | text | e.g. "Gift card rewards" |
+| opportunities | `duration_minutes` | int null | |
+| opportunities | `attributes` | jsonb | remote, online, inPerson, smartphoneRequired, computerRequired, purchaseRequired, reimbursementAvailable, beginnerFriendly, portfolioRequired, audienceRequired, applicationRequired, assessmentRequired, performanceBased, recurringCommission (absent = unknown) |
+| opportunities | `creator_requirements` | jsonb | label/value pairs |
+| opportunities | `what_you_will_do`, `eligibility`, `payment_details`, `terms` | text[] | |
+| opportunity_locations (new) | country, region, city | | location-bound missions; RLS like opportunities |
+| pathways / category_tabs (new) | | | move `taxonomy.ts` groupings into admin-managed tables (update §17) |
+
 ## Seed
 `npm run db:seed` seeds categories + 3 demo providers (example.com URLs, `is_demo = true`).
-Neon `main` was seeded with **categories only**. Category list is proposed, pending the blueprint.
+Neon `main` was seeded with **categories only** (the founder's 8, 62 subcategories). Neon `preview` also has 3 legacy demo providers (hidden from the feed; the richer demo set lives in code).
 
 ## Changing the schema
 1. Edit `src/db/schema/*`. 2. `npm run db:generate`. 3. For grants/RLS write a custom migration

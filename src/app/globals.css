@@ -1,54 +1,48 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Dark mode follows the OS setting (prefers-color-scheme). */
-@custom-variant dark (@media (prefers-color-scheme: dark));
+/* Dark mode is the primary (and currently only) theme; `dark:` utilities always apply. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * 8Tasks design tokens (proposed, pending founder approval):
- * deep navy/charcoal base, emerald/mint accents, WCAG AA contrast.
+ * 8Tasks design tokens — Mobile-First Design Specification §4 (founder-approved).
+ * Single source of truth: components use the Tailwind names in @theme below.
  */
 :root {
+  color-scheme: dark;
   --radius: 1rem;
 
-  --background: #f6f8fb;
-  --foreground: #0b1324;
-  --card: #ffffff;
-  --card-foreground: #0b1324;
-  --muted: #eef2f7;
-  --muted-foreground: #4b5568;
-  --primary: #047857; /* emerald-700: 5.5:1 on white */
-  --primary-foreground: #ffffff;
-  --secondary: #e6f4ee;
-  --secondary-foreground: #064e3b;
-  --accent: #e9eef5;
-  --accent-foreground: #0b1324;
-  --border: #dde3ec;
-  --ring: #10b981;
+  --ds-bg: #131b2b; /* Main background */
+  --ds-surface: #202c3e; /* Primary card surface */
+  --ds-elevated: #304258; /* Elevated surface */
+  --ds-emerald: #53e6a0; /* Brand emerald */
+  --ds-action-bg: #294d40; /* Action button background */
+  --ds-action-fg: #83efba; /* Action button text */
+  --ds-text: #f1f5f9; /* Primary text */
+  --ds-text-2: #9daabd; /* Secondary text */
+  --ds-border: #354258; /* Border and divider */
+  --ds-daily8: #1d3437; /* Daily 8 feature surface */
+  --ds-error: #f87171;
+  --ds-warning: #fbbf24;
+  --ds-info: #7db8ff;
 
-  /* Brand band (hero/header), navy in both modes */
-  --brand-navy: #0b1324;
-  --brand-navy-2: #111c33;
-  --brand-mint: #34d399;
-}
+  /* Aliases used by shadcn/ui components and the admin panel */
+  --background: var(--ds-bg);
+  --foreground: var(--ds-text);
+  --card: var(--ds-surface);
+  --card-foreground: var(--ds-text);
+  --muted: var(--ds-elevated);
+  --muted-foreground: var(--ds-text-2);
+  --primary: var(--ds-emerald);
+  --primary-foreground: #0b2418;
+  --secondary: var(--ds-action-bg);
+  --secondary-foreground: var(--ds-action-fg);
+  --accent: var(--ds-elevated);
+  --accent-foreground: var(--ds-text);
+  --border: var(--ds-border);
+  --ring: var(--ds-emerald);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1324;
-    --foreground: #e8edf5;
-    --card: #111c33;
-    --card-foreground: #e8edf5;
-    --muted: #16223b;
-    --muted-foreground: #a3aec2;
-    --primary: #34d399; /* mint: 9:1 on navy */
-    --primary-foreground: #06241a;
-    --secondary: #12302a;
-    --secondary-foreground: #a7f3d0;
-    --accent: #1a2742;
-    --accent-foreground: #e8edf5;
-    --border: #22304d;
-    --ring: #34d399;
-  }
+  --bottom-nav-height: 4rem;
 }
 
 @theme inline {
@@ -66,12 +60,25 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
-  --color-navy: var(--brand-navy);
-  --color-navy-2: var(--brand-navy-2);
-  --color-mint: var(--brand-mint);
+
+  --color-surface: var(--ds-surface);
+  --color-elevated: var(--ds-elevated);
+  --color-emerald: var(--ds-emerald);
+  --color-action: var(--ds-action-bg);
+  --color-action-foreground: var(--ds-action-fg);
+  --color-daily8: var(--ds-daily8);
+  --color-text-2: var(--ds-text-2);
+  --color-error: var(--ds-error);
+  --color-warning: var(--ds-warning);
+  --color-info: var(--ds-info);
+  /* Legacy names kept for the admin panel */
+  --color-navy: var(--ds-bg);
+  --color-navy-2: var(--ds-surface);
+  --color-mint: var(--ds-emerald);
+
   --radius-lg: var(--radius);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @layer base {
@@ -80,15 +87,37 @@
   }
   html {
     -webkit-tap-highlight-color: transparent;
+    background: var(--background);
   }
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans), system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   :focus-visible {
-    outline-color: var(--ring);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  /* Horizontal chip rows: scroll on mobile without a visible scrollbar. */
+  .scroll-row {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+  /* Space for the fixed mobile bottom navigation (+ device safe area). */
+  .pb-bottom-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 1.5rem);
   }
 }
 
@@ -97,29 +126,8 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-/* Gentle float for hero artwork (disabled by the reduced-motion rule above). */
-@keyframes hero-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-.hero-float {
-  animation: hero-float 6s ease-in-out infinite;
-}
-.hero-float-delayed {
-  animation: hero-float 6s ease-in-out 1.5s infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-float,
-  .hero-float-delayed {
-    animation: none;
+    scroll-behavior: auto !important;
   }
 }

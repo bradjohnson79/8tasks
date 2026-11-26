@@ -2,7 +2,7 @@ import { asc } from "drizzle-orm";
 import { AdminForm } from "@/components/admin/admin-form";
 import { CheckboxField, SelectField, TextField } from "@/components/admin/fields";
 import { FormMessage } from "@/components/admin/form-message";
-import { CategoryIcon, ICONS } from "@/components/site/category-icon";
+import { CategoryIcon, ICONS } from "@/components/app/category-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { categories, subcategories } from "@/db/schema";

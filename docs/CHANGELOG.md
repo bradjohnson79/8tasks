@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-26: Mobile-first design system + discovery update
+- Implemented the founder's design specification and enhancement update (see docs/DESIGN_SYSTEM.md):
+  dark tokens, Inter, wordmark, sticky 64px header, five-destination bottom nav (desktop: header nav),
+  search, My Daily 8 card, "How do you want to earn?" pathways, 8-category grid, filter chips, grouped
+  filters, mission cards with flexible compensation, detail pages with reimbursement breakdown and sticky CTA.
+- New routes: `/missions` (search, pathways, filters), `/missions/[id]`, `/daily-8`, `/saved` (device),
+  `/earnings`, `/profile`, `/notifications`; category pages gained tabs and "Find missions near you".
+- Categories replaced with the founder's 8 (+ expanded Content & Media and Mystery Shopping subcategories)
+  on local, Neon `main` and Neon `preview`.
+- Vercel: preview deployment of this branch with preview-only env vars and Neon `preview` branch.
+- Tests: compensation wording, filters (unknown never matches), pathways, search, location, demo isolation
+  (56 unit tests). Viewport sweep at 320–1920px: no overflow, no JS errors.
+
 ## 2026-11-26: Provider pages, admin panel, CA/US market
 - Public: provider profile pages, provider list links, CA · US badges, opportunity cards link to the provider.
 - Launch market Canada + US enforced in admin validation and public queries (`src/lib/markets.ts`).

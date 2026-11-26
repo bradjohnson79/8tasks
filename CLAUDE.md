@@ -48,15 +48,18 @@ Out of scope until approved: user accounts, My Daily 8, creator program, convers
 8. **Disclosures.** Affiliate disclosure is visible wherever affiliate links appear. Sponsored placements are labelled.
 9. **No production deploys, outreach, or live financial workflows** without explicit founder approval.
 
-## Design direction (proposed — pending founder approval)
-Deep navy/charcoal base, emerald/mint accents, rounded mission cards, generous spacing, strong contrast (WCAG AA), subtle motion. Mobile must feel app-quality. Avoid spammy-survey, crypto, gambling or get-rich-quick aesthetics. Light/dark mode if cheap.
+## Design (approved 2026-11-26)
+Founder's Mobile-First Design Specification + Discovery & Design Enhancement Update; implementation notes in
+`docs/DESIGN_SYSTEM.md`. Mobile first, desktop expanded, one design system. Dark navy (#131B2B) + emerald (#53E6A0),
+Inter, Lucide icons, five-destination bottom nav, four earning pathways, eight categories. Centralised config in
+`src/lib/taxonomy.ts`; never hardcode opportunity types in page components. Demo listings only via
+`src/lib/missions/demo-data.ts` (never in production).
 
 ## Launch market (decided 2026-11-26)
 Canada + US only. List only providers/opportunities that accept members in at least one of them (`src/lib/markets.ts`). International expansion later = add country codes there.
 
 ## Pending founder decisions
-- Hosting: Vercel (recommended) vs Cloudflare Pages
-- Final branding/logo/colors
+- Final logo (wordmark component is interim)
 - First 5–8 providers to apply to (Phase 0, running in parallel)
 
 ## Working agreement

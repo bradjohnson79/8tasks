@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
-import { CountryBadges } from "@/components/site/country-badges";
-import { ProviderLogo } from "@/components/site/provider-logo";
+import { CountryBadges } from "@/components/app/country-badges";
+import { ProviderLogo } from "@/components/app/provider-logo";
 import { Badge } from "@/components/ui/badge";
 import { getPublishedProviders } from "@/db/queries/public";
 
