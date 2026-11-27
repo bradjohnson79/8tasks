@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-27: Affiliate-network readiness (part 1)
+- Operator details in one place (`OPERATOR` in `src/lib/seo.ts`): ANOINT Inc., Langley, BC, Canada; 8tasks@proton.me.
+  About ("Who runs 8Tasks"), Contact (email + privacy requests) and the homepage Organization JSON-LD use it.
+- Legal pages render from `content/legal/<page>.md` with an "Effective date" line (`src/lib/legal/effective.ts`); the
+  Draft banner stays on any page without a file or with a `[CONFIRM` marker (a test blocks markers). Free Access
+  Policy expanded. Privacy, Terms, Affiliate Disclosure and Earning Disclaimer await the founder's legal package.
+- Homepage feed shows the listing disclosure under the cards.
+
 ## 2026-11-27: Production rollout of PR #2 (founder "go")
 - Recovery branch `backup-before-pr2-2026-11-27` (br-small-queen-akb4whxo) created from Neon main first.
 - Neon main: migrations 0010–0012 applied (13 rows; 0000–0009 hashes matched the repo). PR #2 merged (b5a6185),

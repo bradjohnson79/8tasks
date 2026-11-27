@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StaticPage } from "@/components/app/static-page";
+import { OPERATOR } from "@/lib/seo";
 
 export const metadata: Metadata = { title: "Contact", alternates: { canonical: "/contact" } };
 
-// TODO(founder): add the public contact email when it is confirmed.
 export default function ContactPage() {
   return (
-    <StaticPage title="Contact" intro="The quickest way to reach us depends on what you need.">
+    <StaticPage
+      title="Contact"
+      intro={`8Tasks is run by ${OPERATOR.legalName}, ${OPERATOR.locality}, ${OPERATOR.region}, ${OPERATOR.country}.`}
+    >
+      <p>
+        Email:{" "}
+        <a href={`mailto:${OPERATOR.email}`} className="font-medium">
+          {OPERATOR.email}
+        </a>
+        . We reply to every message, usually within a few business days. Privacy requests (access,
+        correction, deletion) go to the same address.
+      </p>
+      <p>The quickest way to reach us depends on what you need:</p>
       <ul className="flex list-disc flex-col gap-2 pl-5">
         <li>
           Something wrong with a listing? Use “Report an inaccurate opportunity” on that listing.
@@ -23,7 +35,6 @@ export default function ContactPage() {
           Press: see the <Link href="/press">press page</Link>.
         </li>
       </ul>
-      <p>A general contact email will be published here soon.</p>
     </StaticPage>
   );
 }

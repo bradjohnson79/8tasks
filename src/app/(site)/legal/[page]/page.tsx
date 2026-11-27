@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { notFound } from "next/navigation";
+import { LEGAL_EFFECTIVE_DATE } from "@/lib/legal/effective";
+import { renderMarkdown } from "@/lib/legal/markdown";
+import { OPERATOR } from "@/lib/seo";
 
 /**
- * Placeholder legal pages. Final text must be written/reviewed before launch;
- * these pages deliberately contain no invented legal terms.
+ * Legal pages. Full text lives in content/legal/<page>.md (founder's legal package). A page
+ * without a file, or whose file still contains a "[CONFIRM" marker, shows the Draft banner.
  */
 const PAGES: Record<string, { title: string; intro: string }> = {
   "affiliate-disclosure": {
@@ -19,12 +24,12 @@ const PAGES: Record<string, { title: string; intro: string }> = {
   "free-access": {
     title: "Free Access Policy",
     intro:
-      "8Tasks is always free for everyone. Browsing, searching, filtering, saving and opportunity alerts cost nothing, and they always will. There are no paid memberships, premium tiers, locked categories or paid alerts. We earn referral commissions from some providers when you join through our links. That never costs you anything and never unlocks extra listings.",
+      "8Tasks is always free for everyone. There are no paid memberships, premium tiers, locked categories or paid alerts.",
   },
   privacy: {
     title: "Privacy Policy",
     intro:
-      "Our full privacy policy is being prepared. In short: browsing needs no account. Saved items and saved searches stay on your device. If you sign up for free alerts, report a listing or submit a company, we keep what you send only to provide that service and review it, and you can unsubscribe from alerts at any time.",
+      "Our full privacy policy is being prepared. In short: browsing needs no account, and you can ask us to export or delete your data at any time.",
   },
   terms: {
     title: "Terms of Use",
@@ -32,7 +37,14 @@ const PAGES: Record<string, { title: string; intro: string }> = {
   },
 };
 
+function content(slug: string): string | null {
+  const file = join(process.cwd(), "content", "legal", `${slug}.md`);
+  return existsSync(file) ? readFileSync(file, "utf8") : null;
+}
+
 type Props = { params: Promise<{ page: string }> };
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return Object.keys(PAGES).map((page) => ({ page }));
@@ -45,15 +57,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function LegalPage({ params }: Props) {
-  const p = PAGES[(await params).page];
+  const slug = (await params).page;
+  const p = PAGES[slug];
   if (!p) notFound();
+  const md = content(slug);
+  const draft = !md || md.includes("[CONFIRM");
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-      <p className="mb-3 inline-block rounded-full bg-amber-300/30 px-3 py-1 text-xs font-medium">
-        Draft: full text pending review
-      </p>
+      {draft && (
+        <p className="mb-3 inline-block rounded-full bg-amber-300/30 px-3 py-1 text-xs font-medium">
+          Draft: full text pending review
+        </p>
+      )}
       <h1 className="text-3xl font-semibold tracking-tight">{p.title}</h1>
-      <p className="mt-4 text-muted-foreground">{p.intro}</p>
+      {md ? (
+        <>
+          <p className="mt-2 text-sm text-text-2">Effective date: {LEGAL_EFFECTIVE_DATE}</p>
+          <div className="legal-prose mt-6 flex flex-col gap-4 text-[15px] leading-relaxed text-text-2 [&_a]:font-medium [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-4 [&_h2]:mt-4 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:mt-2 [&_h3]:font-semibold [&_h3]:text-foreground [&_li]:mt-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:pl-5">
+            {renderMarkdown(md)}
+          </div>
+        </>
+      ) : (
+        <p className="mt-4 text-muted-foreground">{p.intro}</p>
+      )}
+      <p className="mt-10 border-t pt-4 text-sm text-text-2">
+        Questions? Email <a href={`mailto:${OPERATOR.email}`}>{OPERATOR.email}</a>. 8Tasks is
+        operated by {OPERATOR.legalName}, {OPERATOR.region}, {OPERATOR.country}.
+      </p>
     </article>
   );
 }

@@ -18,3 +18,13 @@ export const STATIC_ROUTES = [
   "/legal/privacy",
   "/legal/terms",
 ];
+
+/** Who runs 8Tasks (founder-confirmed 2026-11-27). No street address is published. */
+export const OPERATOR = {
+  legalName: "ANOINT Inc.",
+  locality: "Langley",
+  region: "British Columbia",
+  regionCode: "BC",
+  country: "Canada",
+  email: "8tasks@proton.me",
+} as const;

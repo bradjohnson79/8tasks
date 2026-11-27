@@ -14,7 +14,8 @@ import { applyDiscovery, availableFilters, FILTER_BY_ID, HOME_CHIPS } from "@/li
 import { buildHref, param, type SearchParams } from "@/lib/missions/query";
 import { loadOpportunities } from "@/lib/missions/source";
 import { getDiscoveryConfig } from "@/lib/discovery/config";
-import { SITE_URL } from "@/lib/seo";
+import { OPERATOR, SITE_URL } from "@/lib/seo";
+import { ListingDisclosure } from "@/components/app/listing-disclosure";
 
 export const dynamic = "force-dynamic";
 export const metadata = { alternates: { canonical: "/" } };
@@ -79,6 +80,14 @@ export default async function DiscoverPage({
             slogan: "Small Missions. Real Money. Always Free. For Everyone.",
             description:
               "A free discovery site for legitimate ways to earn extra money in Canada and the United States.",
+            email: OPERATOR.email,
+            parentOrganization: { "@type": "Organization", name: OPERATOR.legalName },
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: OPERATOR.locality,
+              addressRegion: OPERATOR.regionCode,
+              addressCountry: "CA",
+            },
           }),
         }}
       />
@@ -143,7 +152,10 @@ export default async function DiscoverPage({
           <FilterChips chips={chips} label="Mission filters" />
         </div>
         {feed.length ? (
-          <MissionGrid items={feed.slice(0, FEED_LIMIT)} />
+          <>
+            <MissionGrid items={feed.slice(0, FEED_LIMIT)} />
+            <ListingDisclosure items={feed.slice(0, FEED_LIMIT)} className="mt-4" />
+          </>
         ) : (
           <EmptyState title={NO_MATCHES}>
             <Link
