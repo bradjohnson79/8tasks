@@ -38,7 +38,12 @@ export const affiliateTxType = pgEnum("affiliate_tx_type", [
   "summary",
 ]);
 
-export const affiliateTxStatus = pgEnum("affiliate_tx_status", ["pending", "approved", "paid", "reversed"]);
+export const affiliateTxStatus = pgEnum("affiliate_tx_status", [
+  "pending",
+  "approved",
+  "paid",
+  "reversed",
+]);
 
 export const affiliateTxSource = pgEnum("affiliate_tx_source", [
   "impact_api",
@@ -89,8 +94,14 @@ export const affiliatePrograms = pgTable(
       "affiliate_programs_network",
       sql`${t.network} in ('direct','impact','awin','cj','flexoffers','daisycon','maxbounty','offerjuice','undecided')`,
     ),
-    check("affiliate_programs_currency", sql`${t.currencyDefault} is null or ${t.currencyDefault} ~ '^[A-Z]{3}$'`),
-    check("affiliate_programs_url_https", sql`${t.affiliateUrl} is null or ${t.affiliateUrl} ~ '^https://'`),
+    check(
+      "affiliate_programs_currency",
+      sql`${t.currencyDefault} is null or ${t.currencyDefault} ~ '^[A-Z]{3}$'`,
+    ),
+    check(
+      "affiliate_programs_url_https",
+      sql`${t.affiliateUrl} is null or ${t.affiliateUrl} ~ '^https://'`,
+    ),
   ],
 );
 
@@ -134,7 +145,10 @@ export const affiliateTransactions = pgTable(
     index("affiliate_tx_program_event_idx").on(t.programId, t.eventAt),
     index("affiliate_tx_click_idx").on(t.clickId),
     check("affiliate_tx_currency", sql`${t.currency} ~ '^[A-Z]{3}$'`),
-    check("affiliate_tx_counts", sql`coalesce(${t.clicks}, 0) >= 0 and coalesce(${t.conversions}, 0) >= 0`),
+    check(
+      "affiliate_tx_counts",
+      sql`coalesce(${t.clicks}, 0) >= 0 and coalesce(${t.conversions}, 0) >= 0`,
+    ),
   ],
 );
 

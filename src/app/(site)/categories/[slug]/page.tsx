@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { ListingDisclosure } from "@/components/app/listing-disclosure";
 import { Container } from "@/components/app/container";
 import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
 import { FilterChips } from "@/components/app/filter-chips";
@@ -126,7 +126,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       {items.length ? (
         <>
           <MissionGrid items={items} headingLevel={2} />
-          <AffiliateDisclosure />
+          <ListingDisclosure items={items} />
         </>
       ) : (
         <EmptyState

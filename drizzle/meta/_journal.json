@@ -71,6 +71,27 @@
       "when": 1795709850177,
       "tag": "0009_user_value_listing",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795713866906,
+      "tag": "0010_user_accounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795713895844,
+      "tag": "0011_accounts_rls",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795714849457,
+      "tag": "0012_free_listing_links",
+      "breakpoints": true
     }
   ]
 }

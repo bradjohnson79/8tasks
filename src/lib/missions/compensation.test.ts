@@ -47,7 +47,9 @@ describe("formatCompensation", () => {
       "Gift card rewards",
     );
     expect(formatCompensation({ type: "variable" }).primary).toBe("Pay varies");
-    expect(formatCompensation({ type: "unknown" }).primary).toBe("See provider details");
+    expect(formatCompensation({ type: "unknown" }).primary).toBe(
+      "Check provider for current rates",
+    );
   });
   it("only sorts on verified cash amounts", () => {
     expect(sortableAmount({ type: "range", min: 50, max: 150, currency: "USD" })).toBe(150);

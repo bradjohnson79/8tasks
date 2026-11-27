@@ -25,6 +25,7 @@ const opportunityCardFields = {
   isSponsored: opportunities.isSponsored,
   isDemo: opportunities.isDemo,
   hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
+  isFreeListing: sql<boolean>`coalesce(not link_is_affiliate(${opportunities.affiliateLinkId}), false)`,
   providerName: providers.name,
   providerSlug: providers.slug,
 };
@@ -141,6 +142,7 @@ export async function getPublicOpportunityRows() {
           string | null
         >`coalesce(${opportunities.lastVerifiedAt}, ${providers.lastVerifiedAt})::text`,
         hasLink: sql<boolean>`${opportunities.affiliateLinkId} is not null`,
+        isFreeListing: sql<boolean>`coalesce(not link_is_affiliate(${opportunities.affiliateLinkId}), false)`,
         categorySlug: categories.slug,
         categoryName: categories.name,
         subcategorySlug: subcategories.slug,

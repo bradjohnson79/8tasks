@@ -56,6 +56,17 @@ export function ImportClient() {
             className="mt-1 w-full rounded-xl border bg-background p-2 font-mono text-xs"
           />
         </label>
+        <fieldset className="space-y-2 text-sm">
+          <legend className="mb-1 font-medium">Listings package options</legend>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" name="includeFree" /> Include free listing candidates (always
+            imported as drafts)
+          </label>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" name="publishAffiliate" /> Publish the affiliate listings marked
+            published, even if they already exist (founder go-ahead)
+          </label>
+        </fieldset>
         <Button type="submit" disabled={previewing}>
           {previewing ? "Checking…" : "Preview import"}
         </Button>
@@ -82,11 +93,14 @@ export function ImportClient() {
                   {r.action === "create" ? "New" : "Update"}: {r.name}{" "}
                   <span className="text-muted-foreground">({r.slug})</span>
                 </p>
-                {r.wasPublished && (
-                  <p className="text-amber-500">
-                    Currently published. Importing moves it back to draft for review.
-                  </p>
-                )}
+                <p>
+                  {r.listingType === "free"
+                    ? "Independent listing (Level D, no commission). "
+                    : r.listingType === "affiliate"
+                      ? "Affiliate listing. "
+                      : ""}
+                  Status after import: {r.statusAfter}. Admin notes you edited are kept.
+                </p>
                 {r.changes.length > 0 && <p>Changes: {r.changes.join(", ")}</p>}
                 {r.newAffiliateLink && <p>Adds an affiliate link (stored admin-only).</p>}
                 {r.opportunities.length > 0 && (
@@ -101,8 +115,10 @@ export function ImportClient() {
           <form action={runApply}>
             <input type="hidden" name="raw" value={preview.raw} />
             <input type="hidden" name="format" value={preview.format} />
+            {preview.includeFree && <input type="hidden" name="includeFree" value="on" />}
+            {preview.publishAffiliate && <input type="hidden" name="publishAffiliate" value="on" />}
             <Button type="submit" disabled={applying}>
-              {applying ? "Importing…" : `Import ${preview.rows.length} as drafts`}
+              {applying ? "Importing…" : `Import ${preview.rows.length} providers`}
             </Button>
           </form>
         </section>

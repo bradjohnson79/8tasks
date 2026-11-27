@@ -68,3 +68,12 @@ there are no `NEXT_PUBLIC_*` variables.
 ## Privacy
 Click logs store no IP or user agent string, only device class, bot flag, ISO country from the
 hosting edge, and same-origin source path.
+
+## Free user accounts (2026-11-26)
+- Sign-in: magic link (15 min, rate-limited 5/10 min) or Google (only when configured). Better Auth sessions in Postgres.
+- Admins: `session.create.before` refuses any admin session not created by password + TOTP endpoints, so a magic link or
+  Google sign-in can never bypass MFA (tested: admin magic link → `failed_to_create_session`).
+- Personal data: per-user RLS on all `user_*` tables (`app.user_id`); admins have no grants. No phone, address, ID or
+  banking data is collected. Export (`/profile/export`, JSON, excludes the secret manage-email token) and self-deletion
+  (`delete_my_account()`, keeps legally required suppressions only).
+- Email: creating an account never subscribes anyone; opting in from the account records consent text/version/source.

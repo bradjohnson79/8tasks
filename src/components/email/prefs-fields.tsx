@@ -46,34 +46,39 @@ export function PrefsFields({
   categories,
   subsections,
   defaults,
+  showFrequency = true,
 }: {
   categories: Opt[];
   subsections: Opt[];
   defaults?: Partial<EmailPrefs>;
+  /** Account preferences reuse these fields without the email frequency. */
+  showFrequency?: boolean;
 }) {
   const d = defaults ?? {};
   return (
     <>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="p-frequency" className={labelClass}>
-          How often
-        </label>
-        <select
-          id="p-frequency"
-          name="frequency"
-          defaultValue={d.frequency ?? "daily"}
-          className={inputClass}
-        >
-          {FREQUENCIES.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-        <p className="text-xs text-text-2">
-          Sent around 8 AM your time, only when we have verified picks.
-        </p>
-      </div>
+      {showFrequency && (
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="p-frequency" className={labelClass}>
+            How often
+          </label>
+          <select
+            id="p-frequency"
+            name="frequency"
+            defaultValue={d.frequency ?? "daily"}
+            className={inputClass}
+          >
+            {FREQUENCIES.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-text-2">
+            Sent around 8 AM your time, only when we have verified picks.
+          </p>
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="p-country" className={labelClass}>

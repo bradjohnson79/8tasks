@@ -84,6 +84,8 @@ export const affiliateLinkSchema = z.object({
     .optional()
     .transform((v) => v || null),
   isActive: z.boolean(),
+  /** false = free listing's official link (no commission). */
+  isAffiliate: z.boolean().default(true),
   adminNotes: optionalText(2000),
 });
 

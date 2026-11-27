@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLinkIcon } from "lucide-react";
-import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { ListingDisclosure } from "@/components/app/listing-disclosure";
 import { ReportListing } from "@/components/app/report-listing";
 import { formatVerified } from "@/lib/missions/metadata";
 import { MissionGrid } from "@/components/app/mission-card";
@@ -85,7 +85,7 @@ export default async function ProviderPage({ params }: Props) {
         </div>
       </header>
 
-      {provider.description && (
+      {provider.description && provider.description !== provider.summary && (
         <section className="mt-8 max-w-3xl space-y-3">
           <h2 className="text-xl font-semibold">About {provider.name}</h2>
           <p className="whitespace-pre-line text-muted-foreground">{provider.description}</p>
@@ -96,7 +96,7 @@ export default async function ProviderPage({ params }: Props) {
         <h2 className="mb-4 text-xl font-semibold">Opportunities</h2>
         {items.length > 0 ? (
           <>
-            <AffiliateDisclosure className="mb-6" />
+            <ListingDisclosure items={items} className="mb-6" />
             <MissionGrid items={items} />
           </>
         ) : (

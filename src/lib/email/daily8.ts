@@ -34,9 +34,11 @@ export function eligible(
   prefs: SubscriberPrefs,
   subsections: DiscoveryGroup[],
   now: Date,
+  requireEmailPermission = true,
 ) {
   if (o.isDemo || !o.hasOutboundLink || isClosed(o, now)) return false;
-  if (o.emailAllowed !== true) return false; // provider must allow email-originated traffic
+  // Email only: the provider must allow email-originated traffic. On the website it's not needed.
+  if (requireEmailPermission && o.emailAllowed !== true) return false;
   // Geography: launch markets, and the subscriber's country when given.
   if (
     prefs.country
@@ -108,13 +110,15 @@ export function recommendDaily8(
     /** Ids in the subscriber's previous email. */
     lastSent: string[];
     now?: Date;
+    /** false for the on-site Daily 8 (website traffic needs no email permission). */
+    requireEmailPermission?: boolean;
     max?: number;
   },
 ): Daily8Result {
   const now = opts.now ?? new Date();
   const recent = new Set(opts.recentlySent);
   const pool = candidates
-    .filter((o) => eligible(o, prefs, opts.subsections, now))
+    .filter((o) => eligible(o, prefs, opts.subsections, now, opts.requireEmailPermission ?? true))
     .map((o) => ({ o, s: score(o, prefs, opts.subsections, recent, now) }))
     .sort(
       (a, b) =>

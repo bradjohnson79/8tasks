@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdvancedFilters } from "@/components/app/advanced-filters";
-import { AffiliateDisclosure } from "@/components/app/affiliate-disclosure";
+import { ListingDisclosure } from "@/components/app/listing-disclosure";
 import { Container } from "@/components/app/container";
 import { EmptyState, NO_MATCHES } from "@/components/app/empty-state";
 import { FilterChips } from "@/components/app/filter-chips";
@@ -40,12 +40,33 @@ export default async function MissionsPage({ searchParams }: Props) {
   const accent = pathway?.accent ?? "#53E6A0";
   const filters = params(sp, "f").filter((id) => FILTER_BY_ID[id] && id !== "for-you");
 
+  // Create & Earn: the creative subsections (Capture, Write, Film, Review, Promote) as tabs.
+  const tabs = pathway?.slug === "create-earn" ? config.subsections : [];
+  const tab = tabs.find((t) => t.slug === param(sp, "tab"));
+
   const all = await loadOpportunities();
   const scoped = pathway ? all.filter((o) => o.pathways?.includes(pathway.slug)) : all;
-  const available = availableFilters(scoped);
-  const items = applyDiscovery(scoped, { q, filters });
+  const tabbed = tab ? applyDiscovery(all, { group: tab }) : scoped;
+  const available = availableFilters(tabbed);
+  const items = applyDiscovery(tabbed, { q, filters });
 
-  const base = { q, path: pathway?.slug };
+  const base = { q, path: pathway?.slug, tab: tab?.slug };
+  const tabChips = tabs.length
+    ? [
+        {
+          id: "all",
+          label: "All",
+          href: buildHref("/missions", { q, path: pathway?.slug, f: filters }),
+          active: !tab,
+        },
+        ...tabs.map((t) => ({
+          id: t.slug,
+          label: t.title,
+          href: buildHref("/missions", { q, path: pathway?.slug, f: filters, tab: t.slug }),
+          active: tab?.slug === t.slug,
+        })),
+      ]
+    : [];
   const chips = HOME_CHIPS.map((id) => {
     const isActive = id === "for-you" ? filters.length === 0 : filters.includes(id);
     const next =
@@ -109,12 +130,13 @@ export default async function MissionsPage({ searchParams }: Props) {
       )}
 
       {!pathway && <SubsectionLinks subsections={config.subsections} />}
+      {tabChips.length > 0 && <FilterChips chips={tabChips} label="Create & Earn types" />}
       <FilterChips chips={chips} label="Quick filters" />
       <AdvancedFilters
         action="/missions"
         active={filters}
         available={available}
-        hidden={{ q, path: pathway?.slug }}
+        hidden={{ q, path: pathway?.slug, tab: tab?.slug }}
         open={param(sp, "panel") === "1"}
       />
 
@@ -142,7 +164,7 @@ export default async function MissionsPage({ searchParams }: Props) {
       {items.length ? (
         <>
           <MissionGrid items={items} headingLevel={2} />
-          <AffiliateDisclosure />
+          <ListingDisclosure items={items} />
         </>
       ) : (
         <EmptyState title={NO_MATCHES}>

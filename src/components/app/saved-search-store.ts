@@ -40,6 +40,16 @@ function write(list: SavedSearch[]) {
   window.dispatchEvent(new Event(SEARCHES_EVENT));
 }
 
+type SearchSync = (s: Omit<SavedSearch, "savedAt">, saved: boolean) => void;
+let searchSync: SearchSync | null = null;
+export function setSearchSync(fn: SearchSync | null) {
+  searchSync = fn;
+}
+
+export function replaceSavedSearches(list: SavedSearch[]) {
+  write(list);
+}
+
 export function isSearchSaved(s: Omit<SavedSearch, "savedAt" | "label">): boolean {
   return getSavedSearches().some((x) => sameQuery(x, s));
 }
@@ -49,9 +59,11 @@ export function toggleSearch(s: Omit<SavedSearch, "savedAt">): boolean {
   const list = getSavedSearches();
   if (list.some((x) => sameQuery(x, s))) {
     write(list.filter((x) => !sameQuery(x, s)));
+    searchSync?.(s, false);
     return false;
   }
   write([{ ...s, savedAt: new Date().toISOString() }, ...list]);
+  searchSync?.(s, true);
   return true;
 }
 

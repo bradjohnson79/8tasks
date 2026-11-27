@@ -99,7 +99,13 @@ export async function saveProvider(providerId: string | null, form: FormData) {
       ? await db
           .select({ n: sql<number>`count(*)::int` })
           .from(affiliateLinks)
-          .where(and(eq(affiliateLinks.providerId, providerId), eq(affiliateLinks.isActive, true)))
+          .where(
+            and(
+              eq(affiliateLinks.providerId, providerId),
+              eq(affiliateLinks.isActive, true),
+              eq(affiliateLinks.isAffiliate, true),
+            ),
+          )
       : [{ n: 0 }];
     const blocker = providerPublishBlocker({
       readinessLevel: internal.readinessLevel,
@@ -148,7 +154,9 @@ export async function saveProvider(providerId: string | null, form: FormData) {
 export async function saveAffiliateLink(providerId: string, linkId: string | null, form: FormData) {
   const { session, db } = await requireAdmin();
   const path = `/admin/providers/${providerId}`;
-  const parsed = affiliateLinkSchema.safeParse(formToObject(form, { booleans: ["isActive"] }));
+  const parsed = affiliateLinkSchema.safeParse(
+    formToObject(form, { booleans: ["isActive", "isAffiliate"] }),
+  );
   if (!parsed.success) return { error: firstError(parsed.error) };
 
   let result: Result;

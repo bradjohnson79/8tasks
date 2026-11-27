@@ -36,34 +36,37 @@ const validTz = (tz: string) => {
   }
 };
 
+/** Base preference fields (shared with account profiles). */
+export const prefsObject = z.object({
+  frequency: z.enum(["daily", "weekly", "alerts", "website_only"]).default("daily"),
+  country: z.union([z.literal(""), z.enum(["CA", "US"])]).default(""),
+  region: z.string().trim().max(10).default(""),
+  city: z.string().trim().max(80).default(""),
+  categories: z.array(slug).max(12).default([]),
+  creativeInterests: z.array(slug).max(12).default([]),
+  workMode: z.enum(["any", "remote", "local"]).default("any"),
+  beginnerOnly: z.boolean().default(false),
+  equipment: z
+    .array(z.enum(["smartphone", "computer", "camera"]))
+    .max(3)
+    .default([]),
+  compensationTypes: z.array(z.enum(COMPENSATION_TYPES)).max(15).default([]),
+  searchQuery: z.string().trim().max(200).default(""),
+  timeZone: z
+    .string()
+    .max(60)
+    .default("America/Vancouver")
+    .transform((v) => (validTz(v) ? v : "America/Vancouver")),
+});
+
+/** A region must belong to the chosen country. */
+export const fixRegion = <T extends { country: "" | "CA" | "US"; region: string }>(p: T): T => ({
+  ...p,
+  region: p.country && REGIONS[p.country].some((r) => r.code === p.region) ? p.region : "",
+});
+
 /** Subscriber preferences, validated before they reach the database functions. */
-export const prefsSchema = z
-  .object({
-    frequency: z.enum(["daily", "weekly", "alerts", "website_only"]).default("daily"),
-    country: z.union([z.literal(""), z.enum(["CA", "US"])]).default(""),
-    region: z.string().trim().max(10).default(""),
-    city: z.string().trim().max(80).default(""),
-    categories: z.array(slug).max(12).default([]),
-    creativeInterests: z.array(slug).max(12).default([]),
-    workMode: z.enum(["any", "remote", "local"]).default("any"),
-    beginnerOnly: z.boolean().default(false),
-    equipment: z
-      .array(z.enum(["smartphone", "computer", "camera"]))
-      .max(3)
-      .default([]),
-    compensationTypes: z.array(z.enum(COMPENSATION_TYPES)).max(15).default([]),
-    searchQuery: z.string().trim().max(200).default(""),
-    timeZone: z
-      .string()
-      .max(60)
-      .default("America/Vancouver")
-      .transform((v) => (validTz(v) ? v : "America/Vancouver")),
-  })
-  .transform((p) => ({
-    ...p,
-    // A region must belong to the chosen country.
-    region: p.country && REGIONS[p.country].some((r) => r.code === p.region) ? p.region : "",
-  }));
+export const prefsSchema = prefsObject.transform(fixRegion);
 
 export type EmailPrefs = z.output<typeof prefsSchema>;
 

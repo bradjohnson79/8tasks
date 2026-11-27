@@ -37,11 +37,16 @@ export default async function AdminProvidersPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Providers</h1>
-        <Button asChild>
-          <Link href="/admin/providers/new">
-            <PlusIcon /> Add provider
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/admin/import">Import listings</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/providers/new">
+              <PlusIcon /> Add provider
+            </Link>
+          </Button>
+        </div>
       </div>
       <FormMessage saved={sp.saved} error={sp.error} />
       {rows.length === 0 ? (

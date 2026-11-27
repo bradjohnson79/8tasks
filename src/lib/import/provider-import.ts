@@ -9,6 +9,12 @@ import {
 } from "@/lib/validation/admin";
 import { SUPPORTED_COUNTRIES } from "@/lib/markets";
 import { fromIntegrationPackage, isIntegrationPackage } from "./package-v1";
+import {
+  fromListingsPackage,
+  isListingsCsv,
+  isListingsPackage,
+  listingsCsvToPackage,
+} from "./listings-v1";
 
 /**
  * Provider import format (master prompt §3.1). JSON:
@@ -66,6 +72,15 @@ export const importOpportunitySchema = z.object({
 
 export const importProviderSchema = z.object({
   slug: slugSchema,
+  /**
+   * Listings package only. Status is applied when a record is first created (free listings:
+   * always draft). Existing records keep the status set in /admin unless the importer is run
+   * with the explicit "publish affiliate listings" option.
+   */
+  listing: z
+    .object({ type: z.enum(["affiliate", "free"]), status: z.enum(["draft", "published"]) })
+    .optional()
+    .transform((l) => (l?.type === "free" ? { ...l, status: "draft" as const } : l)),
   public: z.object({
     name: z.string().trim().min(2).max(120),
     website_url: z
@@ -87,6 +102,9 @@ export const importProviderSchema = z.object({
       .nullable()
       .transform((v) => v || null),
     affiliate_label: text(120),
+    /** false = free listing's plain official link (8Tasks earns no commission). */
+    affiliate_is_affiliate: z.boolean().default(true),
+    affiliate_notes: text(2000),
     opportunities: z.array(importOpportunitySchema).max(50).default([]),
   }),
   internal: z
@@ -107,6 +125,7 @@ export const importProviderSchema = z.object({
         .optional()
         .nullable()
         .transform((v) => v ?? null),
+      user_value_listing: z.boolean().default(false),
       approval_status: text(120),
       mission_alignment: text(1000),
       business_contact: text(300),
@@ -132,6 +151,7 @@ export const importProviderSchema = z.object({
       recurring_commission: null,
       source_urls: [],
       readiness_level: null,
+      user_value_listing: false,
       approval_status: null,
       mission_alignment: null,
       business_contact: null,
@@ -256,12 +276,22 @@ export function csvToImport(csv: string): unknown {
 }
 
 /** Parses + validates an import (JSON or CSV). Never touches the database. */
-export function parseImport(raw: string, format: "json" | "csv"): ImportResult {
+export function parseImport(
+  raw: string,
+  format: "json" | "csv",
+  opts: { includeFree?: boolean } = {},
+): ImportResult {
   let data: unknown;
   try {
-    data = format === "json" ? JSON.parse(raw) : csvToImport(raw);
-    if (format === "json" && isIntegrationPackage(data))
-      data = fromIntegrationPackage(data as never);
+    data =
+      format === "json"
+        ? JSON.parse(raw)
+        : isListingsCsv(raw)
+          ? listingsCsvToPackage(raw)
+          : csvToImport(raw);
+    if (isIntegrationPackage(data)) data = fromIntegrationPackage(data as never);
+    else if (isListingsPackage(data))
+      data = fromListingsPackage(data as never, { includeFree: !!opts.includeFree });
   } catch {
     return { ok: false, errors: ["The file isn't valid JSON."] };
   }
