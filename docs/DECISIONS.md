@@ -55,3 +55,12 @@
 - Add `docs/PROJECT_BLUEPRINT.md`
 - Final logo
 - Neon compute: project was created with min/max 1 CU; consider 0.25 CU min + scale-to-zero to cut cost
+
+## 2026-11-26/27: Founder decisions on listings and accounts
+- Optional free accounts ship (Phases 1–2); Google sign-in stays off until credentials exist.
+- Non-affiliate providers are listed as "Independent listing" (Level D internally); they never show pay unless verified.
+- Single-country (CA-only or US-only) providers are allowed; country restrictions must be shown and Daily 8 excludes
+  ineligible countries. None imported yet: they need records and verification first.
+- JoinBrands approved for Capture, Film, Review and Promote & Earn (no incentivized/positive-only reviews, no brand
+  campaigns without permission). OnlineBookClub and Groover: list only after their conditions are verified.
+
