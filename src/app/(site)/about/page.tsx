@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StaticPage } from "@/components/app/static-page";
+import { OPERATOR } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About",
@@ -31,6 +32,12 @@ export default function AboutPage() {
         Some providers pay us a referral commission when you join through our links. That never
         changes what you&apos;re paid. Read our{" "}
         <Link href="/legal/affiliate-disclosure">Affiliate Disclosure</Link>.
+      </p>
+      <h2>Who runs 8Tasks</h2>
+      <p>
+        8Tasks is operated by {OPERATOR.legalName}, based in {OPERATOR.locality}, {OPERATOR.region},{" "}
+        {OPERATOR.country}. Reach us at <a href={`mailto:${OPERATOR.email}`}>{OPERATOR.email}</a> or
+        see <Link href="/contact">Contact</Link>.
       </p>
       <h2>Spot something wrong?</h2>
       <p>

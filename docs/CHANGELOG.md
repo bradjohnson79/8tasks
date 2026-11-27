@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-11-27: Affiliate-network readiness (part 1)
+- Operator details in one place (`OPERATOR` in `src/lib/seo.ts`): ANOINT Inc., Langley, BC, Canada; 8tasks@proton.me.
+  About ("Who runs 8Tasks"), Contact (email + privacy requests) and the homepage Organization JSON-LD use it.
+- Legal pages render from `content/legal/<page>.md` with an "Effective date" line (`src/lib/legal/effective.ts`); the
+  Draft banner stays on any page without a file or with a `[CONFIRM` marker (a test blocks markers). Free Access
+  Policy expanded. Privacy, Terms, Affiliate Disclosure and Earning Disclaimer await the founder's legal package.
+- Homepage feed shows the listing disclosure under the cards.
+
+## 2026-11-27: Production rollout of PR #2 (founder "go")
+- Recovery branch `backup-before-pr2-2026-11-27` (br-small-queen-akb4whxo) created from Neon main first.
+- Neon main: migrations 0010–0012 applied (13 rows; 0000–0009 hashes matched the repo). PR #2 merged (b5a6185),
+  production deploy dpl_J9vUtuXvTQuezC1DMsVt5rGq53eP READY on 8tasks.com.
+- Listings: production dry run on a copy of main matched preview (25 created, 2 updated, 25 links, 0 published without
+  the flag); applied with a checksum guard (6bb0fbb6…). Dreamstime + JoinBrands published (readiness A, CA + US, exact
+  URLs). 24 independent (Level D) listings published after founder review; RWS TrainAI kept as draft (its URL is a
+  client services page, not a rater signup page). OnlineBookClub and Groover not added (official pages could not be
+  verified from the build environment). JoinBrands also in Review & Earn and Promote & Earn with founder-approved wording.
+- Public label "Independent listing" + "8Tasks does not currently receive a commission from this listing."; footer
+  "8Tasks is always free to use. We may earn a commission from qualifying referrals to participating providers.";
+  unknown pay shows "Check provider for current rates".
+
 ## 2026-11-26: First real listings + optional free accounts (preview only; awaiting "go")
 - **Listings import** (`CLAUDE_LISTINGS_PROMPT.md`): `npm run listings:import -- --file <path> [--include-free-drafts]
   [--dry-run] [--publish-affiliate]` and `/admin/import` (also at `/admin/listings/import`, linked from Providers) accept
